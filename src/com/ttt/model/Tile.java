@@ -1,5 +1,7 @@
 package com.ttt.model;
 
-public class Tile {
-
+public enum Tile {
+	EMPTY,
+	X,
+	O;
 }
