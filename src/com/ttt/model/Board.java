@@ -5,6 +5,7 @@ public class Board {
 	//TODO catch if width/height is not positive
 	public static final int BOARD_WIDTH = 3;
 	public static final int BOARD_HEIGHT = 3;
+	public static final int WIN_COUNT = 3;
 	public Tile[][] tiles;
 	
 	public Board() {
@@ -23,6 +24,46 @@ public class Board {
 			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
 			System.exit(0);
 		}
+	}
+	
+	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY){
+		if(tiles[i + dirX][j + dirY] == tile){
+			return new TilePosition(tile, i + 1, j);
+		}else{
+		return new TilePosition(Tile.EMPTY, -1, -1);
+		}
+	}
+	
+	public int getPathLength(Tile tile, int dirX, int dirY){
+		
+		return 0;
+	}
+	
+	public boolean checkWin(Tile tile){
+		int consecutiveCount = 0;
+		for(int i = 0; i < BOARD_WIDTH; i++){
+			for(int j = 0; j < BOARD_HEIGHT; j++){
+					if(tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()){
+						getPathLength(tile, 1, 0);
+					}else if(tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()){
+						getPathLength(tile, 0, 1);
+						}else if(tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()){
+							getPathLength(tile, 1, 1);
+						}else if(tile == checkSurroundingTiles(tile, i, j, 0, -1).getTile()){
+							getPathLength(tile, 0, -1);
+						}else if(tile == checkSurroundingTiles(tile, i, j, -1, -1).getTile()){
+							getPathLength(tile, -1, -1);
+						}
+						consecutiveCount++;
+					}
+						consecutiveCount = 0;
+					}
+				
+		
+		if(consecutiveCount >= WIN_COUNT){
+			return true;
+		}
+		return false;
 	}
 	
 	public void placeXAt(int x, int y) {
