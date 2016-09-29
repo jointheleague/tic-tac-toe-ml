@@ -41,7 +41,8 @@ public class RenderService extends GUIApplication {
 
 			@Override
 			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				board.tiles[source.getX() / tileWidth][source.getY() / tileHeight] = Tile.O;
+				board.tiles[source.getX() / tileWidth][source.getY()
+						/ tileHeight] = /* board.getCurrentTurn() */Tile.EMPTY;
 			}
 		});
 	}
@@ -51,21 +52,29 @@ public class RenderService extends GUIApplication {
 		for (int x = 0; x < board.tiles.length; x++) {
 			for (int y = 0; y < board.tiles[x].length; y++) {
 				Tile tile = board.tiles[x][y];
-				GraphicsStyle override = style.clone().setStyle(Style.COLOR, Color.black).setStyle(Style.STROKE_WIDTH,
-						15);
-				Shape shape = null;
-				switch (tile) {
-				case X:
-					break;
-				case O:
-					shape = new Ellipse(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
-					break;
-				default:
-					break;
-				}
-				drawButton(new Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight));
-				if (shape != null) {
-					drawShape(shape, override, false, true);
+
+				if (tile != Tile.EMPTY) {
+					GraphicsStyle override = style.clone().setStyle(Style.COLOR, Color.blue)
+							.setStyle(Style.STROKE_WIDTH, 10);
+					Shape shape = null;
+					switch (tile) {
+					case X:
+						break;
+					case O:
+						shape = new Ellipse((x * tileWidth) + ((tileWidth - (int) (tileWidth / 1.1)) / 2),
+								(y * tileHeight) + ((tileHeight - (int) (tileHeight / 1.1)) / 2),
+								(int) (tileWidth / 1.1), (int) (tileHeight / 1.1));
+						break;
+					default:
+						break;
+					}
+					drawShape(new Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight));
+					if (shape != null) {
+						drawShape(shape, override, false, true);
+						drawShape(shape, override.setStyle(Style.STROKE_WIDTH, 1), false, true);
+					}
+				} else {
+					drawButton(new Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight));
 				}
 			}
 		}
