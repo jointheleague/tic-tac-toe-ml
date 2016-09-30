@@ -3,8 +3,8 @@ package com.ttt.model;
 public class Board {
 
 	//TODO catch if width/height is not positive
-	public static final int BOARD_WIDTH = 3;
-	public static final int BOARD_HEIGHT = 3;
+	public static final int BOARD_WIDTH = 5;
+	public static final int BOARD_HEIGHT = 5;
 	public static final int WIN_COUNT = 3;
 	public Tile[][] tiles;
 	
@@ -37,7 +37,7 @@ public class Board {
 	}
 	
 	public int getPathLength(TilePosition tile, int dirX, int dirY){
-		int pathLength = 1;
+		int pathLength = 0;
 		boolean path = true;
 		TilePosition toCheck = tile;
 		while(path){
