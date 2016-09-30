@@ -13,6 +13,7 @@ public class Board {
 	}
 	
 	public Board(Tile[][] tiles) {
+		
 		if (tiles.length > 0) {
 			if (tiles.length == BOARD_HEIGHT && tiles[0].length == BOARD_WIDTH) {
 				this.tiles = tiles;
@@ -27,42 +28,85 @@ public class Board {
 	}
 	
 	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY){
+	
 		if(tiles[i + dirX][j + dirY] == tile){
-			return new TilePosition(tile, i + 1, j);
+			return new TilePosition(tile, i + dirX, j + dirY);
 		}else{
 		return new TilePosition(Tile.EMPTY, -1, -1);
 		}
 	}
 	
-	public int getPathLength(Tile tile, int dirX, int dirY){
-		
-		return 0;
+	public int getPathLength(TilePosition tile, int dirX, int dirY){
+		int pathLength = 1;
+		boolean path = true;
+		TilePosition toCheck = tile;
+		while(path){
+			try{
+			toCheck = checkSurroundingTiles(toCheck.getTile(), toCheck.getX(), toCheck.getY(), dirX, dirY);
+			if(toCheck.getTile() == tile.getTile()){
+				pathLength++;
+			}else{
+				path = false;
+			}
+			}catch(Exception e){
+				path = false;
+			}
+		}
+		System.out.println("Path length : " + pathLength);
+		return pathLength;
 	}
 	
 	public boolean checkWin(Tile tile){
+		
 		int consecutiveCount = 0;
 		for(int i = 0; i < BOARD_WIDTH; i++){
 			for(int j = 0; j < BOARD_HEIGHT; j++){
-					if(tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()){
-						getPathLength(tile, 1, 0);
-					}else if(tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()){
-						getPathLength(tile, 0, 1);
-						}else if(tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()){
-							getPathLength(tile, 1, 1);
-						}else if(tile == checkSurroundingTiles(tile, i, j, 0, -1).getTile()){
-							getPathLength(tile, 0, -1);
-						}else if(tile == checkSurroundingTiles(tile, i, j, -1, -1).getTile()){
-							getPathLength(tile, -1, -1);
+				Tile t1 = null, t2 = null, t3 = null, t4 = null, t5 = null;
+				try{
+				t1 = checkSurroundingTiles(tile, i, j, 1, 0).getTile();
+				}catch (Exception e){
+					
+				}
+				try{
+				t2 = checkSurroundingTiles(tile, i, j, 0, 1).getTile();
+			}catch (Exception e){
+				
+			}
+			try{
+				t3 = checkSurroundingTiles(tile, i, j, 1, 1).getTile();
+			}catch (Exception e){
+				
+			}
+			try{
+				t4 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
+			}catch (Exception e){
+				
+			}try{
+				t5 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
+				}catch (Exception e){
+					
+				}
+					if(tile == t1){
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
+					}else if(tile == t2){
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
+						}else if(tile == t3){
+							consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
+						}else if(tile == t4){
+							consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, -1);
+						}else if(tile == t5){
+							consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, -1);
 						}
-						consecutiveCount++;
+					if(consecutiveCount >= WIN_COUNT){
+						return true;
 					}
-						consecutiveCount = 0;
+						//consecutiveCount++;
 					}
+		}	//consecutiveCount = 0;
+					
 				
 		
-		if(consecutiveCount >= WIN_COUNT){
-			return true;
-		}
+		
 		return false;
 	}
 	
