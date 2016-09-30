@@ -12,6 +12,6 @@ public class TicTacToe {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(new RenderService(board).getContents());
 		frame.setVisible(true);
-		frame.setSize(RenderService.PANEL_WIDTH - 1, RenderService.PANEL_HEIGHT + frame.getInsets().top - 1);
+		frame.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + frame.getInsets().top);
 	}
 }
