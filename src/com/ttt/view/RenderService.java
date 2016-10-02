@@ -7,6 +7,7 @@ import javax.awt.Ellipse;
 import javax.awt.Fonts;
 import javax.awt.GUIApplication;
 import javax.awt.GraphicsStyle;
+import javax.awt.KeyListener;
 import javax.awt.Rectangle;
 import javax.awt.Shape;
 import javax.awt.Style;
@@ -45,6 +46,26 @@ public class RenderService extends GUIApplication {
 						/ tileHeight] = /* board.getCurrentTurn() */Tile.EMPTY;
 			}
 		});
+		setKeyListener(new KeyListener() {
+			@Override
+			public void onKeyPress(int keyCode, int mouseX, int mouseY) {
+				if (keyCode >= 97 && keyCode <= 105) {
+					int keyValue = keyCode - 96;
+					int x = keyValue % 3;
+					if (x == 0) {
+						x = 3;
+					}
+					x--;
+					int y = Math.abs((int) Math.ceil((double) (keyValue - x) / 4) - 2);
+					if (keyValue - x == 1) {
+						y = 2;
+					}
+
+					board.tiles[x][y] = /* board.getCurrentTurn() */Tile.O;
+				}
+			}
+		});
+
 	}
 
 	@Override
