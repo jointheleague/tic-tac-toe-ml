@@ -2,18 +2,17 @@ package com.ttt.model;
 
 public class Board {
 
-	//TODO catch if width/height is not positive
-	public static final int BOARD_WIDTH = 5;
-	public static final int BOARD_HEIGHT = 5;
+	// TODO catch if width/height is not positive
+	public static final int BOARD_WIDTH = 3;
+	public static final int BOARD_HEIGHT = 3;
 	public static final int WIN_COUNT = 3;
 	public Tile[][] tiles;
-	
+
 	public Board() {
 		tiles = emptyBoard();
 	}
-	
+
 	public Board(Tile[][] tiles) {
-		
 		if (tiles.length > 0) {
 			if (tiles.length == BOARD_HEIGHT && tiles[0].length == BOARD_WIDTH) {
 				this.tiles = tiles;
@@ -26,90 +25,83 @@ public class Board {
 			System.exit(0);
 		}
 	}
-	
-	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY){
-	
-		if(tiles[i + dirX][j + dirY] == tile){
+
+	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY) {
+		if (tiles[i + dirX][j + dirY] == tile) {
 			return new TilePosition(tile, i + dirX, j + dirY);
-		}else{
-		return new TilePosition(Tile.EMPTY, -1, -1);
+		} else {
+			return new TilePosition(Tile.EMPTY, -1, -1);
 		}
 	}
-	
-	public int getPathLength(TilePosition tile, int dirX, int dirY){
-		int pathLength = 0;
-		boolean path = true;
+
+	public int getPathLength(TilePosition tile, int dirX, int dirY) {
+		int pathLength = 1;
 		TilePosition toCheck = tile;
-		while(path){
-			try{
-			toCheck = checkSurroundingTiles(toCheck.getTile(), toCheck.getX(), toCheck.getY(), dirX, dirY);
-			if(toCheck.getTile() == tile.getTile()){
-				pathLength++;
-			}else{
-				path = false;
-			}
-			}catch(Exception e){
-				path = false;
+		while (true) {
+			try {
+				toCheck = checkSurroundingTiles(toCheck.getTile(), toCheck.getX(), toCheck.getY(), dirX, dirY);
+				if (toCheck.getTile() == tile.getTile()) {
+					pathLength++;
+				} else {
+					break;
+				}
+			} catch (Exception e) {
+				break;
 			}
 		}
 		System.out.println("Path length : " + pathLength);
 		return pathLength;
 	}
-	
-	public boolean checkWin(Tile tile){
-		
+
+	public boolean checkWin(Tile tile) {
 		int consecutiveCount = 0;
-		for(int i = 0; i < BOARD_WIDTH; i++){
-			for(int j = 0; j < BOARD_HEIGHT; j++){
+		for (int i = 0; i < BOARD_WIDTH; i++) {
+			for (int j = 0; j < BOARD_HEIGHT; j++) {
 				Tile t1 = null, t2 = null, t3 = null, t4 = null, t5 = null;
-				try{
-				t1 = checkSurroundingTiles(tile, i, j, 1, 0).getTile();
-				}catch (Exception e){
-					
+				try {
+					t1 = checkSurroundingTiles(tile, i, j, 1, 0).getTile();
+				} catch (Exception e) {
+
 				}
-				try{
-				t2 = checkSurroundingTiles(tile, i, j, 0, 1).getTile();
-			}catch (Exception e){
-				
-			}
-			try{
-				t3 = checkSurroundingTiles(tile, i, j, 1, 1).getTile();
-			}catch (Exception e){
-				
-			}
-			try{
-				t4 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
-			}catch (Exception e){
-				
-			}try{
-				t5 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
-				}catch (Exception e){
-					
+				try {
+					t2 = checkSurroundingTiles(tile, i, j, 0, 1).getTile();
+				} catch (Exception e) {
+
 				}
-					if(tile == t1){
-						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
-					}else if(tile == t2){
-						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
-						}else if(tile == t3){
-							consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
-						}else if(tile == t4){
-							consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, -1);
-						}else if(tile == t5){
-							consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, -1);
-						}
-					if(consecutiveCount >= WIN_COUNT){
-						return true;
-					}
-						//consecutiveCount++;
-					}
-		}	//consecutiveCount = 0;
-					
-				
-		
-		
+				try {
+					t3 = checkSurroundingTiles(tile, i, j, 1, 1).getTile();
+				} catch (Exception e) {
+
+				}
+				try {
+					t4 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
+				} catch (Exception e) {
+
+				}
+				try {
+					t5 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
+				} catch (Exception e) {
+
+				}
+				if (tile == t1) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
+				} else if (tile == t2) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
+				} else if (tile == t3) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
+				} else if (tile == t4) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, -1);
+				} else if (tile == t5) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, -1);
+				}
+				if (consecutiveCount >= WIN_COUNT) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
-	
+
 	public void placeXAt(int x, int y) {
 		try {
 			tiles[x][y] = Tile.X;
@@ -118,7 +110,7 @@ public class Board {
 			System.exit(0);
 		}
 	}
-	
+
 	public void placeOAt(int x, int y) {
 		try {
 			tiles[x][y] = Tile.O;
@@ -127,7 +119,7 @@ public class Board {
 			System.exit(0);
 		}
 	}
-	
+
 	public Tile[][] emptyBoard() {
 		Tile[][] tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
 		for (int x = 0; x < BOARD_WIDTH; x++) {
@@ -137,5 +129,5 @@ public class Board {
 		}
 		return tiles;
 	}
-	
+
 }
