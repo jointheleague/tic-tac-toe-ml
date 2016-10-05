@@ -2,7 +2,6 @@ package com.ttt.view;
 
 import java.awt.Color;
 
-import javax.awt.ClickListener;
 import javax.awt.Ellipse;
 import javax.awt.Fonts;
 import javax.awt.GUIApplication;
@@ -11,6 +10,7 @@ import javax.awt.Rectangle;
 import javax.awt.Shape;
 import javax.awt.Style;
 
+import com.ttt.input.InputController;
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
 
@@ -34,17 +34,7 @@ public class RenderService extends GUIApplication {
 				.setStyle(Style.BUTTON_SELECTED, Color.gray.brighter().brighter()).setStyle(Style.STROKE, Color.black)
 				.setStyle(Style.FONT, Fonts.arial(12)));
 
-		setClickListener(new ClickListener() {
-			@Override
-			public void onClick(int mouseX, int mouseY) {
-			}
-
-			@Override
-			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				board.tiles[source.getX() / tileWidth][source.getY()
-						/ tileHeight] = /* board.getCurrentTurn() */Tile.EMPTY;
-			}
-		});
+		InputController.registerClickInput(this);
 	}
 
 	@Override
