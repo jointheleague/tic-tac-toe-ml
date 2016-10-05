@@ -1,16 +1,21 @@
 package com.ttt.model;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
+import com.apple.eawt.Application;
 import com.ttt.view.RenderService;
+import com.ttt.view.WindowIcon;
 
 public class TicTacToe {
 	
 	public static Tile[][] tiles = new Tile[][]{
+		{ Tile.X, Tile.EMPTY, Tile.O},
 		{ Tile.EMPTY, Tile.O, Tile.EMPTY},
-		{ Tile.EMPTY, Tile.O, Tile.EMPTY},
-		{ Tile.EMPTY, Tile.O, Tile.EMPTY}
+		{ Tile.O, Tile.EMPTY, Tile.X}
 	};
 
 	public static void main(String[] args) {
@@ -21,8 +26,7 @@ public class TicTacToe {
 
 		JFrame frame = new JFrame("Tic Tac Toe");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ImageIcon img = new ImageIcon("res/Icon.png");
-		frame.setIconImage(img.getImage());
+		WindowIcon.setupIcons(frame);
 		frame.add(new RenderService(board).getContents());
 		frame.setVisible(true);
 		frame.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + frame.getInsets().top);

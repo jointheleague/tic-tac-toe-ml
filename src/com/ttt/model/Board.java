@@ -35,6 +35,10 @@ public class Board {
 	}
 
 	public int getPathLength(TilePosition tile, int dirX, int dirY) {
+		if(dirX == 0 && dirY == 0){
+			System.err.println("ERROR: Both directions can't be 0 -Matthew");
+			return 1;
+		}
 		int pathLength = 1;
 		TilePosition toCheck = tile;
 		while (true) {
@@ -57,7 +61,7 @@ public class Board {
 		int consecutiveCount = 0;
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
-				Tile t1 = null, t2 = null, t3 = null, t4 = null, t5 = null;
+				Tile t1 = null, t2 = null, t3 = null, t4 = null;
 				try {
 					t1 = checkSurroundingTiles(tile, i, j, 1, 0).getTile();
 				} catch (Exception e) {
@@ -74,12 +78,7 @@ public class Board {
 
 				}
 				try {
-					t4 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
-				} catch (Exception e) {
-
-				}
-				try {
-					t5 = checkSurroundingTiles(tile, i, j, -1, -1).getTile();
+					t4 = checkSurroundingTiles(tile, i, j, -1, 1).getTile();
 				} catch (Exception e) {
 
 				}
@@ -90,10 +89,8 @@ public class Board {
 				} else if (tile == t3) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
 				} else if (tile == t4) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, -1);
-				} else if (tile == t5) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, -1);
-				}
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
+				}else
 				if (consecutiveCount >= WIN_COUNT) {
 					return true;
 				}
