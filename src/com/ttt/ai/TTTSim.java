@@ -2,8 +2,11 @@ package com.ttt.ai;
 
 public class TTTSim {
 	int[][] board;
+	boolean playing = true;
+	int moves;
 
 	public TTTSim(int size) {
+		moves = 0;
 		board = new int[size][size];
 		size = size - 1;
 		System.out.println("Right size" + size);
@@ -30,6 +33,7 @@ public class TTTSim {
 
 	public void place(int type, int x, int y) {
 		board[x][y] = type;
+		moves++;
 	}
 
 	public boolean isWinner(int player) {
@@ -43,8 +47,10 @@ public class TTTSim {
 				if (!(horizontalWin || verticalWin))
 					break;
 			}
-			if (horizontalWin || verticalWin)
+			if (horizontalWin || verticalWin) {
+				playing = false;
 				return true;
+			}
 		}
 		boolean diagonalWinOne = true, diagonalWinTwo = true;
 		for (int n = 0; n < board.length; n++) {
@@ -58,9 +64,26 @@ public class TTTSim {
 			if (!(diagonalWinOne || diagonalWinTwo))
 				break;
 		}
-		if (diagonalWinOne || diagonalWinTwo)
+		if (diagonalWinOne || diagonalWinTwo) {
+			playing = false;
 			return true;
-		else
+		} else
 			return false;
+	}
+
+	public boolean playing() {
+		return playing;
+	}
+
+	public int score(int player) {
+		int WL;
+		if (isWinner(player))
+			WL = 1;
+		else
+			WL = 0;
+
+		int max = (2 ^ board.length) / 2;
+		int score = WL * (max - moves);
+		return score;
 	}
 }
