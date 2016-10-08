@@ -8,7 +8,7 @@ public class HalScore implements CalculateScore {
 
 	@Override
 	public double calculateScore(MLMethod method) {
-		Hal pilot = new Hal(size,(BasicNetwork)method);
+		Hal pilot = new Hal(3, (BasicNetwork) method);
 		return pilot.scorePilot();
 	}
 

@@ -84,6 +84,7 @@ public class TTTSim {
 
 		int max = (2 ^ board.length) / 2;
 		int score = WL * (max - moves);
+		w
 		return score;
 	}
 }
