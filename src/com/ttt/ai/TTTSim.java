@@ -1,5 +1,7 @@
 package com.ttt.ai;
 
+import java.util.Random;
+
 public class TTTSim {
 	int[][] board;
 	boolean playing = true;
@@ -34,6 +36,22 @@ public class TTTSim {
 	public void place(int type, int x, int y) {
 		board[x][y] = type;
 		moves++;
+	}
+
+	public void TestForWin() {
+		if (isWinner(-1) || isWinner(1)) {
+			playing = false;
+		}
+		boolean Full = true;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (board[i][j] == 0) {
+					Full = false;
+				}
+			}
+		}
+		if (Full)
+			playing = false;
 	}
 
 	public boolean isWinner(int player) {
@@ -84,7 +102,20 @@ public class TTTSim {
 
 		int max = (2 ^ board.length) / 2;
 		int score = WL * (max - moves);
-		w
 		return score;
+	}
+
+	public void randomMove(int player) {
+		boolean go = true;
+		Random r = new Random();
+		while (go) {
+			int x = r.nextInt(board.length);
+			int y = r.nextInt(board.length);
+			if (board[x][y] == 0) {
+				board[x][y] = player;
+				go = false;
+			}
+
+		}
 	}
 }

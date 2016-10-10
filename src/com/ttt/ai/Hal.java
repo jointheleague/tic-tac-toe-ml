@@ -10,7 +10,7 @@ public class Hal {
 
 	private BasicNetwork network;
 	int size;
-	HashMap<Integer, int[]> map;
+	HashMap<Integer, int[]> map = new HashMap<>();
 
 	public Hal(int size, BasicNetwork network) {
 		this.network = network;
@@ -19,9 +19,10 @@ public class Hal {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				int l[] = { i, j };
-				System.out.println();
 				map.put(key, l);
+				// System.out.println(map.get(key));
 				key++;
+
 			}
 		}
 	}
@@ -49,6 +50,8 @@ public class Hal {
 			}
 			System.out.println(maxIndex);
 			sim.place(-1, map.get(maxIndex)[0], map.get(maxIndex)[1]);
+			sim.randomMove(1);
+			sim.TestForWin();
 
 		}
 		return (sim.score(-1));

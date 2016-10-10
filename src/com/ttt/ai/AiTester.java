@@ -41,11 +41,11 @@ public class AiTester {
 				((MLResettable) result).reset();
 				return result;
 			}
-		}, new HalScore(), 10);
+		}, new HalScore(), 100);
 
 		int epoch = 1;
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 3; i++) {
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Score:" + train.getError());
 			epoch++;
