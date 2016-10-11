@@ -101,24 +101,8 @@ public class Board {
 		return false;
 	}
 
-	public void placeXAt(int x, int y) {
-		try {
-			setTile(x, y, Tile.X);
-		} catch (ArrayIndexOutOfBoundsException exception) {
-			System.err
-					.println("ERROR: Tried placing X outside of tile array.  -Ruoya");
-			System.exit(0);
-		}
-	}
-
-	public void placeOAt(int x, int y) {
-		try {
-			setTile(x, y, Tile.O);
-		} catch (ArrayIndexOutOfBoundsException exception) {
-			System.err
-					.println("ERROR: Tried placing O outside of tile array.  -Ruoya");
-			System.exit(0);
-		}
+	public void placeAt(int x, int y, Tile tile) {
+			setTile(x, y, tile);
 	}
 
 	public Tile[][] emptyBoard() {
