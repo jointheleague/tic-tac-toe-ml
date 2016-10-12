@@ -1,44 +1,102 @@
 package com.ttt.ai;
 
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
 
 	private ArrayList<Layer> layers;
 	private ArrayList<WeightGroup> weights;
 
+	
+	/**
+	 *{@code public boolean saveNN(String path)}
+	 * @param path - The path to where the NeuralNetwork will be saved.
+	 * @return Whether or not the save was successful.
+	 */
+	public boolean saveNN(String path) {
+		try {
+			if (!path.contains(".nn")) {
+				path += ".nn";
+			}
+			FileOutputStream fileOut = new FileOutputStream(path);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(this);
+			out.close();
+			fileOut.close();
+			return true;
+		} catch (IOException i) {
+			return false;
+		}
+	}
+
+	/**
+	 * {@code public static NeuralNetwork openNN(String path)}
+	 * @param path - The path to the saved NeuralNetwork.
+	 * @return The instance of the saved NeuralNetwork.
+	 */
+	public static NeuralNetwork openNN(String path) {
+		NeuralNetwork nn = null;
+		try {
+			FileInputStream fileIn = new FileInputStream(path);
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			nn = (NeuralNetwork) in.readObject();
+			in.close();
+			fileIn.close();
+			return nn;
+		} catch (IOException i) {
+			i.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException c) {
+			c.printStackTrace();
+			return null;
+		}
+	}
+
 	/**
 	 * {@code public ArrayList<Layer> getLayers()}
+	 * 
 	 * @return The ArrayList of layers.
 	 */
-	public ArrayList<Layer> getLayers(){
+	public ArrayList<Layer> getLayers() {
 		return layers;
 	}
-	
+
 	/**
 	 * {@code public ArrayList<WeightGroup> getWeightGroups()}
+	 * 
 	 * @return The ArrayList of the WeightGroups.
 	 */
-	public ArrayList<WeightGroup> getWeightGroups(){
+	public ArrayList<WeightGroup> getWeightGroups() {
 		return weights;
 	}
-	
+
 	/**
 	 * {@code public void setLayers(ArrayList<Layer> layers)}
-	 * @param layers - the new ArrayList of Layers.
+	 * 
+	 * @param layers
+	 *            - the new ArrayList of Layers.
 	 */
-	public void setLayers(ArrayList<Layer> layers){
+	public void setLayers(ArrayList<Layer> layers) {
 		this.layers = layers;
 	}
-	
+
 	/**
 	 * {@code public void setWeightGroups(ArrayList<WeightGroup> weights)}
-	 * @param weights - the new ArrayList of WeightGroups.
+	 * 
+	 * @param weights
+	 *            - the new ArrayList of WeightGroups.
 	 */
-	public void setWeightGroups(ArrayList<WeightGroup> weights){
+	public void setWeightGroups(ArrayList<WeightGroup> weights) {
 		this.weights = weights;
 	}
-	
+
 	public NeuralNetwork() {
 		layers = new ArrayList<Layer>();
 		weights = new ArrayList<WeightGroup>();
@@ -46,17 +104,21 @@ public class NeuralNetwork {
 
 	/**
 	 * {@code public void addLayer(Layer layer)}
-	 * @param layer - Layer to be added to the end of the neural network.
+	 * 
+	 * @param layer
+	 *            - Layer to be added to the end of the neural network.
 	 */
 	public void addLayer(Layer layer) {
 		layers.add(layer);
 	}
 
 	/**
-	 * {@code public void makeWeightGroups()}
-	 * <br><br>
+	 * {@code public void makeWeightGroups()} <br>
+	 * <br>
 	 * Makes WeightGroups based on the existing layers.
-	 * @throws Exception Cannot create weight groups for only 1 layer.
+	 * 
+	 * @throws Exception
+	 *             Cannot create weight groups for only 1 layer.
 	 */
 	public void makeWeightGroups() {
 		if (layers.size() < 2) {
@@ -74,8 +136,12 @@ public class NeuralNetwork {
 
 	/**
 	 * {@code public void setInputs(Layer l)}
-	 * @param l - the Layer containing the inputs for the neural network.
-	 * @throws ArrayIndexOutOfBoundsException Thrown when the number of inputs and first layer neurons do not match.
+	 * 
+	 * @param l
+	 *            - the Layer containing the inputs for the neural network.
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             Thrown when the number of inputs and first layer neurons do
+	 *             not match.
 	 */
 	public void setInputs(Layer l) {
 		Layer first = layers.get(0);
@@ -90,8 +156,8 @@ public class NeuralNetwork {
 	}
 
 	/**
-	 * {@code public void flush()}
-	 * <br><br>
+	 * {@code public void flush()} <br>
+	 * <br>
 	 * Runs the given inputs through the neural network.
 	 */
 	public void flush() {
@@ -123,6 +189,7 @@ public class NeuralNetwork {
 
 	/**
 	 * {@code public Layer getOutputs()}
+	 * 
 	 * @return The output layer.
 	 */
 	public Layer getOutputs() {
