@@ -1,4 +1,4 @@
-package com.ttt.ai;
+package com.ttt.ai.hal;
 
 import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.ml.MLMethod;

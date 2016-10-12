@@ -1,4 +1,4 @@
-package com.ttt.ai;
+package com.ttt.ai.hal;
 
 import java.util.Random;
 

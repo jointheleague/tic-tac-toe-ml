@@ -1,4 +1,4 @@
-package com.ttt.ai;
+package com.ttt.ai.hal;
 
 import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
