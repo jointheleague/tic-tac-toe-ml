@@ -3,10 +3,10 @@ package com.ttt.model;
 public class Board {
 
 	// TODO catch if width/height is not positive
-	public static final int BOARD_WIDTH = 5;
-	public static final int BOARD_HEIGHT = 5;
+	public static final int BOARD_WIDTH = 3;
+	public static final int BOARD_HEIGHT = 3;
 	public static final int WIN_COUNT = 3;
-	private static Tile currentTurn = Tile.O;
+	private static Tile currentTurn = Tile.X;
 	private Tile[][] tiles;
 
 	public Board() {
@@ -65,9 +65,6 @@ public class Board {
 	}
 
 	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY) {
-		if(getTile(i + dirX, j + dirY) == null){
-			return new TilePosition(Tile.EMPTY, -1, -1);
-		}
 		if (getTile(i + dirX, j + dirY) == tile) {
 			return new TilePosition(tile, i + dirX, j + dirY);
 		} else {
@@ -98,25 +95,17 @@ public class Board {
 		int consecutiveCount = 0;
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
-				if(getTile(i, j) == tile){
 				if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				} 
-				if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
+				} else if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
-				if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
+				} else if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
-				if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
+				} else if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				} 
+				} else if (consecutiveCount >= WIN_COUNT) {
+					return true;
 				}
-				
 			}
 		}
 		return false;
@@ -126,14 +115,14 @@ public class Board {
 		setTile(x, y, tile);
 	}
 
-	public static Tile[][] emptyBoard() {
-		Tile[][] m_tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
+	public Tile[][] emptyBoard() {
+		Tile[][] tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
 		for (int x = 0; x < BOARD_WIDTH; x++) {
 			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				m_tiles[x][y] = Tile.EMPTY;
+				setTile(x, y, Tile.EMPTY);
 			}
 		}
-		return m_tiles;
+		return tiles;
 	}
 
 }
