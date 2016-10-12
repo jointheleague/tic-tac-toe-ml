@@ -14,11 +14,10 @@ public class InputController {
 
 			@Override
 			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				/**
-				 * board.tiles[source.getX() /
-				 * RenderService.tileWidth][source.getY() /
-				 * RenderService.tileHeight] = Tile.EMPTY;
-				 **/
+				// TicTacToe.getBoard().setTile(source.getX() /
+				// RenderService.tileWidth, source.getY()
+				// / RenderService.tileHeight],
+				// TicTacToe.getBoard().getCurrentTurn());
 			}
 		});
 	}

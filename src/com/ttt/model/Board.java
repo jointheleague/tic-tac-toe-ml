@@ -6,7 +6,7 @@ public class Board {
 	public static final int BOARD_WIDTH = 3;
 	public static final int BOARD_HEIGHT = 3;
 	public static final int WIN_COUNT = 3;
-	public Tile[][] tiles;
+	private Tile[][] tiles;
 
 	public Board() {
 		tiles = emptyBoard();
@@ -17,13 +17,11 @@ public class Board {
 			if (tiles.length == BOARD_HEIGHT && tiles[0].length == BOARD_WIDTH) {
 				this.tiles = tiles;
 			} else {
-				System.err
-						.println("ERROR: Parameter tile array has size different from width & height.  -Ruoya");
+				System.err.println("ERROR: Parameter tile array has size different from width & height.  -Ruoya");
 				System.exit(0);
 			}
 		} else {
-			System.err
-					.println("ERROR: Parameter tile array has size zero.  -Ruoya");
+			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
 			System.exit(0);
 		}
 	}
@@ -45,8 +43,15 @@ public class Board {
 		}
 	}
 
-	public TilePosition checkSurroundingTiles(Tile tile, int i, int j,
-			int dirX, int dirY) {
+	public Tile[][] getTiles() {
+		return tiles;
+	}
+
+	public Tile[] getTileColumn(int x) {
+		return tiles[x];
+	}
+
+	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY) {
 		if (getTile(i + dirX, j + dirY) == tile) {
 			return new TilePosition(tile, i + dirX, j + dirY);
 		} else {
@@ -62,13 +67,12 @@ public class Board {
 		int pathLength = 1;
 		TilePosition toCheck = tile;
 		while (true) {
-				toCheck = checkSurroundingTiles(toCheck.getTile(),
-						toCheck.getX(), toCheck.getY(), dirX, dirY);
-				if (toCheck.getTile() == tile.getTile()) {
-					pathLength++;
-				} else {
-					break;
-				}
+			toCheck = checkSurroundingTiles(toCheck.getTile(), toCheck.getX(), toCheck.getY(), dirX, dirY);
+			if (toCheck.getTile() == tile.getTile()) {
+				pathLength++;
+			} else {
+				break;
+			}
 		}
 		System.out.println("Path length : " + pathLength);
 		return pathLength;
@@ -79,20 +83,13 @@ public class Board {
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
 				if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i,
-							j), 1, 0);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 0, 1)
-						.getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i,
-							j), 0, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 1, 1)
-						.getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i,
-							j), 1, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, -1, 1)
-						.getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i,
-							j), -1, 1);
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
+				} else if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
+				} else if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
+				} else if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
+					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
 				} else if (consecutiveCount >= WIN_COUNT) {
 					return true;
 				}
@@ -102,7 +99,7 @@ public class Board {
 	}
 
 	public void placeAt(int x, int y, Tile tile) {
-			setTile(x, y, tile);
+		setTile(x, y, tile);
 	}
 
 	public Tile[][] emptyBoard() {
