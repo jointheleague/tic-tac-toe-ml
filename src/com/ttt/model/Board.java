@@ -6,6 +6,7 @@ public class Board {
 	public static final int BOARD_WIDTH = 3;
 	public static final int BOARD_HEIGHT = 3;
 	public static final int WIN_COUNT = 3;
+	private static Tile currentTurn = Tile.X;
 	private Tile[][] tiles;
 
 	public Board() {
@@ -23,6 +24,18 @@ public class Board {
 		} else {
 			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
 			System.exit(0);
+		}
+	}
+	
+	public Tile getTurn(){
+		return currentTurn;
+	}
+	
+	public void switchTurn(){
+		if(currentTurn == Tile.X){
+			currentTurn = Tile.O;
+		}else{
+			currentTurn = Tile.X;
 		}
 	}
 

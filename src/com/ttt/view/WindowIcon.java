@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class WindowIcon {
+
 	public static void setupIcons(JFrame frame) {
 		String os = System.getProperty("os.name").toLowerCase();
 
@@ -25,6 +26,7 @@ public class WindowIcon {
 		} else {
 			System.err.println("We all like Linux, but not for playing Tic-Tac-Toe.");
 		}
+
 	}
 
 }
