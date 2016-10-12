@@ -2,16 +2,15 @@ package com.ttt.view;
 
 import java.awt.Color;
 
-import javax.awt.ClickListener;
 import javax.awt.Ellipse;
 import javax.awt.Fonts;
 import javax.awt.GUIApplication;
 import javax.awt.GraphicsStyle;
-import javax.awt.KeyListener;
 import javax.awt.Rectangle;
 import javax.awt.Shape;
 import javax.awt.Style;
 
+import com.ttt.input.InputController;
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
 
@@ -35,37 +34,7 @@ public class RenderService extends GUIApplication {
 				.setStyle(Style.BUTTON_SELECTED, Color.gray.brighter().brighter()).setStyle(Style.STROKE, Color.black)
 				.setStyle(Style.FONT, Fonts.arial(12)));
 
-		setClickListener(new ClickListener() {
-			@Override
-			public void onClick(int mouseX, int mouseY) {
-			}
-
-			@Override
-			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				board.tiles[source.getX() / tileWidth][source.getY()
-						/ tileHeight] = /* board.getCurrentTurn() */Tile.EMPTY;
-			}
-		});
-		setKeyListener(new KeyListener() {
-			@Override
-			public void onKeyPress(int keyCode, int mouseX, int mouseY) {
-				if (keyCode >= 97 && keyCode <= 105) {
-					int keyValue = keyCode - 96;
-					int x = keyValue % 3;
-					if (x == 0) {
-						x = 3;
-					}
-					x--;
-					int y = Math.abs((int) Math.ceil((double) (keyValue - x) / 4) - 2);
-					if (keyValue - x == 1) {
-						y = 2;
-					}
-
-					board.tiles[x][y] = /* board.getCurrentTurn() */Tile.O;
-				}
-			}
-		});
-
+		InputController.registerClickInput(this);
 	}
 
 	@Override
