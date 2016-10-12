@@ -6,13 +6,14 @@ import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
 
 public class TicTacToe {
-	public static Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY },
-			{ Tile.EMPTY, Tile.EMPTY, Tile.EMPTY }, { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY } };
+	//public static Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY },
+		//	{ Tile.EMPTY, Tile.EMPTY, Tile.EMPTY }, { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY } };
 
 	private static Board board;
 
 	public static void main(String[] args) {
-		board = new Board(tiles);
+		board = new Board(board.emptyBoard());
+		
 
 		// Testing the board solved state
 		System.out.println("Has won : " + board.checkWin(Tile.O));
