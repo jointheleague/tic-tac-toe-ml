@@ -11,11 +11,11 @@ public class TTTSim {
 		moves = 0;
 		board = new int[size][size];
 		size = size - 1;
-		System.out.println("Right size" + size);
+		// System.out.println("Right size" + size);
 		for (int i = 0; i <= size; i++) {
 			for (int j = 0; j <= size; j++) {
 				try {
-					System.out.println(i + ", " + j);
+					// System.out.println(i + ", " + j);
 					board[i][j] = 0;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,9 +33,28 @@ public class TTTSim {
 		board = b;
 	}
 
-	public void place(int type, int x, int y) {
+	public void printBoard() {
+		System.out.println("");
+		for (int i = 0; i < board.length; i++) {
+			System.out.println("");
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == -1)
+					System.out.print(2);
+				else
+					System.out.print(board[i][j]);
+
+			}
+		}
+		System.out.println("");
+	}
+
+	public boolean place(int type, int x, int y) {
+
+		if (board[x][y] != 0)
+			return false;
 		board[x][y] = type;
 		moves++;
+		return true;
 	}
 
 	public void TestForWin() {

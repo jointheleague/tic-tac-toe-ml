@@ -48,9 +48,11 @@ public class Hal {
 					maxIndex = i;
 				}
 			}
-			System.out.println(maxIndex);
+			// System.out.println(maxIndex);
 			sim.place(-1, map.get(maxIndex)[0], map.get(maxIndex)[1]);
+			sim.printBoard();
 			sim.randomMove(1);
+			sim.printBoard();
 			sim.TestForWin();
 
 		}

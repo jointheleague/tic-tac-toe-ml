@@ -14,7 +14,7 @@ public class HalScore implements CalculateScore {
 
 	@Override
 	public boolean requireSingleThreaded() {
-		return false;
+		return true;
 	}
 
 	@Override

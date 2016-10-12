@@ -17,10 +17,10 @@ public class AiTester {
 
 	public static BasicNetwork createNetwork() {
 		FeedForwardPattern pattern = new FeedForwardPattern();
-		pattern.setInputNeurons(size*size);
+		pattern.setInputNeurons(size * size);
 		pattern.addHiddenLayer(size * 4);
 		pattern.addHiddenLayer(size * 4);
-		pattern.setOutputNeurons(size*size);
+		pattern.setOutputNeurons(size * size);
 		pattern.setActivationFunction(new ActivationTANH());
 		BasicNetwork network = (BasicNetwork) pattern.generate();
 		network.reset();
@@ -28,10 +28,10 @@ public class AiTester {
 	}
 
 	public static void main(String[] args) {
-		TTTSim sim = new TTTSim(3);
-		sim.setBoard(tb);
-		System.out.println(sim.isWinner(1));
-		
+		// TTTSim sim = new TTTSim(3);
+		// sim.setBoard(tb);
+		// System.out.println(sim.isWinner(1));
+
 		MLTrain train;
 
 		train = new MLMethodGeneticAlgorithm(new MethodFactory() {
@@ -41,11 +41,11 @@ public class AiTester {
 				((MLResettable) result).reset();
 				return result;
 			}
-		}, new HalScore(), 100);
+		}, new HalScore(), 10);
 
 		int epoch = 1;
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 1000; i++) {
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Score:" + train.getError());
 			epoch++;
