@@ -95,15 +95,25 @@ public class Board {
 		int consecutiveCount = 0;
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
+				if(getTile(i, j) == tile){
 				if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
-				} else if (consecutiveCount >= WIN_COUNT) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				}
+				if (consecutiveCount >= WIN_COUNT) {
 					return true;
 				}
 			}
