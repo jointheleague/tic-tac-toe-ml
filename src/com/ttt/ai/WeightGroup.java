@@ -5,6 +5,10 @@ import java.util.Random;
 
 public class WeightGroup implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6200896344311127722L;
 	private double[] weights;
 
 	/**

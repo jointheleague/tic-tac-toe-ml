@@ -15,6 +15,10 @@ import javax.imageio.ImageIO;
 
 public class NetworkPicture implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3949376022275027961L;
 	private ArrayList<Layer> layers;
 	private ArrayList<WeightGroup> weights;
 	private Color background = Color.WHITE;

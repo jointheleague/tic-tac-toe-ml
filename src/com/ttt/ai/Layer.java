@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class Layer implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4419150392509276173L;
 	private Neuron[] neurons;
 
 	/**

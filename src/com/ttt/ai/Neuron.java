@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class Neuron implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -22730653442735727L;
 	private double input;
 
 	/**
