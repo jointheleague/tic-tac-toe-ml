@@ -11,6 +11,10 @@ import java.util.ArrayList;
 
 public class NeuralNetwork implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1439002361729028221L;
 	private ArrayList<Layer> layers;
 	private ArrayList<WeightGroup> weights;
 
@@ -20,7 +24,7 @@ public class NeuralNetwork implements Serializable {
 	 * @param path - The path to where the NeuralNetwork will be saved.
 	 * @return Whether or not the save was successful.
 	 */
-	public boolean saveNN(String path) {
+	public boolean saveNeuralNetwork(String path) {
 		try {
 			if (!path.contains(".nn")) {
 				path += ".nn";
@@ -41,7 +45,7 @@ public class NeuralNetwork implements Serializable {
 	 * @param path - The path to the saved NeuralNetwork.
 	 * @return The instance of the saved NeuralNetwork.
 	 */
-	public static NeuralNetwork openNN(String path) {
+	public static NeuralNetwork openNeuralNetwork(String path) {
 		NeuralNetwork nn = null;
 		try {
 			FileInputStream fileIn = new FileInputStream(path);
