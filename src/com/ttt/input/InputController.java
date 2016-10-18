@@ -1,8 +1,10 @@
 package com.ttt.input;
 
 import javax.awt.ClickListener;
+
 import javax.awt.Shape;
 
+import com.ttt.model.TicTacToe;
 import com.ttt.view.RenderService;
 
 public class InputController {
@@ -14,10 +16,12 @@ public class InputController {
 
 			@Override
 			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				// TicTacToe.getBoard().setTile(source.getX() /
-				// RenderService.tileWidth, source.getY()
-				// / RenderService.tileHeight],
-				// TicTacToe.getBoard().getCurrentTurn());
+				TicTacToe.getBoard().setTile(source.getX() / RenderService.tileWidth,
+						source.getY() / RenderService.tileHeight, TicTacToe.getBoard().getTurn());
+				if (TicTacToe.getBoard().checkWin(TicTacToe.getBoard().getTurn())) {
+					System.out.println(TicTacToe.getBoard().getTurn().name() + " won!");
+				}
+				TicTacToe.getBoard().switchTurn();
 			}
 		});
 	}

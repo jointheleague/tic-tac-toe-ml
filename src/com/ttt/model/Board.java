@@ -6,6 +6,7 @@ public class Board {
 	public static final int BOARD_WIDTH = 3;
 	public static final int BOARD_HEIGHT = 3;
 	public static final int WIN_COUNT = 3;
+	private static Tile currentTurn = Tile.X;
 	private Tile[][] tiles;
 
 	public Board() {
@@ -23,6 +24,18 @@ public class Board {
 		} else {
 			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
 			System.exit(0);
+		}
+	}
+	
+	public Tile getTurn(){
+		return currentTurn;
+	}
+	
+	public void switchTurn(){
+		if(currentTurn == Tile.X){
+			currentTurn = Tile.O;
+		}else{
+			currentTurn = Tile.X;
 		}
 	}
 
@@ -82,15 +95,25 @@ public class Board {
 		int consecutiveCount = 0;
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
+				if(getTile(i, j) == tile){
 				if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
-				} else if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
 					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
-				} else if (consecutiveCount >= WIN_COUNT) {
+					if (consecutiveCount >= WIN_COUNT) return true;
+				}
+				}
+				if (consecutiveCount >= WIN_COUNT) {
 					return true;
 				}
 			}
@@ -100,6 +123,10 @@ public class Board {
 
 	public void placeAt(int x, int y, Tile tile) {
 		setTile(x, y, tile);
+	}
+	
+	public void clearBoard(){
+		this.tiles = emptyBoard();
 	}
 
 	public Tile[][] emptyBoard() {
