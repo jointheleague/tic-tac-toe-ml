@@ -1,6 +1,7 @@
 package com.ttt.input;
 
 import javax.awt.ClickListener;
+
 import javax.awt.Shape;
 
 import com.ttt.model.TicTacToe;
