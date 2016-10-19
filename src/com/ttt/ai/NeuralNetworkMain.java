@@ -46,6 +46,7 @@ public class NeuralNetworkMain {
 				fail++;
 			}
 		}
+		System.out.println(net);
 		return fail;
 	}
 }

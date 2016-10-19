@@ -28,12 +28,13 @@ public class Population {
 
 		for (int i = 0; i < n; i++) {
 			NeuralNetwork nn = new NeuralNetwork();
-			
+
 			Layer[] layers = base.getAllLayers();
 			nn.setInputLayer(layers[0]);
-			for (int a = 1; a < layers.length-1; a++) {
+			for (int a = 1; a < layers.length - 1; a++) {
 				nn.addLogicLayer(layers[a]);
 			}
+			nn.setOutputLayer(layers[layers.length-1]);
 			nn.connectSynapsesBetweenLayers();
 			HashMap<Double, NeuralNetwork> map = new HashMap<Double, NeuralNetwork>();
 			map.put(0.0, nn);
@@ -43,15 +44,16 @@ public class Population {
 
 	public double draw() {
 		selection();
-
+		System.out.println("post selection");
 		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>();
 
 		for (int i = 0; i < pool.size(); i++) {
+			//System.out.println(i);
 			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
 			hash.put(0.0, mutate(crossover(acceptReject(), acceptReject())));
 			newPool.add(hash);
 		}
-
+System.out.println("Post Crossover");
 		double highestFit = Double.MIN_VALUE;
 		for (int i = 0; i < pool.size(); i++) {
 			if (pool.get(i).keySet().toArray(new Double[1])[0] > highestFit) {
@@ -70,10 +72,11 @@ public class Population {
 
 	public void selection() {
 		for (int i = 0; i < pool.size(); i++) {
+			System.out.println(i);
 			board = new Board(TicTacToe.tiles);
 			HashMap<Double, NeuralNetwork> hash = pool.get(i);
 			NeuralNetwork nn = hash.get(0.0);
-
+			
 			int turns = 0;
 			int xturns = 0;
 			int oturns = 0;
@@ -94,12 +97,9 @@ public class Population {
 						index++;
 					}
 				}
-				Layer input = new Layer();
 				for (int x = 0; x < tiles.length; x++) {
-					input.setNeuron(x, new Neuron(tiles[x]));
+					//nn.getInputLayer().getNeuron(x).setValue(tiles[x]);
 				}
-
-				nn.setInputLayer(input);
 
 				nn.compute();
 
@@ -190,47 +190,82 @@ public class Population {
 	}
 
 	public NeuralNetwork crossover(NeuralNetwork p1, NeuralNetwork p2) {
-		ArrayList<WeightGroup> weights = new ArrayList<WeightGroup>();
-		for (int i = 0; i < p1.getWeightGroups().size(); i++) {
-			double[] w1 = p1.getWeightGroups().get(i).getWeights();
-			double[] w2 = p2.getWeightGroups().get(i).getWeights();
+		NeuralNetwork child = new NeuralNetwork();
 
-			int cindex = random.nextInt(w1.length - 1);
-			double[] w3 = new double[w1.length];
+		Layer[] layers = p1.getAllLayers();
+		child.setInputLayer(layers[0]);
+		for (int a = 1; a < layers.length - 1; a++) {
+			child.addLogicLayer(layers[a]);
+		}
+		Random rand = new Random();
 
-			for (int a = 0; a < w1.length; a++) {
-				if (a < cindex) {
-					w3[a] = w1[a];
-				} else {
-					w3[a] = w2[a];
+		for (int i = 0; i < p1.getAllLayers().length - 1; i++) {
+			Layer l = p1.getAllLayers()[i];
+			System.out.println("for 1");
+			for (int n = 0; n < l.getNeurons().length; n++) {
+				System.out.println("for 2");
+				Neuron neuron = l.getNeuron(n);
+				System.out.println(neuron.getOutgoingSynapses().length);
+				int endings = neuron.getOutgoingSynapses().length;
+				for (int s = 0; s < endings; s++) {
+					//System.out.println("for 3: " + s);
+					if(s > endings){
+						System.out.println("Somethings happening.");
+					}
+					Synapse s1 = neuron.getOutgoingSynapses()[s];
+					Synapse s2 = p2.getAllLayers()[i].getNeuron(n).getOutgoingSynapses()[s];
+
+					if (rand.nextBoolean() == true) {
+						Synapse syn = new Synapse(child.getAllLayers()[i].getNeuron(n), child.getAllLayers()[i + 1]
+								.getNeuron(child.getAllLayers()[i + 1].indexOf(s1.getTargetNeuron())), s1.getWeight());
+						child.getAllLayers()[i].getNeuron(n).addOutgoingSynapse(syn);
+						child.getAllLayers()[i + 1]
+								.getNeuron(child.getAllLayers()[i + 1].indexOf(syn.getTargetNeuron()))
+								.addIncomingSynapse(syn);
+					} else {
+						Synapse syn = new Synapse(child.getAllLayers()[i].getNeuron(n), child.getAllLayers()[i + 1]
+								.getNeuron(child.getAllLayers()[i + 1].indexOf(s2.getTargetNeuron())), s2.getWeight());
+						child.getAllLayers()[i].getNeuron(n).addOutgoingSynapse(syn);
+						child.getAllLayers()[i + 1]
+								.getNeuron(child.getAllLayers()[i + 1].indexOf(syn.getTargetNeuron()))
+								.addIncomingSynapse(syn);
+					}
 				}
 			}
-			weights.add(new WeightGroup(w3));
 		}
-		NeuralNetwork nn = new NeuralNetwork();
-		for (Layer l : base.getLayers()) {
-			nn.addLayer(l);
-		}
-		nn.setWeightGroups(weights);
 
-		return nn;
+		return child;
 	}
 
 	public NeuralNetwork mutate(NeuralNetwork nn) {
-		ArrayList<WeightGroup> weights = new ArrayList<WeightGroup>();
-		for (int i = 0; i < nn.getWeightGroups().size(); i++) {
-			double[] w1 = nn.getWeightGroups().get(i).getWeights();
+		NeuralNetwork mutation = new NeuralNetwork();
 
-			for (int a = 0; a < w1.length; a++) {
-				if (random.nextDouble() < mutateRate) {
-					w1[a] = random.nextDouble();
+		Layer[] layers = nn.getAllLayers();
+		mutation.setInputLayer(layers[0]);
+		for (int a = 1; a < layers.length - 1; a++) {
+			mutation.addLogicLayer(layers[a]);
+		}
+		Random rand = new Random();
+
+		for (int i = 0; i < nn.getAllLayers().length - 1; i++) {
+			Layer l = nn.getAllLayers()[i];
+			for (int n = 0; n < l.getNeurons().length; n++) {
+				Neuron neuron = l.getNeuron(n);
+				for (int s = 0; s < neuron.getOutgoingSynapses().length; s++) {
+					Synapse syn = neuron.getOutgoingSynapses()[s];
+
+					if (rand.nextDouble() < mutateRate) {
+						syn = new Synapse(neuron, syn.getTargetNeuron(), -0.5 + (0.5 - -0.5) * rand.nextDouble());
+						mutation.getAllLayers()[i].getNeuron(n).addOutgoingSynapse(syn);
+						mutation.getAllLayers()[i + 1]
+								.getNeuron(mutation.getAllLayers()[i + 1].indexOf(syn.getTargetNeuron()))
+								.addIncomingSynapse(syn);
+					}
 				}
 			}
-			weights.add(new WeightGroup(w1));
 		}
-		nn.setWeightGroups(weights);
 
-		return nn;
+		return mutation;
 	}
 
 	public NeuralNetwork acceptReject() {
