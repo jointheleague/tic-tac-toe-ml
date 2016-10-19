@@ -52,9 +52,9 @@ public class TTTSim {
 	}
 
 	public boolean place(int type, int x, int y) {
-
 		if (board[x][y] != 0)
 			return false;
+		System.out.println("Placing");
 		board[x][y] = type;
 		moves++;
 		return true;
@@ -134,7 +134,7 @@ public class TTTSim {
 		else
 			WL = 0;
 
-		int max = (2 ^ board.length) / 2;
+		int max = (int) ((Math.pow(2, board.length)) / 2) + 1;
 		double score = WL * (max - moves);
 		return score;
 	}

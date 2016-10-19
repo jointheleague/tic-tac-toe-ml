@@ -49,6 +49,7 @@ public class Hal {
 				}
 			}
 			while (!sim.place(-1, map.get(maxIndex)[0], map.get(maxIndex)[1])) {
+
 				value[maxIndex] = 0;
 				maxIndex = 0;
 				for (int i = 0; i < value.length; i++) {
@@ -60,6 +61,10 @@ public class Hal {
 			}
 			sim.printBoard();
 			sim.randomMove(1);
+			if (sim.isTie()) {
+				sim.setPlaying(false);
+				break;
+			}
 			sim.printBoard();
 			sim.TestForWin();
 			if (sim.isTie()) {
