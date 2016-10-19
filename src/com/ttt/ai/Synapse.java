@@ -1,4 +1,4 @@
-package org.ai;
+package com.ttt.ai;
 
 public class Synapse {
 	private Neuron firingNeuron;

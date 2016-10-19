@@ -1,4 +1,4 @@
-package org.ai;
+package com.ttt.ai;
 public class NeuralNetworkMain {
 	private static int runs = 1000;
 
