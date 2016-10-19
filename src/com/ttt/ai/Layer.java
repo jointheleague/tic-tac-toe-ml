@@ -27,8 +27,12 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 		neurons.remove(n);
 	}
 
-	public void getNeurons(Neuron[] n) {
+	public void setNeurons(Neuron[] n) {
 		this.neurons = new ArrayList<>(Arrays.asList(n));
+	}
+	
+	public Neuron[] getNeurons(){
+		return neurons.toArray(new Neuron[neurons.size()]);
 	}
 
 	public int getDepth() {
