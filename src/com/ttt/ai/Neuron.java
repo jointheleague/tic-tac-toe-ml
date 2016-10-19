@@ -1,4 +1,4 @@
-package org.ai;
+package com.ttt.ai;
 import java.util.ArrayList;
 
 public class Neuron {

@@ -1,4 +1,4 @@
-package org.ai;
+package com.ttt.ai;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
