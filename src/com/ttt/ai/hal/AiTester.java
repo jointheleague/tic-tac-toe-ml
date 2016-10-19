@@ -45,7 +45,7 @@ public class AiTester {
 
 		int epoch = 1;
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 100; i++) {
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Score:" + train.getError());
 			epoch++;

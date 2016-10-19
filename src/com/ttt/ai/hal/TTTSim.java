@@ -11,11 +11,9 @@ public class TTTSim {
 		moves = 0;
 		board = new int[size][size];
 		size = size - 1;
-		// System.out.println("Right size" + size);
 		for (int i = 0; i <= size; i++) {
 			for (int j = 0; j <= size; j++) {
 				try {
-					// System.out.println(i + ", " + j);
 					board[i][j] = 0;
 				} catch (Exception e) {
 					e.printStackTrace();
