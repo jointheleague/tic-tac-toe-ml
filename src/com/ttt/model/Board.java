@@ -124,6 +124,10 @@ public class Board {
 	public void placeAt(int x, int y, Tile tile) {
 		setTile(x, y, tile);
 	}
+	
+	public void clearBoard(){
+		this.tiles = emptyBoard();
+	}
 
 	public Tile[][] emptyBoard() {
 		Tile[][] tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
