@@ -28,10 +28,13 @@ public class Population {
 
 		for (int i = 0; i < n; i++) {
 			NeuralNetwork nn = new NeuralNetwork();
-			for (Layer l : base.getLayers()) {
-				nn.addLayer(l);
+			
+			Layer[] layers = base.getAllLayers();
+			nn.setInputLayer(layers[0]);
+			for (int a = 1; a < layers.length-1; a++) {
+				nn.addLogicLayer(layers[a]);
 			}
-			nn.makeWeightGroups();
+			nn.connectSynapsesBetweenLayers();
 			HashMap<Double, NeuralNetwork> map = new HashMap<Double, NeuralNetwork>();
 			map.put(0.0, nn);
 			pool.add(map);
@@ -91,16 +94,16 @@ public class Population {
 						index++;
 					}
 				}
-				Layer input = new Layer(tiles.length);
+				Layer input = new Layer();
 				for (int x = 0; x < tiles.length; x++) {
 					input.setNeuron(x, new Neuron(tiles[x]));
 				}
 
-				nn.setInputs(input);
+				nn.setInputLayer(input);
 
-				nn.flush();
+				nn.compute();
 
-				Layer output = nn.getOutputs();
+				Layer output = nn.getOutputLayer();
 				int[] indexes = bubbleSort(output);
 
 				for (int place : indexes) {
