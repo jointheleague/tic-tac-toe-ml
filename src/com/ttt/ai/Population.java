@@ -163,7 +163,7 @@ public class Population {
 		for (int i = 0; i < n; i++) {
 			for (int j = 1; j < (n - i); j++) {
 
-				if (out[j - 1].getInput() > out[j].getInput()) {
+				if (out[j - 1].getValue() > out[j].getValue()) {
 					temp = j - 1;
 					nTemp = out[j - 1];
 					out[j - 1] = out[j];
@@ -181,8 +181,8 @@ public class Population {
 		int highestIndex = 0;
 		double highest = Double.MIN_VALUE;
 		for (int x = 0; x < output.getNeurons().length; x++) {
-			if (output.getNeuron(x).getInput() > highest) {
-				highest = output.getNeuron(x).getInput();
+			if (output.getNeuron(x).getValue() > highest) {
+				highest = output.getNeuron(x).getValue();
 				highestIndex = x;
 			}
 		}
