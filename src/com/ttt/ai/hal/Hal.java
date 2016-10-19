@@ -27,7 +27,7 @@ public class Hal {
 		}
 	}
 
-	public int scorePilot() {
+	public double scorePilot() {
 		TTTSim sim = new TTTSim(size);
 		while (sim.playing()) {
 			MLData input = new BasicMLData(size * size);
@@ -54,8 +54,12 @@ public class Hal {
 			sim.randomMove(1);
 			sim.printBoard();
 			sim.TestForWin();
+			if (sim.isTie()) {
+				sim.setPlaying(false);
+			}
 
 		}
+		System.out.println("Exit While");
 		return (sim.score(-1));
 	}
 }

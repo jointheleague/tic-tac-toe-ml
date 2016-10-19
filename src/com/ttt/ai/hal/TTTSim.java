@@ -33,8 +33,13 @@ public class TTTSim {
 		board = b;
 	}
 
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
+	}
+
 	public void printBoard() {
 		System.out.println("");
+		System.out.println("Moves:" + moves);
 		for (int i = 0; i < board.length; i++) {
 			System.out.println("");
 			for (int j = 0; j < board[i].length; j++) {
@@ -71,6 +76,16 @@ public class TTTSim {
 		}
 		if (Full)
 			playing = false;
+	}
+
+	public boolean isTie() {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 0)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean isWinner(int player) {
@@ -112,15 +127,17 @@ public class TTTSim {
 		return playing;
 	}
 
-	public int score(int player) {
-		int WL;
+	public double score(int player) {
+		double WL;
 		if (isWinner(player))
 			WL = 1;
+		else if (isTie())
+			WL = 0.2;
 		else
 			WL = 0;
 
 		int max = (2 ^ board.length) / 2;
-		int score = WL * (max - moves);
+		double score = WL * (max - moves);
 		return score;
 	}
 
@@ -136,5 +153,6 @@ public class TTTSim {
 			}
 
 		}
+		moves++;
 	}
 }
