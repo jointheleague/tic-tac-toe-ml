@@ -1,68 +1,100 @@
 package com.ttt.ai;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
 
-import java.io.Serializable;
+public class Layer implements Comparable<Layer>, Iterable<Neuron> {
+	private ArrayList<Neuron> neurons = new ArrayList<>();
+	private int depth;
 
-public class Layer implements Serializable {
+	public Layer() {
+	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4419150392509276173L;
-	private Neuron[] neurons;
-
-	/**
-	 * {@code public Layer(int neurons)}
-	 * 
-	 * @param neurons
-	 *            - The number of neurons in this layer.
-	 */
-	public Layer(int neurons) {
-		this.neurons = new Neuron[neurons];
-
-		for (int i = 0; i < this.neurons.length; i++) {
-			this.neurons[i] = new Neuron();
+	public Layer(Neuron[] ns) {
+		for (Neuron n : ns) {
+			addNeuron(n);
 		}
 	}
 
-	/**
-	 * {@code public int size()}
-	 * 
-	 * @return The number of Neurons in the layer.
-	 */
+	public void addNeuron(Neuron n) {
+		n.setLayer(this);
+		neurons.add(n);
+		n.setIndexInLayer(neurons.size() - 1);
+	}
+
+	public void removeNeuron(Neuron n) {
+		neurons.remove(n);
+	}
+
+	public void getNeurons(Neuron[] n) {
+		this.neurons = new ArrayList<>(Arrays.asList(n));
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Layer) {
+			Layer l = (Layer) o;
+			return l.depth == this.depth && l.neurons.equals(this.neurons);
+		}
+		return false;
+	}
+
+	@Override
+	public int compareTo(Layer o) {
+		return depth - o.depth;
+	}
+
 	public int size() {
-		return neurons.length;
+		return neurons.size();
 	}
 
-	/**
-	 * {@code public Neuron[] getNeurons()}
-	 * 
-	 * @return An array of Neurons in the layer.
-	 */
-	public Neuron[] getNeurons() {
-		return neurons;
-	}
-
-	/**
-	 * {@code public Neuron getNeuron(int index)}
-	 * 
-	 * @param index
-	 *            - index of the Neuron to return
-	 * @return The Neuron at a given index.
-	 */
 	public Neuron getNeuron(int index) {
-		return neurons[index];
+		return neurons.get(index);
 	}
 
-	/**
-	 * {@code public void setNeuron(int index, Neuron n)}
-	 * 
-	 * @param index
-	 *            - index of the Neuron to replace.
-	 * @param n
-	 *            - the Neuron to replace the existing Neuron.
-	 */
-	public void setNeuron(int index, Neuron n) {
-		neurons[index] = n;
+	public void setNeuron(int index, Neuron neuron) {
+		neurons.set(index, neuron);
 	}
 
+	public void connectSynapses(Layer layer) {
+		Random random = new Random();
+
+		for (Neuron neuron : this) {
+			for (Neuron other : layer) {
+				neuron.addOutgoingSynapse(new Synapse(neuron, other, random.nextFloat() - 0.5f));
+			}
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 + neurons.hashCode();
+	}
+
+	@Override
+	public Iterator<Neuron> iterator() {
+		return neurons.iterator();
+	}
+
+	@Override
+	public String toString() {
+		String str = "[";
+		for (Neuron n : this) {
+			str += n.toString() + ", ";
+		}
+		return str.substring(0, str.length() - 2) + "]";
+	}
+
+	public int indexOf(Neuron n) {
+		return neurons.indexOf(n);
+	}
 }
