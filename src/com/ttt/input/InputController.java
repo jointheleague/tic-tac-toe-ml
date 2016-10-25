@@ -8,6 +8,11 @@ import com.ttt.model.TicTacToe;
 import com.ttt.view.RenderService;
 
 public class InputController {
+	
+	public static volatile boolean clicked = false;
+	public static volatile int tileX;
+	public static volatile int tileY;
+	
 	public static void registerClickInput(RenderService renderService) {
 		renderService.setClickListener(new ClickListener() {
 			@Override
@@ -16,12 +21,11 @@ public class InputController {
 
 			@Override
 			public void onButtonClick(Shape source, int mouseX, int mouseY) {
-				TicTacToe.getBoard().setTile(source.getX() / RenderService.tileWidth,
-						source.getY() / RenderService.tileHeight, TicTacToe.getBoard().getTurn());
-				if (TicTacToe.getBoard().checkWin(TicTacToe.getBoard().getTurn())) {
-					System.out.println(TicTacToe.getBoard().getTurn().name() + " won!");
-				}
-				TicTacToe.getBoard().switchTurn();
+				
+				clicked = true;
+				tileX = source.getX() / RenderService.tileWidth;
+				tileY = source.getY() / RenderService.tileHeight;
+				
 			}
 		});
 	}

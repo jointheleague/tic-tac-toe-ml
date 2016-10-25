@@ -32,11 +32,13 @@ public class Board {
 	}
 	
 	public void switchTurn(){
+		//TODO: Remove method
 		if(currentTurn == Tile.X){
 			currentTurn = Tile.O;
 		}else{
 			currentTurn = Tile.X;
 		}
+		System.err.println("Board.switchTurn() is deprecated, use GameControllers to manage games from now on!");
 	}
 
 	public Tile getTile(int x, int y) {
