@@ -31,6 +31,7 @@ public class Board {
 		return currentTurn;
 	}
 	
+	@Deprecated
 	public void switchTurn(){
 		//TODO: Remove method
 		if(currentTurn == Tile.X){
