@@ -2,6 +2,7 @@ package com.ttt.model;
 
 import javax.swing.JFrame;
 
+import com.ttt.control.GameController;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
 
@@ -13,11 +14,11 @@ public class TicTacToe {
 
 	public static void main(String[] args) {
 		board = new Board(tiles);
-
-		// Testing the board solved state
-		System.out.println("Has won : " + board.checkWin(Tile.O));
-
+		Player p1 = new HumanPlayer("Player 1");
+		Player p2 = new HumanPlayer("Player 2");
 		setupGraphics(board);
+		Player winner = new GameController(p1, p2, board).playGame();
+		System.out.print(winner.getLabel() + " Won!");
 	}
 
 	public static void setupGraphics(Board b) {
