@@ -11,10 +11,10 @@ public class GameController {
 	private Player playerB;
 	private Board gameBoard;
 	
-	public GameController(Player a, Player b){
+	public GameController(Player a, Player b, Board board){
 		this.playerA = a;
 		this.playerB = b;
-		this.gameBoard = TicTacToe.getBoard();
+		this.gameBoard = board;
 		
 		if(a.getTileType() == b.getTileType()){
 			a.swapTileType();
@@ -31,12 +31,12 @@ public class GameController {
 		boolean playerWon = false;
 		while(!playerWon){
 			if(playerTurn){
-				playerA.performTurn();
+				playerA.performTurn(gameBoard);
 			}else{
-				playerB.performTurn();
+				playerB.performTurn(gameBoard);
 			}
 			playerTurn = !playerTurn;
-			playerWon = (!(!(gameBoard.checkWin(Tile.X) && !(gameBoard.checkWin(Tile.O)))));
+			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))));
 		}
 		if(gameBoard.checkWin(Tile.X)){
 			return playerA.getTileType() == Tile.X ? playerA : playerB;

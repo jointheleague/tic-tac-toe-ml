@@ -13,8 +13,8 @@ public class AIPlayer extends Player{
 	}
 	
 	@Override
-	public void performTurn(){
-		brain.performTurn();
+	public void performTurn(Board b){
+		brain.performTurn(b);
 	}
 
 }
