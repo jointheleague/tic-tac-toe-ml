@@ -54,7 +54,6 @@ public class TTTSim {
 	public boolean place(int type, int x, int y) {
 		if (board[x][y] != 0)
 			return false;
-		System.out.println("Placing");
 		board[x][y] = type;
 		moves++;
 		return true;

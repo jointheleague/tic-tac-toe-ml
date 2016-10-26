@@ -18,8 +18,10 @@ public class AiTester {
 	public static BasicNetwork createNetwork() {
 		FeedForwardPattern pattern = new FeedForwardPattern();
 		pattern.setInputNeurons(size * size);
-		pattern.addHiddenLayer(size * 4);
-		pattern.addHiddenLayer(size * 4);
+		pattern.addHiddenLayer(size * size);
+		pattern.addHiddenLayer(size * size);
+		pattern.addHiddenLayer(size * size);
+		pattern.addHiddenLayer(size * size);
 		pattern.setOutputNeurons(size * size);
 		pattern.setActivationFunction(new ActivationTANH());
 		BasicNetwork network = (BasicNetwork) pattern.generate();
@@ -41,11 +43,12 @@ public class AiTester {
 				((MLResettable) result).reset();
 				return result;
 			}
-		}, new HalScore(), 10);
+		}, new HalScore(), 1);
 
 		int epoch = 1;
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
+			System.out.println("Training #" + epoch);
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Score:" + train.getError());
 			epoch++;

@@ -20,17 +20,16 @@ public class Hal {
 			for (int j = 0; j < size; j++) {
 				int l[] = { i, j };
 				map.put(key, l);
-				// System.out.println(map.get(key));
 				key++;
-
 			}
 		}
 	}
 
 	public double scorePilot() {
 		TTTSim sim = new TTTSim(size);
+		System.out.println("Game Starting");
 		while (sim.playing()) {
-			MLData input = new BasicMLData(size * size);
+			MLData input = new BasicMLData((size * size));
 			int times = 0;
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
@@ -40,39 +39,39 @@ public class Hal {
 			}
 			MLData output = this.network.compute(input);
 			double value[] = output.getData();
-			double max = value[0];
-			int maxIndex = 0;
+			boolean findWorkingLocaiton = true;
 			for (int i = 0; i < value.length; i++) {
-				if (value[i] > max) {
-					max = value[i];
-					maxIndex = i;
-				}
+				System.out.println(value[i]);
 			}
-			while (!sim.place(-1, map.get(maxIndex)[0], map.get(maxIndex)[1])) {
-
-				value[maxIndex] = 0;
-				maxIndex = 0;
+			while (findWorkingLocaiton) {
+				int maxIndex = 0;
+				double max = value[0];
 				for (int i = 0; i < value.length; i++) {
-					if (value[i] > max) {
+					if (value[i] >= max) {
 						max = value[i];
 						maxIndex = i;
 					}
 				}
+				System.out.println(maxIndex + "-" + max);
+				sim.printBoard();
+				findWorkingLocaiton = !sim.place(1, map.get(maxIndex)[0], map.get(maxIndex)[1]);
+				value[maxIndex] = -10;
 			}
+
 			sim.printBoard();
-			sim.randomMove(1);
+			sim.randomMove(-1);
+			sim.printBoard();
 			if (sim.isTie()) {
 				sim.setPlaying(false);
 				break;
 			}
-			sim.printBoard();
 			sim.TestForWin();
 			if (sim.isTie()) {
 				sim.setPlaying(false);
 			}
 
 		}
-		System.out.println("Exit While");
-		return (sim.score(-1));
+		System.out.println("Game Finsihed, scoring");
+		return (sim.score(1));
 	}
 }
