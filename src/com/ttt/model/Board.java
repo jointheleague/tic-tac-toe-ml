@@ -19,11 +19,11 @@ public class Board {
 				this.tiles = tiles;
 			} else {
 				System.err.println("ERROR: Parameter tile array has size different from width & height.  -Ruoya");
-				System.exit(0);
+				throw(new ArrayIndexOutOfBoundsException());
 			}
 		} else {
 			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
-			System.exit(0);
+			throw(new ArrayIndexOutOfBoundsException());
 		}
 	}
 	
@@ -124,8 +124,10 @@ public class Board {
 		return false;
 	}
 
+	@Deprecated
 	public void placeAt(int x, int y, Tile tile) {
 		setTile(x, y, tile);
+		System.out.println("Baord.placeAt() is deprecated, please use setTile instead.");
 	}
 	
 	public void clearBoard(){
@@ -136,7 +138,7 @@ public class Board {
 		Tile[][] tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
 		for (int x = 0; x < BOARD_WIDTH; x++) {
 			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				setTile(x, y, Tile.EMPTY);
+				tiles[x][y] = Tile.EMPTY;
 			}
 		}
 		return tiles;

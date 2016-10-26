@@ -14,6 +14,7 @@ import javax.awt.Style;
 import javax.imageio.ImageIO;
 
 import com.ttt.input.InputController;
+import com.ttt.model.Board;
 import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 
@@ -24,8 +25,8 @@ public class RenderService extends GUIApplication {
 
 	public static final int PANEL_WIDTH = 500;
 	public static final int PANEL_HEIGHT = 500;
-	public static final int tileWidth = PANEL_WIDTH / 3;
-	public static final int tileHeight = PANEL_HEIGHT / 3;
+	public static final int tileWidth = PANEL_WIDTH / Board.BOARD_WIDTH;
+	public static final int tileHeight = PANEL_HEIGHT / Board.BOARD_HEIGHT;
 
 	public RenderService() {
 		super(60); // framerate
