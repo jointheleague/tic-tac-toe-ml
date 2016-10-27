@@ -1,4 +1,5 @@
 package com.ttt.ai;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,11 +13,11 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	}
 
 	public Layer(int neurons) {
-		for(int i = 0; i < neurons; i++){
+		for (int i = 0; i < neurons; i++) {
 			addNeuron(new Neuron(0));
 		}
 	}
-	
+
 	public Layer(Neuron[] ns) {
 		for (Neuron n : ns) {
 			addNeuron(n);
@@ -36,8 +37,8 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public void setNeurons(Neuron[] n) {
 		this.neurons = new ArrayList<>(Arrays.asList(n));
 	}
-	
-	public Neuron[] getNeurons(){
+
+	public Neuron[] getNeurons() {
 		return neurons.toArray(new Neuron[neurons.size()]);
 	}
 
@@ -107,24 +108,45 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public int indexOf(Neuron n) {
 		return neurons.indexOf(n);
 	}
-	
-	public Neuron getHighest(){
+
+	public Neuron getHighest() {
 		Neuron highest = new Neuron(Double.MIN_VALUE);
-		for(Neuron n : neurons){
-			if(n.getValue() > n.getValue()){
+		for (Neuron n : neurons) {
+			if (n.getValue() > n.getValue()) {
 				highest = n;
 			}
 		}
 		return highest;
 	}
-	
-	public Neuron getLowest(){
+
+	public Neuron getLowest() {
 		Neuron lowest = new Neuron(Double.MAX_VALUE);
-		for(Neuron n : neurons){
-			if(n.getValue() < n.getValue()){
+		for (Neuron n : neurons) {
+			if (n.getValue() < n.getValue()) {
 				lowest = n;
 			}
 		}
 		return lowest;
+	}
+
+	public ArrayList<Integer> getHighest2Lowest() {
+		ArrayList<Neuron> copy = new ArrayList<Neuron>();
+		copy.addAll(neurons);
+		ArrayList<Integer> sorted = new ArrayList<Integer>();
+
+		while (copy.size() > 0) {
+			Neuron highest = new Neuron(Double.MIN_VALUE);
+			int highestIndex = 0;
+			for (int n = 0; n < copy.size(); n++) {
+				if (copy.get(n).getValue() > highest.getValue()) {
+					highest = copy.get(n);
+					highestIndex = n;
+				}
+			}
+			sorted.add(highestIndex);
+			copy.remove(highestIndex);
+		}
+		
+		return sorted;
 	}
 }
