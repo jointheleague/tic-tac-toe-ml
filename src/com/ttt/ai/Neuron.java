@@ -11,6 +11,10 @@ public class Neuron {
 	public Neuron(double value) {
 		this.value = value;
 	}
+	
+	public Neuron(){
+		
+	}
 
 	public double getValue() {
 		return value;

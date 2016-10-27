@@ -30,16 +30,40 @@ public class GeneticAlgorithm {
 
 		base.flush();
 
-		System.out.println("Highest base output: " + base.getOutputs().getHighest().getInput());
+		System.out.println("Highest jnn base output: " + base.getOutputs().getHighest().getInput());
 		
-		JNeuralNetwork mutated = mutate(base, 0.1);
+		JNeuralNetwork mutated = jmutate(base, 0.1);
 		mutated.flush();
-		System.out.println("Highest mutated output: " + mutated.getOutputs().getHighest().getInput());
+		System.out.println("Highest jnn mutated output: " + mutated.getOutputs().getHighest().getInput());
 		
+		NeuralNetwork nbase = new NeuralNetwork();
+		nbase.setInputLayer(new Layer(new Neuron[] {new Neuron(1), new Neuron(0), new Neuron(0), new Neuron(-2), new Neuron(4), new Neuron(1), new Neuron(0), new Neuron(2), new Neuron(-1)}));
+		nbase.addLogicLayer(new Layer(15));
+		nbase.setOutputLayer(new Layer(9));
+		
+		nbase.connectSynapsesBetweenLayers();
+		nbase.compute();
+		
+		NeuralNetwork nbase2 = new NeuralNetwork();
+		nbase2.setInputLayer(new Layer(new Neuron[] {new Neuron(1), new Neuron(0), new Neuron(0), new Neuron(-2), new Neuron(4), new Neuron(1), new Neuron(0), new Neuron(2), new Neuron(-1)}));
+		nbase2.addLogicLayer(new Layer(15));
+		nbase2.setOutputLayer(new Layer(9));
+		
+		nbase2.connectSynapsesBetweenLayers();
+		nbase2.compute();
+		
+		NeuralNetwork crossed = crossover(nbase, nbase2);
+		crossed.compute();
+		
+		System.out.println("First nn base output: " + nbase.getOutputLayer().getHighest().getValue());
+		
+		NeuralNetwork nmutated = mutate(nbase, 0.1);
+		nmutated.compute();
 
+		System.out.println("First crossover base output: " + crossed.getOutputLayer().getHighest().getValue());
 	}
 
-	public static JNeuralNetwork mutate(JNeuralNetwork jnn, double mutateRate) {
+	public static JNeuralNetwork jmutate(JNeuralNetwork jnn, double mutateRate) {
 		Random r = new Random();
 
 		JNeuralNetwork mutated = new JNeuralNetwork();
@@ -58,6 +82,40 @@ public class GeneticAlgorithm {
 		}
 		mutated.setWeightGroups(weights);
 		return mutated;
+	}
+	
+	public static NeuralNetwork mutate(NeuralNetwork nn, double mutateRate) {
+		Random r = new Random();
+		
+		for (int i = 0; i < nn.getAllLayers().length - 1; i++) {
+			Layer l = nn.getAllLayers()[i];
+			for(Neuron n : l.getNeurons()){
+				for(Synapse s : n.getOutgoingSynapses()){
+					if(r.nextDouble() < mutateRate){
+						s.setWeight(r.nextDouble());
+					}
+				}
+			}
+		}
+		return nn;
+	}
+	
+	public static NeuralNetwork crossover(NeuralNetwork nn, NeuralNetwork nn2) {
+		Random r = new Random();
+		
+		for (int i = 0; i < nn.getAllLayers().length - 1; i++) {
+			Layer l = nn.getAllLayers()[i];
+			for(int a = 0; a < l.getNeurons().length; a++){
+				Neuron n = l.getNeuron(a);
+				for(int d = 0; d < n.getOutgoingSynapses().length; d++){
+					Synapse s = n.getOutgoingSynapses()[d];
+					if(r.nextBoolean()){
+						s.setWeight(nn2.getAllLayers()[i].getNeuron(a).getOutgoingSynapses()[d].getWeight());
+					}
+				}
+			}
+		}
+		return nn;
 	}
 
 }

@@ -11,6 +11,12 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public Layer() {
 	}
 
+	public Layer(int neurons) {
+		for(int i = 0; i < neurons; i++){
+			addNeuron(new Neuron(0));
+		}
+	}
+	
 	public Layer(Neuron[] ns) {
 		for (Neuron n : ns) {
 			addNeuron(n);
@@ -100,5 +106,25 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 
 	public int indexOf(Neuron n) {
 		return neurons.indexOf(n);
+	}
+	
+	public Neuron getHighest(){
+		Neuron highest = new Neuron(Double.MIN_VALUE);
+		for(Neuron n : neurons){
+			if(n.getValue() > n.getValue()){
+				highest = n;
+			}
+		}
+		return highest;
+	}
+	
+	public Neuron getLowest(){
+		Neuron lowest = new Neuron(Double.MAX_VALUE);
+		for(Neuron n : neurons){
+			if(n.getValue() < n.getValue()){
+				lowest = n;
+			}
+		}
+		return lowest;
 	}
 }
