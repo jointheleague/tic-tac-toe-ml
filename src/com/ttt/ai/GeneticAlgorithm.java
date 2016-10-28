@@ -117,7 +117,7 @@ public class GeneticAlgorithm {
 				b.placeAt(p.x, p.y, Tile.X);
 
 			} else { // If O turn
-				Layer l = new Layer(nn.getInputLayer().getNeurons().length);
+				Layer l = new Layer();
 				Tile[][] tiles = b.getTiles();
 				for (int x = 0; x < tiles.length; x++) {
 					for (int y = 0; y < tiles[0].length; y++) {
@@ -134,14 +134,14 @@ public class GeneticAlgorithm {
 				nn.setInputLayer(l);
 				nn.compute();
 
+				System.out.println(nn.getInputLayer());
+
 				ArrayList<Integer> sortedIndexes = nn.getOutputLayer().getHighest2Lowest();
 				boolean placed = false;
 				int index = 0;
 				while (!placed && index < Board.BOARD_HEIGHT * Board.BOARD_WIDTH) {
 					int x = sortedIndexes.get(index) % Board.BOARD_WIDTH;
 					int y = sortedIndexes.get(index) / Board.BOARD_HEIGHT;
-					System.out.println("X: " + x + ". Y: " + y);
-					System.out.println(nn.getOutputLayer());
 					if (tiles[x][y] == Tile.EMPTY) {
 						b.placeAt(x, y, Tile.O);
 						placed = true;
