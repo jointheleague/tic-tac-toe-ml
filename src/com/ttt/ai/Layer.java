@@ -2,7 +2,9 @@ package com.ttt.ai;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 public class Layer implements Comparable<Layer>, Iterable<Neuron> {
@@ -75,6 +77,12 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public void setNeuron(int index, Neuron neuron) {
 		neurons.set(index, neuron);
 	}
+	
+	public void setNeuron(int index, double value) {
+		Neuron n = neurons.get(index);
+		n.setValue(value);
+		neurons.set(index, n);
+	}
 
 	public void connectSynapses(Layer layer) {
 		Random random = new Random();
@@ -132,19 +140,11 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public ArrayList<Integer> getHighest2Lowest() {
 		ArrayList<Neuron> copy = new ArrayList<Neuron>();
 		copy.addAll(neurons);
-		ArrayList<Integer> sorted = new ArrayList<Integer>();
+		Collections.sort(copy);
 
-		while (copy.size() > 0) {
-			Neuron highest = new Neuron(Double.MIN_VALUE);
-			int highestIndex = 0;
-			for (int n = 0; n < copy.size(); n++) {
-				if (copy.get(n).getValue() > highest.getValue()) {
-					highest = copy.get(n);
-					highestIndex = n;
-				}
-			}
-			sorted.add(highestIndex);
-			copy.remove(highestIndex);
+		ArrayList<Integer> sorted = new ArrayList<Integer>();
+		for(Neuron n : copy){
+			sorted.add(neurons.indexOf(n));
 		}
 		
 		return sorted;

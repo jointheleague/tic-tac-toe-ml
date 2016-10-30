@@ -23,6 +23,12 @@ public class NeuralNetwork implements Iterable<Layer> {
 		this.inputLayer = inputLayer;
 		inputLayer.setDepth(INPUT_LAYER_DEPTH);
 	}
+	
+	public void setInputs(Layer inputs){
+		for(int n = 0; n < inputLayer.getNeurons().length; n++){
+			inputLayer.setNeuron(n, inputs.getNeuron(n).getValue());
+		}
+	}
 
 	public Layer getOutputLayer() {
 		return outputLayer;

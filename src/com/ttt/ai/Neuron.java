@@ -1,7 +1,7 @@
 package com.ttt.ai;
 import java.util.ArrayList;
 
-public class Neuron {
+public class Neuron implements Comparable<Neuron>{
 	private Layer layer;
 	private double value;
 	private int indexInLayer;
@@ -84,5 +84,10 @@ public class Neuron {
 
 	void setIndexInLayer(int indexInLayer) {
 		this.indexInLayer = indexInLayer;
+	}
+	
+	public int compareTo(Neuron o)
+	{
+	     return (Double.compare(o.getValue(), getValue()));
 	}
 }
