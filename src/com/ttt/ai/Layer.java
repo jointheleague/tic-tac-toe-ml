@@ -77,7 +77,7 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public void setNeuron(int index, Neuron neuron) {
 		neurons.set(index, neuron);
 	}
-	
+
 	public void setNeuron(int index, double value) {
 		Neuron n = neurons.get(index);
 		n.setValue(value);
@@ -89,7 +89,7 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 
 		for (Neuron neuron : this) {
 			for (Neuron other : layer) {
-				neuron.addOutgoingSynapse(new Synapse(neuron, other, random.nextFloat() - 0.5f));
+				neuron.addOutgoingSynapse(new Synapse(neuron, other, (random.nextFloat() - 0.5f) * 2));
 			}
 		}
 	}
@@ -143,10 +143,10 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 		Collections.sort(copy);
 
 		ArrayList<Integer> sorted = new ArrayList<Integer>();
-		for(Neuron n : copy){
+		for (Neuron n : copy) {
 			sorted.add(neurons.indexOf(n));
 		}
-		
+
 		return sorted;
 	}
 }

@@ -3,10 +3,10 @@ package com.ttt.ai;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import com.ttt.model.Board;
-import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 
 public class Population extends GeneticAlgorithm {
@@ -19,12 +19,15 @@ public class Population extends GeneticAlgorithm {
 	private int generation = 0;
 	private String output = "";
 	private boolean debug = false;
+	private boolean extraDebug = false;
 	private String percent = "";
 	private int exponent;
+	private double wonPercent = 0;
+	private double tiedPercent = 0;;
 
 	public Population(NeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<HashMap<Double, NeuralNetwork>>();
-		board = new Board(TicTacToe.tiles);
+		board = new Board();
 		this.mutateRate = mutateRate;
 		maxFitness = (int) Math.pow((2 * ((board.BOARD_WIDTH * board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
 		this.exponent = exponent;
@@ -33,11 +36,11 @@ public class Population extends GeneticAlgorithm {
 			NeuralNetwork nn = new NeuralNetwork();
 
 			Layer[] layers = base.getAllLayers();
-			nn.setInputLayer(layers[0]);
+			nn.setInputLayer(new Layer(layers[0].getNeurons().length));
 			for (int a = 1; a < layers.length - 1; a++) {
-				nn.addLogicLayer(layers[a]);
+				nn.addLogicLayer(new Layer(layers[a].getNeurons().length));
 			}
-			nn.setOutputLayer(layers[layers.length - 1]);
+			nn.setOutputLayer(new Layer(layers[layers.length - 1].getNeurons().length));
 			nn.connectSynapsesBetweenLayers();
 			HashMap<Double, NeuralNetwork> map = new HashMap<Double, NeuralNetwork>();
 			map.put(0.0, nn);
@@ -64,15 +67,11 @@ public class Population extends GeneticAlgorithm {
 
 		for (int i = 0; i < pool.size(); i++) {
 			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
-			NeuralNetwork p1 = acceptReject(pool, maxFitness);
-			//System.out.println("Parent 1 found.");
-			NeuralNetwork p2 = acceptReject(pool, maxFitness);
-			//System.out.println("Parent 1 found.");
+			populateMatingPool(pool);
+			NeuralNetwork p1 = pickParent(null);
+			NeuralNetwork p2 = pickParent(p1);
 			NeuralNetwork crossed = crossover(p1, p2);
-			//System.out.println("Child born.");
 			NeuralNetwork mutated = mutate(crossed, mutateRate);
-			//System.out.println("Child mutated!!!");
-			//System.out.println();
 			hash.put(0.0, mutated);
 			newPool.add(hash);
 			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
@@ -93,8 +92,11 @@ public class Population extends GeneticAlgorithm {
 
 		pool.removeAll(pool);
 		pool.addAll(newPool);
-		output = "Generation: " + generation + ". Average Fitness: " + avg;
+		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
+				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: " + (tiedPercent * 100 / pool.size() + "%.");
 		generation++;
+		wonPercent = 0;
+		tiedPercent = 0;
 	}
 
 	public String progressBar(int progress) {
@@ -124,8 +126,12 @@ public class Population extends GeneticAlgorithm {
 		this.debug = debug;
 	}
 
-	public Point pickRandom(Board b) {
-		Tile[][] tiles = b.getTiles();
+	public void setExtraDebug(boolean extraDebug) {
+		this.extraDebug = extraDebug;
+	}
+
+	public Point pickRandom() {
+		Tile[][] tiles = board.getTiles();
 
 		int trys = 100;
 		while (trys > 0) {
@@ -140,12 +146,12 @@ public class Population extends GeneticAlgorithm {
 		return null;
 	}
 
-	public void printBoard(Board b) {
-		Tile[][] tiles = b.getTiles();
+	public void printBoard() {
+		Tile[][] tiles = board.getTiles();
 
 		System.out.println();
-		for (int x = 0; x < b.BOARD_HEIGHT; x++) {
-			for (int y = 0; y < b.BOARD_WIDTH; y++) {
+		for (int x = 0; x < board.BOARD_HEIGHT; x++) {
+			for (int y = 0; y < board.BOARD_WIDTH; y++) {
 				if (tiles[x][y] == Tile.EMPTY) {
 					System.out.print(" - ");
 				} else if (tiles[x][y] == Tile.X) {
@@ -156,11 +162,15 @@ public class Population extends GeneticAlgorithm {
 			}
 			System.out.println();
 		}
+		if (board.checkWin(Tile.X)) {
+			System.out.println("X Won!");
+		} else if (board.checkWin(Tile.O)) {
+			System.out.println("O Won!");
+		}
 	}
 
 	@Override
 	public double selection(NeuralNetwork nn) {
-		Board b = new Board(TicTacToe.tiles);
 		boolean tileWon = false;
 		boolean draw = false;
 
@@ -169,13 +179,13 @@ public class Population extends GeneticAlgorithm {
 
 		while (!tileWon && !draw) {
 
-			if (b.getTurn() == Tile.X) { // If X turn
-				Point p = pickRandom(b);
-				b.placeAt(p.x, p.y, Tile.X);
+			if (board.getTurn() == Tile.X) { // If X turn
+				minimax(0, 1);
+				board.placeAt(computersMove.x, computersMove.y, Tile.X);
 
-			} else if (b.getTurn() == Tile.O) { // If O turn
+			} else if (board.getTurn() == Tile.O) { // If O turn
 				Layer l = new Layer();
-				Tile[][] tiles = b.getTiles();
+				Tile[][] tiles = board.getTiles();
 				for (int x = 0; x < tiles.length; x++) {
 					for (int y = 0; y < tiles[0].length; y++) {
 						if (tiles[x][y] == Tile.EMPTY) {
@@ -194,25 +204,26 @@ public class Population extends GeneticAlgorithm {
 				Layer output = nn.getOutputLayer();
 				ArrayList<Integer> sortedIndexes = output.getHighest2Lowest();
 				for (int index = 0; index < Board.BOARD_WIDTH * Board.BOARD_HEIGHT; index++) {
-					int x = sortedIndexes.get(index) % Board.BOARD_WIDTH;
-					int y = sortedIndexes.get(index) / Board.BOARD_HEIGHT;
+					int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
+					int y = sortedIndexes.get(index) % Board.BOARD_HEIGHT;
 					if (tiles[x][y] == Tile.EMPTY) {
-						b.placeAt(x, y, Tile.O);
+						board.placeAt(x, y, Tile.O);
 						break;
 					}
 				}
 				oMoves++;
 			}
 
-			if (b.checkWin(Tile.X)) {
+			if (board.checkWin(Tile.X)) {
 				fitness = oMoves;
 				tileWon = true;
-			} else if (b.checkWin(Tile.O)) {
+			} else if (board.checkWin(Tile.O)) {
 				fitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
 				tileWon = true;
+				wonPercent++;
 			} else {
 				boolean emptyTile = false;
-				Tile[][] tiles = b.getTiles();
+				Tile[][] tiles = board.getTiles();
 				for (Tile[] tiles1 : tiles) {
 					for (Tile tile : tiles1) {
 						if (tile == Tile.EMPTY) {
@@ -222,17 +233,75 @@ public class Population extends GeneticAlgorithm {
 					}
 				}
 				if (!emptyTile) {// The board is full
-					fitness = Math.pow(oMoves, exponent);
+					fitness = Math.pow(oMoves, exponent - 1);
 					draw = true;
+					tiedPercent++;
 				}
 			}
 
-			b.switchTurn();
+			board.switchTurn();
+			// printBoard();
 		}
 
-		b.clearBoard();
+		if (extraDebug) {
+			printBoard();
+		}
+
+		board.clearBoard();
 		return fitness;
 
 	}
 
+	public static Point intToCell(int i) {
+		int x = i / Board.BOARD_WIDTH;
+		int y = i % Board.BOARD_HEIGHT;
+		return new Point(x, y);
+	}
+
+    List<Point> availablePoints;
+    Point computersMove;
+	
+	public List<Point> getAvailableStates() {
+        availablePoints = new ArrayList<>();
+        for (int i = 0; i < Board.BOARD_WIDTH; ++i) {
+            for (int j = 0; j < Board.BOARD_HEIGHT; ++j) {
+                if (board.getTile(i, j) == Tile.EMPTY) {
+                    availablePoints.add(new Point(i, j));
+                }
+            }
+        }
+        return availablePoints;
+    }
+	
+	public int minimax(int depth, int turn) {  
+        if (board.checkWin(Tile.X)) return +1; 
+        if (board.checkWin(Tile.O)) return -1;
+
+        List<Point> pointsAvailable = getAvailableStates();
+        if (pointsAvailable.isEmpty()) return 0; 
+ 
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+         
+        for (int i = 0; i < pointsAvailable.size(); ++i) {  
+            Point point = pointsAvailable.get(i);   
+            if (turn == 1) { 
+            	board.setTile(point.x, point.y, Tile.X);
+                int currentScore = minimax(depth + 1, 2);
+                max = Math.max(currentScore, max);
+                
+                if(depth == 0)//System.out.println("Score for position "+(i+1)+" = "+currentScore);
+                if(currentScore >= 0){ if(depth == 0) computersMove = point;} 
+                if(currentScore == 1){board.setTile(point.x, point.y, Tile.EMPTY); break;} 
+                if(i == pointsAvailable.size()-1 && max < 0){if(depth == 0)computersMove = point;}
+            } else if (turn == 2) {
+            	board.setTile(point.x, point.y, Tile.O);
+                int currentScore = minimax(depth + 1, 1);
+                min = Math.min(currentScore, min); 
+                if(min == -1){board.setTile(point.x, point.y, Tile.EMPTY); break;}
+            }
+            board.setTile(point.x, point.y, Tile.EMPTY); //Reset this point
+        } 
+        return turn == 1?max:min;
+    }  
+	
 }

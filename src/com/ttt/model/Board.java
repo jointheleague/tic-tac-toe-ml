@@ -133,7 +133,7 @@ public class Board {
 		Tile[][] tiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
 		for (int x = 0; x < BOARD_WIDTH; x++) {
 			for (int y = 0; y < BOARD_HEIGHT; y++) {
-				setTile(x, y, Tile.EMPTY);
+				tiles[x][y] = Tile.EMPTY;
 			}
 		}
 		return tiles;
