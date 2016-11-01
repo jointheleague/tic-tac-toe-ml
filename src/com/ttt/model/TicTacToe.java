@@ -7,13 +7,11 @@ import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
 
 public class TicTacToe {
-	public static Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY },
-			{ Tile.EMPTY, Tile.EMPTY, Tile.EMPTY }, { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY } };
 
 	private static Board board;
 
 	public static void main(String[] args) {
-		board = new Board(tiles);
+		board = new Board();
 		Player p1 = new HumanPlayer("Player 1");
 		Player p2 = new HumanPlayer("Player 2");
 		setupGraphics(board);
