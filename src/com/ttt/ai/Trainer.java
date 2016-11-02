@@ -14,11 +14,13 @@ public class Trainer {
 		nbase.connectSynapsesBetweenLayers();
 		nbase.compute();
 		
-		Population pop = new Population(nbase, 1, 0.01, 3);
+		Population pop = new Population(nbase, 100, 0.01, 3);
 
 		pop.setDebug(false);
 		pop.setExtraDebug(false);
-		for(int i = 0; i < 1; i++){
+		pop.setMaxDepth(10); //Dosen't matter for 3 x 3 board
+		for(int i = 0; i < 1000000
+				; i++){
 			pop.runGeneration();
 			System.out.println(pop.getOutput());
 		}

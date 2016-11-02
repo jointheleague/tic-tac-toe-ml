@@ -23,7 +23,8 @@ public class Population extends GeneticAlgorithm {
 	private String percent = "";
 	private int exponent;
 	private double wonPercent = 0;
-	private double tiedPercent = 0;;
+	private double tiedPercent = 0;
+	private int maxDepth = 3;
 
 	public Population(NeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<HashMap<Double, NeuralNetwork>>();
@@ -50,7 +51,7 @@ public class Population extends GeneticAlgorithm {
 
 	public void runGeneration() {
 		for (int i = 0; i < pool.size(); i++) {
-			double fitness = selection(pool.get(i).get(0.0));
+			double fitness = selection(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
 			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
 			hash.put(fitness, pool.get(i).get(0.0));
 			pool.set(i, hash);
@@ -65,11 +66,12 @@ public class Population extends GeneticAlgorithm {
 
 		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>();
 
-		for (int i = 0; i < pool.size(); i++) {
+		int size = getHighestHalf(pool).size();
+		for (int i = 0; i < size; i++) {
 			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
 			populateMatingPool(pool);
-			NeuralNetwork p1 = pickParent(null);
-			NeuralNetwork p2 = pickParent(p1);
+			NeuralNetwork p1 = pickParent(null, 0);
+			NeuralNetwork p2 = pickParent(p1, 0);
 			NeuralNetwork crossed = crossover(p1, p2);
 			NeuralNetwork mutated = mutate(crossed, mutateRate);
 			hash.put(0.0, mutated);
@@ -79,6 +81,7 @@ public class Population extends GeneticAlgorithm {
 				System.out.println("Crossover/Mutation: " + percent);
 			}
 		}
+
 		if (debug) {
 			System.out.println("Crossover/Mutation Done!");
 		}
@@ -90,8 +93,17 @@ public class Population extends GeneticAlgorithm {
 
 		avg /= pool.size();
 
-		pool.removeAll(pool);
+		int size = (int) (pool.size() - (pool.size() * 1.0));
+		pool.clear();
+		ArrayList<NeuralNetwork> matingPool = getMatingPool();
+		for (int i = 0; i < size; i++) {
+			HashMap<Double, NeuralNetwork> hash = new HashMap<>();
+			hash.put(0.0, matingPool.get(random.nextInt(matingPool.size())));
+			pool.add(hash);
+		}
+
 		pool.addAll(newPool);
+		System.out.println(pool.size());
 		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
 				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: " + (tiedPercent * 100 / pool.size() + "%.");
 		generation++;
@@ -112,6 +124,14 @@ public class Population extends GeneticAlgorithm {
 		}
 		percent += "|\r";
 		return percent;
+	}
+
+	public void setMaxDepth(int depth) {
+		this.maxDepth = depth;
+	}
+
+	public int getMaxDepth() {
+		return maxDepth;
 	}
 
 	public String getProgress() {
@@ -233,7 +253,7 @@ public class Population extends GeneticAlgorithm {
 					}
 				}
 				if (!emptyTile) {// The board is full
-					fitness = Math.pow(oMoves, exponent - 1);
+					fitness = Math.pow(oMoves, exponent);
 					draw = true;
 					tiedPercent++;
 				}
@@ -258,50 +278,70 @@ public class Population extends GeneticAlgorithm {
 		return new Point(x, y);
 	}
 
-    List<Point> availablePoints;
-    Point computersMove;
-	
-	public List<Point> getAvailableStates() {
-        availablePoints = new ArrayList<>();
-        for (int i = 0; i < Board.BOARD_WIDTH; ++i) {
-            for (int j = 0; j < Board.BOARD_HEIGHT; ++j) {
-                if (board.getTile(i, j) == Tile.EMPTY) {
-                    availablePoints.add(new Point(i, j));
-                }
-            }
-        }
-        return availablePoints;
-    }
-	
-	public int minimax(int depth, int turn) {  
-        if (board.checkWin(Tile.X)) return +1; 
-        if (board.checkWin(Tile.O)) return -1;
+	List<Point> availablePoints;
+	Point computersMove;
 
-        List<Point> pointsAvailable = getAvailableStates();
-        if (pointsAvailable.isEmpty()) return 0; 
- 
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
-         
-        for (int i = 0; i < pointsAvailable.size(); ++i) {  
-            Point point = pointsAvailable.get(i);   
-            if (turn == 1) { 
-            	board.setTile(point.x, point.y, Tile.X);
-                int currentScore = minimax(depth + 1, 2);
-                max = Math.max(currentScore, max);
-                
-                if(depth == 0)//System.out.println("Score for position "+(i+1)+" = "+currentScore);
-                if(currentScore >= 0){ if(depth == 0) computersMove = point;} 
-                if(currentScore == 1){board.setTile(point.x, point.y, Tile.EMPTY); break;} 
-                if(i == pointsAvailable.size()-1 && max < 0){if(depth == 0)computersMove = point;}
-            } else if (turn == 2) {
-            	board.setTile(point.x, point.y, Tile.O);
-                int currentScore = minimax(depth + 1, 1);
-                min = Math.min(currentScore, min); 
-                if(min == -1){board.setTile(point.x, point.y, Tile.EMPTY); break;}
-            }
-            board.setTile(point.x, point.y, Tile.EMPTY); //Reset this point
-        } 
-        return turn == 1?max:min;
-    }  
-	
+	public List<Point> getAvailableStates() {
+		availablePoints = new ArrayList<>();
+		for (int i = 0; i < Board.BOARD_WIDTH; ++i) {
+			for (int j = 0; j < Board.BOARD_HEIGHT; ++j) {
+				if (board.getTile(i, j) == Tile.EMPTY) {
+					availablePoints.add(new Point(i, j));
+				}
+			}
+		}
+		return availablePoints;
+	}
+
+	public int minimax(int depth, int turn) {
+		if (board.checkWin(Tile.X))
+			return +1;
+		if (board.checkWin(Tile.O))
+			return -1;
+
+		if (depth > maxDepth) {
+			return 0;
+		}
+
+		List<Point> pointsAvailable = getAvailableStates();
+		if (pointsAvailable.isEmpty())
+			return 0;
+
+		int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+		for (int i = 0; i < pointsAvailable.size(); ++i) {
+			Point point = pointsAvailable.get(i);
+			if (turn == 1) { // X's Turn
+				board.setTile(point.x, point.y, Tile.X);
+				int currentScore = minimax(depth + 1, 2);
+				max = Math.max(currentScore, max);
+
+				if (depth == 0)// System.out.println("Score for position
+								// "+(i+1)+" = "+currentScore);
+					if (currentScore >= 0) {
+						if (depth == 0)
+							computersMove = point;
+					}
+				if (currentScore == 1) {
+					board.setTile(point.x, point.y, Tile.EMPTY);
+					break;
+				}
+				if (i == pointsAvailable.size() - 1 && max < 0) {
+					if (depth == 0)
+						computersMove = point;
+				}
+			} else if (turn == 2) { // O's Turn
+				board.setTile(point.x, point.y, Tile.O);
+				int currentScore = minimax(depth + 1, 1);
+				min = Math.min(currentScore, min);
+				if (min == -1) {
+					board.setTile(point.x, point.y, Tile.EMPTY);
+					break;
+				}
+			}
+			board.setTile(point.x, point.y, Tile.EMPTY); // Reset this point
+		}
+		return turn == 1 ? max : min;
+	}
+
 }

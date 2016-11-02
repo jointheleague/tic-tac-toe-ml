@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public abstract class GeneticAlgorithm {
-	
+
 	private ArrayList<NeuralNetwork> matingPool = new ArrayList<NeuralNetwork>();
 	private Random random = new Random();
 
@@ -62,24 +62,60 @@ public abstract class GeneticAlgorithm {
 
 	}
 
-	public NeuralNetwork pickParent(NeuralNetwork not) {
+	public NeuralNetwork pickParent(NeuralNetwork not, int iteration) {
 		NeuralNetwork parent = matingPool.get(random.nextInt(matingPool.size()));
-		if(parent == not){
-			return pickParent(not);
-		} else{
+		if (iteration > 100) {
+			return (matingPool.indexOf(not) == 0) ? matingPool.get(matingPool.size() - 1)
+					: matingPool.get(matingPool.indexOf(not) - 1);
+		} else if (parent == not) {
+			return pickParent(not, iteration + 1);
+		} else {
 			return parent;
-		} 
+		}
 	}
-	
+
 	public void populateMatingPool(ArrayList<HashMap<Double, NeuralNetwork>> pool) {
+		matingPool.clear();
 		for (HashMap<Double, NeuralNetwork> hash : pool) {
 			double fitness = (double) hash.keySet().toArray()[0];
-			for(int i = 0; i < fitness; i++){
+			for (int i = 0; i < fitness; i++) {
 				matingPool.add(hash.get(fitness));
 			}
 		}
 	}
-	
+
+	public ArrayList<HashMap<Double, NeuralNetwork>> getHighestHalf(ArrayList<HashMap<Double, NeuralNetwork>> pool) {
+		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>(pool.size()/2);
+		for (int i = 0; i < pool.size() / 2; i++) {
+			double highest = Double.MIN_VALUE;
+			NeuralNetwork best = null;
+			for (HashMap<Double, NeuralNetwork> hash : pool) {
+				double fitness = (double) hash.keySet().toArray()[0];
+				if (fitness > highest) {
+					highest = fitness;
+					best = hash.get(fitness);
+				}
+			}
+			HashMap<Double, NeuralNetwork> hash1 = new HashMap<Double, NeuralNetwork>();
+			hash1.put(highest, best);
+			newPool.add(hash1);
+			for (int a = 0; a < pool.size(); a++) {
+				HashMap<Double, NeuralNetwork> hash = pool.get(a);
+				double fitness = (double) hash.keySet().toArray()[0];
+				if (fitness == fitness) {
+					pool.remove(hash);
+					break;
+				}
+			}
+			
+		}
+		return newPool;
+	}
+
+	public ArrayList<NeuralNetwork> getMatingPool() {
+		return matingPool;
+	}
+
 	public abstract double selection(NeuralNetwork nn);
 
 }
