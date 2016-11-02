@@ -27,7 +27,6 @@ public class Hal {
 
 	public double scorePilot() {
 		TTTSim sim = new TTTSim(size);
-		System.out.println("Game Starting");
 		gameloop: while (sim.playing()) {
 			MLData input = new BasicMLData((size * size));
 			int times = 0;
@@ -61,7 +60,6 @@ public class Hal {
 			sim.printBoard();
 			sim.TestForWin();
 		}
-		System.out.println("Game Finsihed, scoring");
 		return (sim.score(1));
 	}
 }

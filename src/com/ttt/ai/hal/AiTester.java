@@ -42,10 +42,10 @@ public class AiTester {
 
 		int epoch = 1;
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			System.out.println("Training #" + epoch);
 			train.iteration();
-			System.out.println("Epoch #" + epoch + " Score:" + train.getError());
+			//System.out.println("Epoch #" + epoch + " Score:" + train.getError());
 			epoch++;
 		}
 		train.finishTraining();

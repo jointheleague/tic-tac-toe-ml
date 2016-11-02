@@ -6,6 +6,7 @@ public class TTTSim {
 	int[][] board;
 	boolean playing = true;
 	int moves;
+	boolean Logging = false;
 
 	public TTTSim(int size) {
 		moves = 0;
@@ -36,19 +37,21 @@ public class TTTSim {
 	}
 
 	public void printBoard() {
-		System.out.println("");
-		System.out.println("Moves:" + moves);
-		for (int i = 0; i < board.length; i++) {
+		if (Logging) {
 			System.out.println("");
-			for (int j = 0; j < board.length; j++) {
-				if (board[i][j] == -1)
-					System.out.print(2);
-				else
-					System.out.print(board[i][j]);
+			System.out.println("Moves:" + moves);
+			for (int i = 0; i < board.length; i++) {
+				System.out.println("");
+				for (int j = 0; j < board.length; j++) {
+					if (board[i][j] == -1)
+						System.out.print(2);
+					else
+						System.out.print(board[i][j]);
 
+				}
 			}
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 
 	public boolean place(int type, int x, int y) {
@@ -81,9 +84,6 @@ public class TTTSim {
 				if (board[i][j] == 0)
 					tie = false;
 			}
-		}
-		if (tie) {
-			System.out.println("Tie!");
 		}
 		return tie;
 	}
@@ -128,7 +128,12 @@ public class TTTSim {
 	}
 
 	public double score(int player) {
-	//TODO scoreing.
+		int max = (board.length * board.length) / 2;
+		int turns = moves / 2;
+		double score;
+		score = max - turns;
+		System.out.println("Score: " + score);
+		return score;
 	}
 
 	public void randomMove(int player) {
