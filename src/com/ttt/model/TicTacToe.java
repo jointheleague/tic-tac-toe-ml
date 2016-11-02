@@ -16,7 +16,11 @@ public class TicTacToe {
 		Player p2 = new HumanPlayer("Player 2");
 		setupGraphics(board);
 		Player winner = new GameController(p1, p2, board).playGame();
-		System.out.print(winner.getLabel() + " Won!");
+		if (winner == null) {
+			System.out.println("Game tied.");
+		} else {			
+			System.out.print(winner.getLabel() + " Won!");
+		}
 	}
 
 	public static void setupGraphics(Board b) {
