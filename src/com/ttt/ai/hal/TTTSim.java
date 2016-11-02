@@ -40,7 +40,7 @@ public class TTTSim {
 		System.out.println("Moves:" + moves);
 		for (int i = 0; i < board.length; i++) {
 			System.out.println("");
-			for (int j = 0; j < board[i].length; j++) {
+			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] == -1)
 					System.out.print(2);
 				else
@@ -59,30 +59,33 @@ public class TTTSim {
 		return true;
 	}
 
-	public void TestForWin() {
+	public boolean TestForWin() {
+		boolean win = false;
 		if (isWinner(-1) || isWinner(1)) {
-			playing = false;
+			this.playing = false;
+			System.out.println("Winner Found");
+			win = true;
 		}
-		boolean Full = true;
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if (board[i][j] == 0) {
-					Full = false;
-				}
-			}
+		if (isTie()) {
+			this.playing = false;
+			win = true;
+			System.out.println("Tie");
 		}
-		if (Full)
-			playing = false;
+		return win;
 	}
 
 	public boolean isTie() {
+		boolean tie = true;
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				if (board[i][j] == 0)
-					return false;
+					tie = false;
 			}
 		}
-		return true;
+		if (tie) {
+			System.out.println("Tie!");
+		}
+		return tie;
 	}
 
 	public boolean isWinner(int player) {
@@ -125,17 +128,7 @@ public class TTTSim {
 	}
 
 	public double score(int player) {
-		double WL;
-		if (isWinner(player))
-			WL = 1;
-		else if (isTie())
-			WL = 0.2;
-		else
-			WL = 0;
-
-		int max = (int) ((Math.pow(2, board.length)) / 2) + 1;
-		double score = WL * (max - moves);
-		return score;
+	//TODO scoreing.
 	}
 
 	public void randomMove(int player) {

@@ -30,12 +30,7 @@ public class AiTester {
 	}
 
 	public static void main(String[] args) {
-		// TTTSim sim = new TTTSim(3);
-		// sim.setBoard(tb);
-		// System.out.println(sim.isWinner(1));
-
 		MLTrain train;
-
 		train = new MLMethodGeneticAlgorithm(new MethodFactory() {
 			@Override
 			public MLMethod factor() {
@@ -47,7 +42,7 @@ public class AiTester {
 
 		int epoch = 1;
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println("Training #" + epoch);
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Score:" + train.getError());

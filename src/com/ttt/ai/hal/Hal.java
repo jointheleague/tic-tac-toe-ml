@@ -28,7 +28,7 @@ public class Hal {
 	public double scorePilot() {
 		TTTSim sim = new TTTSim(size);
 		System.out.println("Game Starting");
-		while (sim.playing()) {
+		gameloop: while (sim.playing()) {
 			MLData input = new BasicMLData((size * size));
 			int times = 0;
 			for (int i = 0; i < size; i++) {
@@ -40,9 +40,6 @@ public class Hal {
 			MLData output = this.network.compute(input);
 			double value[] = output.getData();
 			boolean findWorkingLocaiton = true;
-			for (int i = 0; i < value.length; i++) {
-				System.out.println(value[i]);
-			}
 			while (findWorkingLocaiton) {
 				int maxIndex = 0;
 				double max = value[0];
@@ -52,24 +49,17 @@ public class Hal {
 						maxIndex = i;
 					}
 				}
-				System.out.println(maxIndex + "-" + max);
-				sim.printBoard();
 				findWorkingLocaiton = !sim.place(1, map.get(maxIndex)[0], map.get(maxIndex)[1]);
 				value[maxIndex] = -10;
 			}
 
 			sim.printBoard();
+			if (sim.TestForWin()) {
+				break gameloop;
+			}
 			sim.randomMove(-1);
 			sim.printBoard();
-			if (sim.isTie()) {
-				sim.setPlaying(false);
-				break;
-			}
 			sim.TestForWin();
-			if (sim.isTie()) {
-				sim.setPlaying(false);
-			}
-
 		}
 		System.out.println("Game Finsihed, scoring");
 		return (sim.score(1));
