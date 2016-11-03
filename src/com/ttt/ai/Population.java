@@ -2,6 +2,7 @@ package com.ttt.ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -51,6 +52,10 @@ public class Population extends GeneticAlgorithm {
 
 	public void runGeneration() {
 		for (int i = 0; i < pool.size(); i++) {
+			System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
+		}
+		for (int i = 0; i < pool.size(); i++) {
+			//System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
 			double fitness = selection(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
 			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
 			hash.put(fitness, pool.get(i).get(0.0));
@@ -63,25 +68,38 @@ public class Population extends GeneticAlgorithm {
 		if (debug) {
 			System.out.println("Selection Done!");
 		}
+		//System.out.println(pool);
 
 		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>();
 
-		int size = getHighestHalf(pool).size();
-		for (int i = 0; i < size; i++) {
-			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
-			populateMatingPool(pool);
-			NeuralNetwork p1 = pickParent(null, 0);
-			NeuralNetwork p2 = pickParent(p1, 0);
-			NeuralNetwork crossed = crossover(p1, p2);
-			NeuralNetwork mutated = mutate(crossed, mutateRate);
-			hash.put(0.0, mutated);
-			newPool.add(hash);
-			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
-				percent = progressBar((i * 100) / pool.size());
-				System.out.println("Crossover/Mutation: " + percent);
-			}
-		}
+//		int size = pool.size()/2;
+//		populateMatingPool(pool);
+//		for (int i = 0; i < size; i++) {
+//			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
+//			NeuralNetwork p1 = pickParent(null, 0);
+//			NeuralNetwork p2 = pickParent(p1, 0);
+//			NeuralNetwork crossed = crossover(p1, p2);
+//			//System.out.println(crossed);
+//			NeuralNetwork mutated = mutate(crossed, mutateRate);
+//			hash.put(0.0, mutated);
+//			newPool.add(hash);
+//			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
+//				percent = progressBar((i * 100) / pool.size());
+//				System.out.println("Crossover/Mutation: " + percent);
+//			}
+//		}
+		
+//		for(int i = 0; i < size; i++){
+//			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
+//			NeuralNetwork p1 = getMatingPool().get(random.nextInt(getMatingPool().size()));
+//			//System.out.println(p1);
+//			hash.put(0.0, p1);
+//			newPool.add(hash);
+//		}
 
+		//System.out.println(getHighestHalf(pool).size());
+		newPool.addAll(getHighestHalf(pool));
+		System.out.println(newPool.size());
 		if (debug) {
 			System.out.println("Crossover/Mutation Done!");
 		}
@@ -93,17 +111,10 @@ public class Population extends GeneticAlgorithm {
 
 		avg /= pool.size();
 
-		int size = (int) (pool.size() - (pool.size() * 1.0));
 		pool.clear();
-		ArrayList<NeuralNetwork> matingPool = getMatingPool();
-		for (int i = 0; i < size; i++) {
-			HashMap<Double, NeuralNetwork> hash = new HashMap<>();
-			hash.put(0.0, matingPool.get(random.nextInt(matingPool.size())));
-			pool.add(hash);
-		}
-
 		pool.addAll(newPool);
 		System.out.println(pool.size());
+		//System.out.println(Arrays.toString(pool.toArray()));
 		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
 				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: " + (tiedPercent * 100 / pool.size() + "%.");
 		generation++;
@@ -191,6 +202,8 @@ public class Population extends GeneticAlgorithm {
 
 	@Override
 	public double selection(NeuralNetwork nn) {
+		
+		board = new Board();
 		boolean tileWon = false;
 		boolean draw = false;
 
@@ -229,16 +242,18 @@ public class Population extends GeneticAlgorithm {
 					if (tiles[x][y] == Tile.EMPTY) {
 						board.placeAt(x, y, Tile.O);
 						break;
+					} else{
+						fitness -= Math.pow(3, exponent);
 					}
 				}
 				oMoves++;
 			}
 
 			if (board.checkWin(Tile.X)) {
-				fitness = oMoves;
+				fitness += oMoves;
 				tileWon = true;
 			} else if (board.checkWin(Tile.O)) {
-				fitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
+				fitness += Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
 				tileWon = true;
 				wonPercent++;
 			} else {
@@ -253,7 +268,7 @@ public class Population extends GeneticAlgorithm {
 					}
 				}
 				if (!emptyTile) {// The board is full
-					fitness = Math.pow(oMoves, exponent);
+					fitness += Math.pow(oMoves, exponent);
 					draw = true;
 					tiedPercent++;
 				}
@@ -268,6 +283,7 @@ public class Population extends GeneticAlgorithm {
 		}
 
 		board.clearBoard();
+		//System.out.println(fitness);
 		return fitness;
 
 	}

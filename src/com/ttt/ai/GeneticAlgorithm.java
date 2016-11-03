@@ -1,72 +1,76 @@
 package com.ttt.ai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public abstract class GeneticAlgorithm {
 
-	private ArrayList<NeuralNetwork> matingPool = new ArrayList<NeuralNetwork>();
-	private Random random = new Random();
+	private ArrayList<JNeuralNetwork> matingPool = new ArrayList<JNeuralNetwork>();
+	private static Random random = new Random();
 
-	public NeuralNetwork mutate(NeuralNetwork nn, double mutateRate) {
-		Random r = new Random();
-
-		for (int i = 0; i < nn.getAllLayers().length - 1; i++) {
-			Layer l = nn.getAllLayers()[i];
-			for (Neuron n : l.getNeurons()) {
-				for (Synapse s : n.getOutgoingSynapses()) {
-					if (r.nextDouble() < mutateRate) {
-						s.setWeight(r.nextDouble());
-					}
+	public static JNeuralNetwork mutate(JNeuralNetwork nn, double mutateRate) {
+		JNeuralNetwork mutated = new JNeuralNetwork(nn);
+		mutated.makeWeightGroups();
+		
+		for (int i = 0; i < nn.getWeightGroups().size(); i++) {
+			JWeightGroup wg = mutated.getWeightGroups().get(i);
+			for (int d = 0; d < wg.getWeights().length; d++) {
+				if(random.nextDouble() < mutateRate){
+					wg.setWeight(d, (random.nextDouble() - 0.5));
+				} else{
+					wg.setWeight(d, nn.getWeightGroups().get(i).getWeights()[d]);
 				}
 			}
+			mutated.setWeightGroup(i, wg);
 		}
-		return nn;
+		return mutated;
 	}
 
-	public NeuralNetwork crossover(NeuralNetwork nn, NeuralNetwork nn2) {
-		Random r = new Random();
-
-		for (int i = 0; i < nn.getAllLayers().length - 1; i++) {
-			Layer l = nn.getAllLayers()[i];
-			int crossPoint = r.nextInt(l.getNeurons().length);
-			for (int a = 0; a < l.getNeurons().length; a++) {
-				if (a > crossPoint) {
-					Neuron n = l.getNeuron(a);
-					for (int d = 0; d < n.getOutgoingSynapses().length; d++) {
-						Synapse s = n.getOutgoingSynapses()[d];
-						s.setWeight(nn2.getAllLayers()[i].getNeuron(a).getOutgoingSynapses()[d].getWeight());
-					}
+	public static JNeuralNetwork crossover(JNeuralNetwork nn, JNeuralNetwork nn2) {
+		JNeuralNetwork crossed = new JNeuralNetwork(nn);
+		crossed.makeWeightGroups();
+		
+		for (int i = 0; i < nn.getWeightGroups().size(); i++) {
+			JWeightGroup wg = crossed.getWeightGroups().get(i);
+			int crossPoint = random.nextInt(wg.getWeights().length);
+			for (int d = 0; d < wg.getWeights().length; d++) {
+				if(d > crossPoint){
+					wg.setWeight(d, nn.getWeightGroups().get(i).getWeights()[d]);
+				} else{
+					wg.setWeight(d, nn2.getWeightGroups().get(i).getWeights()[d]);
 				}
 			}
+			crossed.setWeightGroup(i, wg);
 		}
-		return nn;
+		return crossed;
 	}
 
-	public NeuralNetwork acceptReject(ArrayList<HashMap<Double, NeuralNetwork>> pool, int maxFitness) {
+	public JNeuralNetwork acceptReject(ArrayList<Individual> pool, int maxFitness) {
 		Random random = new Random();
 		int besafe = 0;
 		while (besafe < 10000) {
 			int index = random.nextInt(pool.size());
-			HashMap<Double, NeuralNetwork> partner = pool.get(index);
+			Individual partner = pool.get(index);
 			int r = random.nextInt(maxFitness);
-			double key = partner.keySet().toArray(new Double[partner.keySet().size()])[0];
+			double key = partner.fitness;
 
 			if (r < key) {
-				return partner.get(key);
+				return partner.nn;
 			}
 			besafe++;
 		}
-		return pool.get(0).get(pool.get(0).keySet().toArray(new Double[1])[0]);
+		return pool.get(0).nn;
 
 	}
 
-	public NeuralNetwork pickParent(NeuralNetwork not, int iteration) {
-		NeuralNetwork parent = matingPool.get(random.nextInt(matingPool.size()));
+	public JNeuralNetwork pickParent(JNeuralNetwork not, int iteration) {
+		//System.out.println(matingPool.size());
+		JNeuralNetwork parent = matingPool.get(random.nextInt(matingPool.size()));
 		if (iteration > 100) {
-			return (matingPool.indexOf(not) == 0) ? matingPool.get(matingPool.size() - 1)
-					: matingPool.get(matingPool.indexOf(not) - 1);
+			return parent;
 		} else if (parent == not) {
 			return pickParent(not, iteration + 1);
 		} else {
@@ -74,48 +78,60 @@ public abstract class GeneticAlgorithm {
 		}
 	}
 
-	public void populateMatingPool(ArrayList<HashMap<Double, NeuralNetwork>> pool) {
+	public void populateMatingPool(ArrayList<Individual> pool) {
 		matingPool.clear();
-		for (HashMap<Double, NeuralNetwork> hash : pool) {
-			double fitness = (double) hash.keySet().toArray()[0];
-			for (int i = 0; i < fitness; i++) {
-				matingPool.add(hash.get(fitness));
+		double lowest = Double.MAX_VALUE; //So lowest fitness = 0
+		for (Individual hash : pool) {
+			double fitness = hash.fitness;
+			if(fitness < lowest){
+				lowest = fitness;
+			}
+		}
+
+		for (Individual hash : pool) {
+			double fitness = hash.fitness;
+			for (int i = 0; i < fitness + Math.abs(lowest) + 1; i++) {
+				matingPool.add(hash.nn);
 			}
 		}
 	}
 
-	public ArrayList<HashMap<Double, NeuralNetwork>> getHighestHalf(ArrayList<HashMap<Double, NeuralNetwork>> pool) {
-		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>(pool.size()/2);
-		for (int i = 0; i < pool.size() / 2; i++) {
-			double highest = Double.MIN_VALUE;
-			NeuralNetwork best = null;
-			for (HashMap<Double, NeuralNetwork> hash : pool) {
-				double fitness = (double) hash.keySet().toArray()[0];
-				if (fitness > highest) {
-					highest = fitness;
-					best = hash.get(fitness);
-				}
-			}
-			HashMap<Double, NeuralNetwork> hash1 = new HashMap<Double, NeuralNetwork>();
-			hash1.put(highest, best);
-			newPool.add(hash1);
-			for (int a = 0; a < pool.size(); a++) {
-				HashMap<Double, NeuralNetwork> hash = pool.get(a);
-				double fitness = (double) hash.keySet().toArray()[0];
-				if (fitness == fitness) {
-					pool.remove(hash);
-					break;
-				}
-			}
-			
-		}
-		return newPool;
+	public ArrayList<Individual> getHighestHalf(ArrayList<Individual> pool) {
+//		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>();
+//		int size = pool.size()/2;
+//		for (int i = 0; i < size; i++) {
+//			double highest = Double.MIN_VALUE;
+//			NeuralNetwork best = null;
+//			for (HashMap<Double, NeuralNetwork> hash : pool) {
+//				double fitness = (double) hash.keySet().toArray()[0];
+//				if (fitness > highest) {
+//					highest = fitness;
+//					best = hash.get(fitness);
+//				}
+//			}
+//			HashMap<Double, NeuralNetwork> hash1 = new HashMap<Double, NeuralNetwork>();
+//			hash1.put(highest, best);
+//			newPool.add(hash1);
+//			for (int a = 0; a < pool.size(); a++) {
+//				HashMap<Double, NeuralNetwork> hash = pool.get(a);
+//				double fitness = (double) hash.keySet().toArray()[0];
+//				if (fitness == fitness) {
+//					pool.remove(hash);
+//					break;
+//				}
+//			}
+//		}
+//		return newPool;
+		
+		Collections.sort(pool);
+		//TODO Make it return top half of now sorted pool
+		return pool;
 	}
 
-	public ArrayList<NeuralNetwork> getMatingPool() {
+	public ArrayList<JNeuralNetwork> getMatingPool() {
 		return matingPool;
 	}
 
-	public abstract double selection(NeuralNetwork nn);
+	public abstract double selection(JNeuralNetwork nn);
 
 }

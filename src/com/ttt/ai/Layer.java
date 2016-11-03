@@ -89,7 +89,7 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 
 		for (Neuron neuron : this) {
 			for (Neuron other : layer) {
-				neuron.addOutgoingSynapse(new Synapse(neuron, other, (random.nextFloat() - 0.5f) * 2));
+				neuron.addOutgoingSynapse(new Synapse(neuron, other, (random.nextFloat() - 0.5f) * 10));
 			}
 		}
 	}

@@ -98,14 +98,14 @@ public class NeuralNetwork implements Iterable<Layer> {
 		return l.toArray(new Layer[l.size()]);
 	}
 
-	@Override
-	public String toString() {
-		String str = "";
-		for (Layer l : getAllLayers()) {
-			str += l.toString() + "\n";
-		}
-		return str.trim();
-	}
+//	@Override
+//	public String toString() {
+//		String str = "";
+//		for (Layer l : getAllLayers()) {
+//			str += l.toString() + "\n";
+//		}
+//		return str.trim();
+//	}
 
 	@Override
 	public Iterator<Layer> iterator() {
