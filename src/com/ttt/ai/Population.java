@@ -12,7 +12,7 @@ import com.ttt.model.Tile;
 
 public class Population extends GeneticAlgorithm {
 
-	private ArrayList<HashMap<Double, NeuralNetwork>> pool;
+	private ArrayList<Individual> pool;
 	private Board board;
 	private int maxFitness = 0;
 	private Random random = new Random();
@@ -27,39 +27,29 @@ public class Population extends GeneticAlgorithm {
 	private double tiedPercent = 0;
 	private int maxDepth = 3;
 
-	public Population(NeuralNetwork base, int populationSize, double mutateRate, int exponent) {
-		pool = new ArrayList<HashMap<Double, NeuralNetwork>>();
+	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
+		pool = new ArrayList<Individual>();
 		board = new Board();
 		this.mutateRate = mutateRate;
 		maxFitness = (int) Math.pow((2 * ((board.BOARD_WIDTH * board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
 		this.exponent = exponent;
 
 		for (int i = 0; i < populationSize; i++) {
-			NeuralNetwork nn = new NeuralNetwork();
+			JNeuralNetwork nn = new JNeuralNetwork(base);
+			nn.makeWeightGroups();
 
-			Layer[] layers = base.getAllLayers();
-			nn.setInputLayer(new Layer(layers[0].getNeurons().length));
-			for (int a = 1; a < layers.length - 1; a++) {
-				nn.addLogicLayer(new Layer(layers[a].getNeurons().length));
-			}
-			nn.setOutputLayer(new Layer(layers[layers.length - 1].getNeurons().length));
-			nn.connectSynapsesBetweenLayers();
-			HashMap<Double, NeuralNetwork> map = new HashMap<Double, NeuralNetwork>();
-			map.put(0.0, nn);
-			pool.add(map);
+			Individual ind = new Individual(0.0, nn);
+			pool.add(ind);
 		}
 	}
 
 	public void runGeneration() {
 		for (int i = 0; i < pool.size(); i++) {
-			System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
-		}
-		for (int i = 0; i < pool.size(); i++) {
-			//System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
-			double fitness = selection(pool.get(i).get(pool.get(i).keySet().toArray(new Double[1])[0]));
-			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
-			hash.put(fitness, pool.get(i).get(0.0));
-			pool.set(i, hash);
+			// System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new
+			// Double[1])[0]));
+			double fitness = selection(pool.get(i).nn);
+			Individual ind = new Individual(fitness, pool.get(i).nn);
+			pool.set(i, ind);
 			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
 				percent = progressBar((i * 100) / pool.size());
 				System.out.println("Selection: " + percent);
@@ -68,53 +58,40 @@ public class Population extends GeneticAlgorithm {
 		if (debug) {
 			System.out.println("Selection Done!");
 		}
-		//System.out.println(pool);
+		// System.out.println(pool);
 
-		ArrayList<HashMap<Double, NeuralNetwork>> newPool = new ArrayList<HashMap<Double, NeuralNetwork>>();
+		ArrayList<Individual> newPool = new ArrayList<Individual>();
 
-//		int size = pool.size()/2;
-//		populateMatingPool(pool);
-//		for (int i = 0; i < size; i++) {
-//			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
-//			NeuralNetwork p1 = pickParent(null, 0);
-//			NeuralNetwork p2 = pickParent(p1, 0);
-//			NeuralNetwork crossed = crossover(p1, p2);
-//			//System.out.println(crossed);
-//			NeuralNetwork mutated = mutate(crossed, mutateRate);
-//			hash.put(0.0, mutated);
-//			newPool.add(hash);
-//			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
-//				percent = progressBar((i * 100) / pool.size());
-//				System.out.println("Crossover/Mutation: " + percent);
-//			}
-//		}
-		
-//		for(int i = 0; i < size; i++){
-//			HashMap<Double, NeuralNetwork> hash = new HashMap<Double, NeuralNetwork>();
-//			NeuralNetwork p1 = getMatingPool().get(random.nextInt(getMatingPool().size()));
-//			//System.out.println(p1);
-//			hash.put(0.0, p1);
-//			newPool.add(hash);
-//		}
-
-		//System.out.println(getHighestHalf(pool).size());
+		int size = pool.size() / 2;
+		populateMatingPool(pool);
+		for (int i = 0; i < pool.size() / 2; i++) {
+			JNeuralNetwork p1 = pickParent(null, 0);
+			JNeuralNetwork p2 = pickParent(p1, 0);
+			JNeuralNetwork crossed = crossover(p1, p2);
+			// System.out.println(crossed);
+			JNeuralNetwork mutated = mutate(crossed, mutateRate);
+			Individual ind = new Individual(0.0, mutated);
+			newPool.add(ind);
+			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
+				percent = progressBar((i * 100) / pool.size());
+				System.out.println("Crossover/Mutation: " + percent);
+			}
+		}
 		newPool.addAll(getHighestHalf(pool));
-		System.out.println(newPool.size());
 		if (debug) {
 			System.out.println("Crossover/Mutation Done!");
 		}
 
 		double avg = 0;
 		for (int i = 0; i < pool.size(); i++) {
-			avg += pool.get(i).keySet().toArray(new Double[1])[0];
+			avg += pool.get(i).fitness;
 		}
 
 		avg /= pool.size();
 
 		pool.clear();
 		pool.addAll(newPool);
-		System.out.println(pool.size());
-		//System.out.println(Arrays.toString(pool.toArray()));
+		// System.out.println(Arrays.toString(pool.toArray()));
 		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
 				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: " + (tiedPercent * 100 / pool.size() + "%.");
 		generation++;
@@ -201,8 +178,8 @@ public class Population extends GeneticAlgorithm {
 	}
 
 	@Override
-	public double selection(NeuralNetwork nn) {
-		
+	public double selection(JNeuralNetwork nn) {
+
 		board = new Board();
 		boolean tileWon = false;
 		boolean draw = false;
@@ -217,24 +194,20 @@ public class Population extends GeneticAlgorithm {
 				board.placeAt(computersMove.x, computersMove.y, Tile.X);
 
 			} else if (board.getTurn() == Tile.O) { // If O turn
-				Layer l = new Layer();
+				JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
 				Tile[][] tiles = board.getTiles();
+				int i = 0;
 				for (int x = 0; x < tiles.length; x++) {
 					for (int y = 0; y < tiles[0].length; y++) {
-						if (tiles[x][y] == Tile.EMPTY) {
-							l.addNeuron(new Neuron(0));
-						} else if (tiles[x][y] == Tile.X) {
-							l.addNeuron(new Neuron(1));
-						} else { // If tile is O
-							l.addNeuron(new Neuron(-1));
-						}
+						l.setNeuron(i, new JNeuron(tiles[x][y].getValue()));
+						i++;
 					}
 				}
-				l.addNeuron(new Neuron(1)); // constant
+				l.setNeuron(Board.BOARD_WIDTH * Board.BOARD_HEIGHT, new JNeuron(1)); // constant
 				nn.setInputs(l);
-				nn.compute();
+				nn.flush();
 
-				Layer output = nn.getOutputLayer();
+				JLayer output = nn.getOutputs();
 				ArrayList<Integer> sortedIndexes = output.getHighest2Lowest();
 				for (int index = 0; index < Board.BOARD_WIDTH * Board.BOARD_HEIGHT; index++) {
 					int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
@@ -242,7 +215,7 @@ public class Population extends GeneticAlgorithm {
 					if (tiles[x][y] == Tile.EMPTY) {
 						board.placeAt(x, y, Tile.O);
 						break;
-					} else{
+					} else {
 						fitness -= Math.pow(3, exponent);
 					}
 				}
@@ -283,7 +256,7 @@ public class Population extends GeneticAlgorithm {
 		}
 
 		board.clearBoard();
-		//System.out.println(fitness);
+		// System.out.println(fitness);
 		return fitness;
 
 	}

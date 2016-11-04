@@ -9,6 +9,11 @@ public class Individual implements Comparable<Individual>{
 		nn = new JNeuralNetwork();
 	}
 	
+	public Individual(double fitness, JNeuralNetwork nn){
+		this.nn = nn;
+		this.fitness = fitness;
+	}
+	
 	public void setFitness(double fitness){
 		this.fitness = fitness;
 	}

@@ -122,10 +122,13 @@ public abstract class GeneticAlgorithm {
 //			}
 //		}
 //		return newPool;
-		
+
 		Collections.sort(pool);
-		//TODO Make it return top half of now sorted pool
-		return pool;
+		ArrayList<Individual> newPool = new ArrayList<Individual>();
+		for(int i = 0; i < pool.size()/2; i++){
+			newPool.add(pool.get(i));
+		}
+		return newPool;
 	}
 
 	public ArrayList<JNeuralNetwork> getMatingPool() {

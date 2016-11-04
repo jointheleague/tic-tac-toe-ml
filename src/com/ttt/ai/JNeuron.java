@@ -1,7 +1,7 @@
 package com.ttt.ai;
 import java.io.Serializable;
 
-public class JNeuron implements Serializable{
+public class JNeuron implements Serializable, Comparable<JNeuron>{
 	
 	/**
 	 * 
@@ -12,6 +12,10 @@ public class JNeuron implements Serializable{
 	@Override
 	public String toString(){
 		return "(" + input + ")";
+	}
+	
+	public double getValue(){
+		return input;
 	}
 	
 	/**
@@ -51,6 +55,11 @@ public class JNeuron implements Serializable{
 	 */
 	public double getOutput(){
 		return (1/( 1 + Math.pow(Math.E,(-1*input))));
+	}
+
+	@Override
+	public int compareTo(JNeuron o) {
+		return Double.compare(input, o.getValue());
 	}
 	
 }
