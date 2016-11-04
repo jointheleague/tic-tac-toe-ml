@@ -2,8 +2,6 @@ package com.ttt.ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -26,6 +24,7 @@ public class Population extends GeneticAlgorithm {
 	private double wonPercent = 0;
 	private double tiedPercent = 0;
 	private int maxDepth = 3;
+	private double avgFitness = 0;
 
 	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<Individual>();
@@ -43,7 +42,7 @@ public class Population extends GeneticAlgorithm {
 		}
 	}
 
-	public void runGeneration() {
+	public void selection() {
 		for (int i = 0; i < pool.size(); i++) {
 			// System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new
 			// Double[1])[0]));
@@ -58,11 +57,11 @@ public class Population extends GeneticAlgorithm {
 		if (debug) {
 			System.out.println("Selection Done!");
 		}
-		// System.out.println(pool);
+	}
 
+	public void makeNewGeneration() {
 		ArrayList<Individual> newPool = new ArrayList<Individual>();
 
-		int size = pool.size() / 2;
 		populateMatingPool(pool);
 		for (int i = 0; i < pool.size() / 2; i++) {
 			JNeuralNetwork p1 = pickParent(null, 0);
@@ -88,15 +87,41 @@ public class Population extends GeneticAlgorithm {
 		}
 
 		avg /= pool.size();
+		this.avgFitness = avg;
 
 		pool.clear();
 		pool.addAll(newPool);
 		// System.out.println(Arrays.toString(pool.toArray()));
 		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
-				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: " + (tiedPercent * 100 / pool.size() + "%.");
+				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: "
+				+ (tiedPercent * 100 / (pool.size() * 3) + "%.");
 		generation++;
+	}
+	
+	public void clearStats(){
 		wonPercent = 0;
 		tiedPercent = 0;
+	}
+
+	public void runGeneration() {
+
+		selection();
+		
+		makeNewGeneration();
+		
+		clearStats();
+	}
+
+	public double getAvgFitness() {
+		return avgFitness;
+	}
+
+	public double getTiedPercent() {
+		return (tiedPercent * 100) / (pool.size() * 3);
+	}
+	
+	public int getGeneration(){
+		return generation;
 	}
 
 	public String progressBar(int progress) {
@@ -180,84 +205,87 @@ public class Population extends GeneticAlgorithm {
 	@Override
 	public double selection(JNeuralNetwork nn) {
 
-		board = new Board();
-		boolean tileWon = false;
-		boolean draw = false;
-
-		int oMoves = 0;
 		double fitness = 0;
+		for (int game = 0; game < 3; game++) {
+			board = new Board();
+			boolean tileWon = false;
+			boolean draw = false;
 
-		while (!tileWon && !draw) {
+			int oMoves = 0;
 
-			if (board.getTurn() == Tile.X) { // If X turn
-				minimax(0, 1);
-				board.placeAt(computersMove.x, computersMove.y, Tile.X);
+			while (!tileWon && !draw) {
 
-			} else if (board.getTurn() == Tile.O) { // If O turn
-				JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
-				Tile[][] tiles = board.getTiles();
-				int i = 0;
-				for (int x = 0; x < tiles.length; x++) {
-					for (int y = 0; y < tiles[0].length; y++) {
-						l.setNeuron(i, new JNeuron(tiles[x][y].getValue()));
-						i++;
-					}
-				}
-				l.setNeuron(Board.BOARD_WIDTH * Board.BOARD_HEIGHT, new JNeuron(1)); // constant
-				nn.setInputs(l);
-				nn.flush();
+				if (board.getTurn() == Tile.X) { // If X turn
+					minimax(0, 1);
+					board.placeAt(computersMove.x, computersMove.y, Tile.X);
 
-				JLayer output = nn.getOutputs();
-				ArrayList<Integer> sortedIndexes = output.getHighest2Lowest();
-				for (int index = 0; index < Board.BOARD_WIDTH * Board.BOARD_HEIGHT; index++) {
-					int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
-					int y = sortedIndexes.get(index) % Board.BOARD_HEIGHT;
-					if (tiles[x][y] == Tile.EMPTY) {
-						board.placeAt(x, y, Tile.O);
-						break;
-					} else {
-						fitness -= Math.pow(3, exponent);
-					}
-				}
-				oMoves++;
-			}
-
-			if (board.checkWin(Tile.X)) {
-				fitness += oMoves;
-				tileWon = true;
-			} else if (board.checkWin(Tile.O)) {
-				fitness += Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
-				tileWon = true;
-				wonPercent++;
-			} else {
-				boolean emptyTile = false;
-				Tile[][] tiles = board.getTiles();
-				for (Tile[] tiles1 : tiles) {
-					for (Tile tile : tiles1) {
-						if (tile == Tile.EMPTY) {
-							emptyTile = true;
-							break;
+				} else if (board.getTurn() == Tile.O) { // If O turn
+					JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
+					Tile[][] tiles = board.getTiles();
+					int i = 0;
+					for (int x = 0; x < tiles.length; x++) {
+						for (int y = 0; y < tiles[0].length; y++) {
+							l.setNeuron(i, new JNeuron(tiles[x][y].getValue()));
+							i++;
 						}
 					}
+					l.setNeuron(Board.BOARD_WIDTH * Board.BOARD_HEIGHT, new JNeuron(1)); // constant
+					nn.setInputs(l);
+					nn.flush();
+
+					JLayer output = nn.getOutputs();
+					ArrayList<Integer> sortedIndexes = output.getHighest2Lowest();
+					for (int index = 0; index < Board.BOARD_WIDTH * Board.BOARD_HEIGHT; index++) {
+						int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
+						int y = sortedIndexes.get(index) % Board.BOARD_HEIGHT;
+						if (tiles[x][y] == Tile.EMPTY) {
+							board.placeAt(x, y, Tile.O);
+							break;
+						} else {
+							// fitness -= Math.pow(2, exponent);
+						}
+					}
+					oMoves++;
 				}
-				if (!emptyTile) {// The board is full
-					fitness += Math.pow(oMoves, exponent);
-					draw = true;
-					tiedPercent++;
+
+				if (board.checkWin(Tile.X)) {
+					fitness += oMoves;
+					tileWon = true;
+				} else if (board.checkWin(Tile.O)) {
+					fitness += Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
+					tileWon = true;
+					wonPercent++;
+				} else {
+					boolean emptyTile = false;
+					Tile[][] tiles = board.getTiles();
+					for (Tile[] tiles1 : tiles) {
+						for (Tile tile : tiles1) {
+							if (tile == Tile.EMPTY) {
+								emptyTile = true;
+								break;
+							}
+						}
+					}
+					if (!emptyTile) {// The board is full
+						fitness += Math.pow(oMoves, exponent);
+						draw = true;
+						tiedPercent++;
+					}
 				}
+
+				board.switchTurn();
+				// printBoard();
 			}
 
-			board.switchTurn();
-			// printBoard();
-		}
+			if (extraDebug) {
+				printBoard();
+			}
 
-		if (extraDebug) {
-			printBoard();
-		}
+			board.clearBoard();
 
-		board.clearBoard();
+		}
 		// System.out.println(fitness);
-		return fitness;
+		return fitness / 3;
 
 	}
 
