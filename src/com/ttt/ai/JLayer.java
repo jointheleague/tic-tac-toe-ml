@@ -54,6 +54,10 @@ public class JLayer implements Serializable{
 		return sorted;
 	}
 	
+	public void addNeuron(JNeuron n){
+		neurons.add(n);
+	}
+	
 	/**
 	 * {@code public Layer(int neurons)}
 	 * @param neurons - The number of neurons in this layer.

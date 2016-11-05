@@ -25,6 +25,7 @@ public class Population extends GeneticAlgorithm {
 	private double tiedPercent = 0;
 	private int maxDepth = 3;
 	private double avgFitness = 0;
+	private double avgNeurons = 0;
 
 	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<Individual>();
@@ -51,7 +52,7 @@ public class Population extends GeneticAlgorithm {
 			pool.set(i, ind);
 			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
 				percent = progressBar((i * 100) / pool.size());
-				System.out.println("Selection: " + percent);
+				System.out.print("Selection: " + percent);
 			}
 		}
 		if (debug) {
@@ -67,13 +68,12 @@ public class Population extends GeneticAlgorithm {
 			JNeuralNetwork p1 = pickParent(null, 0);
 			JNeuralNetwork p2 = pickParent(p1, 0);
 			JNeuralNetwork crossed = crossover(p1, p2);
-			// System.out.println(crossed);
 			JNeuralNetwork mutated = mutate(crossed, mutateRate);
 			Individual ind = new Individual(0.0, mutated);
 			newPool.add(ind);
 			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
 				percent = progressBar((i * 100) / pool.size());
-				System.out.println("Crossover/Mutation: " + percent);
+				System.out.print("Crossover/Mutation: " + percent);
 			}
 		}
 		newPool.addAll(getHighestHalf(pool));
@@ -81,20 +81,23 @@ public class Population extends GeneticAlgorithm {
 			System.out.println("Crossover/Mutation Done!");
 		}
 
-		double avg = 0;
+		double avgFitness = 0;
+		double avgNeurons = 0;
 		for (int i = 0; i < pool.size(); i++) {
-			avg += pool.get(i).fitness;
+			avgFitness += pool.get(i).fitness;
+			avgNeurons += pool.get(i).nn.getTotalNeurons();
 		}
 
-		avg /= pool.size();
-		this.avgFitness = avg;
+		avgFitness /= pool.size();
+		avgNeurons /= pool.size();
+		this.avgFitness = avgFitness;
+		this.avgNeurons = avgNeurons;
 
 		pool.clear();
 		pool.addAll(newPool);
 		// System.out.println(Arrays.toString(pool.toArray()));
-		output = "Generation: " + generation + ". Average Fitness: " + avg + " Won Percent: "
-				+ (wonPercent * 100 / pool.size()) + "%. Tied Percent: "
-				+ (tiedPercent * 100 / (pool.size() * 3) + "%.");
+		output = "Generation: " + generation + ". Average Fitness: " + avgFitness + " Tied Percent: "
+				+ (tiedPercent * 100 / (pool.size() * 3) + "%. Average Neurons: " + avgNeurons);
 		generation++;
 	}
 	
@@ -114,6 +117,10 @@ public class Population extends GeneticAlgorithm {
 
 	public double getAvgFitness() {
 		return avgFitness;
+	}
+	
+	public double getAvgNeurons() {
+		return avgNeurons;
 	}
 
 	public double getTiedPercent() {

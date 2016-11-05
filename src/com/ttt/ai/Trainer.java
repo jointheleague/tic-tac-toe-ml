@@ -9,14 +9,14 @@ public class Trainer {
 	public static void main(String[] args) {
 		JNeuralNetwork nbase = new JNeuralNetwork();
 		nbase.addLayer(new JLayer(Board.BOARD_HEIGHT * Board.BOARD_WIDTH + 1));
-		nbase.addLayer(new JLayer(100));
-		nbase.addLayer(new JLayer(100));
+		nbase.addLayer(new JLayer(15));
+		nbase.addLayer(new JLayer(15));
 		nbase.addLayer(new JLayer(Board.BOARD_HEIGHT * Board.BOARD_WIDTH));
 
 		nbase.makeWeightGroups();
 		nbase.flush();
 		
-		Population pop = new Population(nbase, 100, 0.01, 3);
+		Population pop = new Population(nbase, 1000, 0.01, 3);
 
 		pop.setDebug(false);
 		pop.setExtraDebug(false);

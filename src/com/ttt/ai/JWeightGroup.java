@@ -12,6 +12,10 @@ public class JWeightGroup implements Serializable{
 	private static final long serialVersionUID = 5488310668853952534L;
 	private double[] weights;
 	
+	public double getWeight(int index){
+		return weights[index];
+	}
+	
 	/**
 	 * {@code public WeightGroup(double[] weights)}
 	 * @param weights - the array of weights in the WeightGroup.
