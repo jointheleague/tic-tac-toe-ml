@@ -36,7 +36,7 @@ public class JWeightGroup implements Serializable{
 		double[] weights = new double[l1.size()*l2.size()];
 		
 		for(int i = 0; i < weights.length; i++){
-			weights[i] = r.nextFloat();
+			weights[i] = (r.nextFloat() - 0.5) * 2;
 		}
 		
 		return new JWeightGroup(weights);

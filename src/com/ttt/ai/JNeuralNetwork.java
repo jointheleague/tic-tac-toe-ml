@@ -30,6 +30,14 @@ public class JNeuralNetwork implements Serializable {
 		return total;
 	}
 	
+	public void removeLayer(int index){
+		layers.remove(index);
+	}
+	
+	public void addLayerAt(int index, JLayer l){
+		layers.add(index, l);
+	}
+	
 	public JNeuralNetwork(JNeuralNetwork copy){
 		this();
 		for(JLayer l : copy.getLayers()){

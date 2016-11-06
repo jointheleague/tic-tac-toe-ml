@@ -29,9 +29,14 @@ public class Individual implements Comparable<Individual>{
 	public JNeuralNetwork getNeuralNetwork(){
 		return nn;
 	}
-	
-	public int compareTo(Individual i2){
-		return Double.compare(fitness, i2.fitness);
+
+	@Override
+	public int compareTo(Individual i2) {
+		return Double.compare(i2.fitness, this.fitness);
 	}
 	
+	@Override
+	public String toString(){
+		return String.valueOf(fitness);
+	}
 }

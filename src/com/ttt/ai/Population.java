@@ -114,6 +114,14 @@ public class Population extends GeneticAlgorithm {
 		
 		clearStats();
 	}
+	
+	public Individual getBestIndividual(){
+		return getHighestHalf(pool).get(0);
+	}
+	
+	public ArrayList<Individual> getPopulation(){
+		return pool;
+	}
 
 	public double getAvgFitness() {
 		return avgFitness;

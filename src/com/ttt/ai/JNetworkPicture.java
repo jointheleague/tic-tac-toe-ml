@@ -23,11 +23,16 @@ public class JNetworkPicture implements Serializable{
 	private Color background = Color.WHITE;
 	private Color nodes = Color.BLACK;
 	private Color lines = Color.BLACK;
+	private Color negativeLines = Color.BLACK;
 	private Color text = Color.WHITE;
 	private NumberFormat nf;
 
 	public JNetworkPicture(JNeuralNetwork nn) {
 		update(nn);
+		nf = NumberFormat.getInstance();
+	}
+	
+	public JNetworkPicture() {
 		nf = NumberFormat.getInstance();
 	}
 
@@ -79,6 +84,15 @@ public class JNetworkPicture implements Serializable{
 	 */
 	public void setLines(Color c){
 		lines = c;
+	}
+	
+	/**
+	 * {@code public void setNegativeLines(Color c)}
+	 * 
+	 * @param c - The Color of the negative lines.
+	 */
+	public void setNegativeLines(Color c){
+		negativeLines = c;
 	}
 	
 	/**
@@ -140,9 +154,12 @@ public class JNetworkPicture implements Serializable{
 				}
 
 				g.setColor(lines);
-				g.setStroke(new BasicStroke((int) (ws[w] * nodeDiameter / 10)));
-				g.draw(new Line2D.Float(curX + nodeDiameter / 2, y + nodeDiameter / 2, nextX + nodeDiameter / 2,
-						y + ySpacing + nodeDiameter + nodeDiameter / 2));
+				if(ws[w] < 0){
+					g.setColor(negativeLines);
+				}
+				g.setStroke(new BasicStroke((int) (Math.abs(ws[w]) * nodeDiameter / 10)));
+				g.draw(new Line2D.Float(curX + nodeDiameter / 2, y + (int)(nodeDiameter * 0.9), nextX + nodeDiameter / 2,
+						y + ySpacing + nodeDiameter + nodeDiameter / 10));
 
 				g.setColor(nodes);
 				g.fillOval(curX, y, nodeDiameter, nodeDiameter);
