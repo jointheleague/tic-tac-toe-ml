@@ -18,6 +18,14 @@ public class JNeuralNetwork implements Serializable {
 	private ArrayList<JWeightGroup> weights;
 
 	
+	public void clear(){
+		for(JLayer l : layers){
+			for(JNeuron n : l.getNeurons()){
+				n.setInput(0);
+			}
+		}
+	}
+	
 	public void setLayer(int index, JLayer l){
 		layers.set(index, l);
 	}

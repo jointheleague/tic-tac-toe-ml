@@ -188,6 +188,11 @@ public abstract class GeneticAlgorithm {
 		}
 		return newPool;
 	}
+	
+	public static ArrayList<Individual> getSorted(ArrayList<Individual> pool) {
+		Collections.sort(pool);
+		return pool;
+	}
 
 	public ArrayList<JNeuralNetwork> getMatingPool() {
 		return matingPool;

@@ -28,7 +28,7 @@ public class Trainer {
 
 		pop.setDebug(false);
 		pop.setExtraDebug(false);
-		pop.setMaxDepth(2); // Dosen't matter for 3 x 3 board
+		pop.setMaxDepth(2); // (2 for 5x5, 10 for 3x3)
 		
 		JNetworkPicture np = new JNetworkPicture(nbase);
 		np.setNodes(Color.blue);
@@ -36,7 +36,7 @@ public class Trainer {
 		np.setNegativeLines(Color.red);
 		
 		JFrame frame = new JFrame();
-		frame.setSize(1000, 1000);
+		frame.setSize(1000, 800);
 		frame.getContentPane().setLayout(new FlowLayout());
 		JLabel label = new JLabel(new ImageIcon(np.getNetworkImage(frame.getWidth(), frame.getHeight(), 60)));
 		frame.getContentPane().add(label);
@@ -57,7 +57,7 @@ public class Trainer {
 			Graphics g = img.getGraphics();
 			g.setColor(Color.black);
 			g.drawString(pop.getOutput(), 50, 25);
-			g.drawString("Best Fitness: " + ind.fitness, 50, 50);
+			g.drawString("Best Fitness: " + ind.fitness + " / " + pop.getMaxTiedFitness(), 50, 50);
 			label.setIcon(new ImageIcon(img));
 
 			pop.makeNewGeneration();
@@ -66,10 +66,10 @@ public class Trainer {
 		}
 		ArrayList<Individual> finals = pop.getPopulation();
 
-		String dir = JOptionPane.showInputDialog("Dir for final brains (Include all slashes): ");
+		String dir = JOptionPane.showInputDialog("Dir for final top half of brains (Include all slashes): ");
 		int index = 0;
 		for(Individual i : finals){
-			i.nn.saveNN(dir + "nn" + index);
+			i.saveIndividual(dir + "ind" + index);
 			index++;
 		}
 		System.exit(0);

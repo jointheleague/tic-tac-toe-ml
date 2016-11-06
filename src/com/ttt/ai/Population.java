@@ -26,12 +26,14 @@ public class Population extends GeneticAlgorithm {
 	private int maxDepth = 3;
 	private double avgFitness = 0;
 	private double avgNeurons = 0;
+	private double maxTiedFitness = 0;
 
 	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<Individual>();
 		board = new Board();
 		this.mutateRate = mutateRate;
-		maxFitness = (int) Math.pow((2 * ((board.BOARD_WIDTH * board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
+		maxFitness = (int) Math.pow((2 * ((Board.BOARD_WIDTH * Board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
+		maxTiedFitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) / 2 + 1, exponent);
 		this.exponent = exponent;
 
 		for (int i = 0; i < populationSize; i++) {
@@ -100,8 +102,8 @@ public class Population extends GeneticAlgorithm {
 				+ (tiedPercent * 100 / (pool.size() * 3) + "%. Average Neurons: " + avgNeurons);
 		generation++;
 	}
-	
-	public void clearStats(){
+
+	public void clearStats() {
 		wonPercent = 0;
 		tiedPercent = 0;
 	}
@@ -109,24 +111,28 @@ public class Population extends GeneticAlgorithm {
 	public void runGeneration() {
 
 		selection();
-		
+
 		makeNewGeneration();
-		
+
 		clearStats();
 	}
-	
-	public Individual getBestIndividual(){
-		return getHighestHalf(pool).get(0);
+
+	public double getMaxTiedFitness() {
+		return maxTiedFitness;
 	}
-	
-	public ArrayList<Individual> getPopulation(){
+
+	public Individual getBestIndividual() {
+		return getSorted(pool).get(0);
+	}
+
+	public ArrayList<Individual> getPopulation() {
 		return pool;
 	}
 
 	public double getAvgFitness() {
 		return avgFitness;
 	}
-	
+
 	public double getAvgNeurons() {
 		return avgNeurons;
 	}
@@ -134,8 +140,8 @@ public class Population extends GeneticAlgorithm {
 	public double getTiedPercent() {
 		return (tiedPercent * 100) / (pool.size() * 3);
 	}
-	
-	public int getGeneration(){
+
+	public int getGeneration() {
 		return generation;
 	}
 
@@ -297,6 +303,7 @@ public class Population extends GeneticAlgorithm {
 			}
 
 			board.clearBoard();
+			nn.clear();
 
 		}
 		// System.out.println(fitness);
