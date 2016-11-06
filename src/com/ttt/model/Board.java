@@ -18,12 +18,10 @@ public class Board {
 			if (tiles.length == BOARD_HEIGHT && tiles[0].length == BOARD_WIDTH) {
 				this.tiles = tiles;
 			} else {
-				System.err.println("ERROR: Parameter tile array has size different from width & height.  -Ruoya");
-				System.exit(0);
+				throw new ArrayIndexOutOfBoundsException("Parameter tile array has size different from width & height");
 			}
 		} else {
-			System.err.println("ERROR: Parameter tile array has size zero.  -Ruoya");
-			System.exit(0);
+			throw new ArrayIndexOutOfBoundsException("Parameter tile array has size zero");
 		}
 	}
 	
@@ -31,12 +29,15 @@ public class Board {
 		return currentTurn;
 	}
 	
+	@Deprecated
 	public void switchTurn(){
+		//TODO: Remove method
 		if(currentTurn == Tile.X){
 			currentTurn = Tile.O;
 		}else{
 			currentTurn = Tile.X;
 		}
+		System.err.println("Board.switchTurn() is deprecated, use GameControllers to manage games from now on!");
 	}
 
 	public Tile getTile(int x, int y) {
@@ -121,8 +122,10 @@ public class Board {
 		return false;
 	}
 
+	@Deprecated
 	public void placeAt(int x, int y, Tile tile) {
 		setTile(x, y, tile);
+		System.err.println("Baord.placeAt() is deprecated, please use setTile instead.");
 	}
 	
 	public void clearBoard(){

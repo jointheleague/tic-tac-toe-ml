@@ -13,7 +13,7 @@ public class Player {
 		return playerLabel;
 	}
 	
-	public void performTurn(){
+	public void performTurn(Board b){
 		
 	}
 	public void swapTileType(){
