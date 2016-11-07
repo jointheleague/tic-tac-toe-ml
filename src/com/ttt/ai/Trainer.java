@@ -28,7 +28,7 @@ public class Trainer {
 
 		pop.setDebug(false);
 		pop.setExtraDebug(false);
-		pop.setMaxDepth(2); // (2 for 5x5, 10 for 3x3)
+		pop.setMaxDepth(10); // (2 for 5x5, 10 for 3x3)
 		
 		JNetworkPicture np = new JNetworkPicture(nbase);
 		np.setNodes(Color.blue);
@@ -46,7 +46,7 @@ public class Trainer {
 		
 		double tiedPercent = 0;
 		int gen = 0;
-		while(tiedPercent < 95 && gen < 10000) {
+		while(tiedPercent < 98 && gen < 10000) {
 			pop.selection();
 			tiedPercent = pop.getTiedPercent();
 			System.out.println(pop.getOutput());
@@ -66,7 +66,7 @@ public class Trainer {
 		}
 		ArrayList<Individual> finals = pop.getPopulation();
 
-		String dir = JOptionPane.showInputDialog("Dir for final top half of brains (Include all slashes): ");
+		String dir = JOptionPane.showInputDialog("Dir for final top brain (Include all slashes): ");
 		int index = 0;
 		for(Individual i : finals){
 			i.saveIndividual(dir + "ind" + index);

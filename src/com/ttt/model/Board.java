@@ -3,9 +3,9 @@ package com.ttt.model;
 public class Board {
 
 	// TODO catch if width/height is not positive
-	public static final int BOARD_WIDTH = 5;
-	public static final int BOARD_HEIGHT = 5;
-	public static final int WIN_COUNT = 5;
+	public static final int BOARD_WIDTH = 3;
+	public static final int BOARD_HEIGHT = 3;
+	public static final int WIN_COUNT = 3;
 	private static Tile currentTurn = Tile.X;
 	private Tile[][] tiles;
 

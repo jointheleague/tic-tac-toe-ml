@@ -23,14 +23,15 @@ public class Population extends GeneticAlgorithm {
 	private int exponent;
 	private double wonPercent = 0;
 	private double tiedPercent = 0;
-	private int maxDepth = 3;
 	private double avgFitness = 0;
 	private double avgNeurons = 0;
 	private double maxTiedFitness = 0;
+	private Minimax minimax;
 
 	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<Individual>();
 		board = new Board();
+		minimax = new Minimax(2, Tile.X);
 		this.mutateRate = mutateRate;
 		maxFitness = (int) Math.pow((2 * ((Board.BOARD_WIDTH * Board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
 		maxTiedFitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) / 2 + 1, exponent);
@@ -161,11 +162,11 @@ public class Population extends GeneticAlgorithm {
 	}
 
 	public void setMaxDepth(int depth) {
-		this.maxDepth = depth;
+		minimax.setMaxDepth(depth);
 	}
 
 	public int getMaxDepth() {
-		return maxDepth;
+		return minimax.getMaxDepth();
 	}
 
 	public String getProgress() {
@@ -233,12 +234,15 @@ public class Population extends GeneticAlgorithm {
 			boolean draw = false;
 
 			int oMoves = 0;
+			
+			for(int i = 0; i < random.nextInt(5); i++){
+				board.switchTurn();
+			}
 
 			while (!tileWon && !draw) {
 
 				if (board.getTurn() == Tile.X) { // If X turn
-					minimax(0, 1);
-					board.placeAt(computersMove.x, computersMove.y, Tile.X);
+					minimax.performTurn(board);
 
 				} else if (board.getTurn() == Tile.O) { // If O turn
 					JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
@@ -315,72 +319,6 @@ public class Population extends GeneticAlgorithm {
 		int x = i / Board.BOARD_WIDTH;
 		int y = i % Board.BOARD_HEIGHT;
 		return new Point(x, y);
-	}
-
-	List<Point> availablePoints;
-	Point computersMove;
-
-	public List<Point> getAvailableStates() {
-		availablePoints = new ArrayList<>();
-		for (int i = 0; i < Board.BOARD_WIDTH; ++i) {
-			for (int j = 0; j < Board.BOARD_HEIGHT; ++j) {
-				if (board.getTile(i, j) == Tile.EMPTY) {
-					availablePoints.add(new Point(i, j));
-				}
-			}
-		}
-		return availablePoints;
-	}
-
-	public int minimax(int depth, int turn) {
-		if (board.checkWin(Tile.X))
-			return +1;
-		if (board.checkWin(Tile.O))
-			return -1;
-
-		if (depth > maxDepth) {
-			return 0;
-		}
-
-		List<Point> pointsAvailable = getAvailableStates();
-		if (pointsAvailable.isEmpty())
-			return 0;
-
-		int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
-
-		for (int i = 0; i < pointsAvailable.size(); ++i) {
-			Point point = pointsAvailable.get(i);
-			if (turn == 1) { // X's Turn
-				board.setTile(point.x, point.y, Tile.X);
-				int currentScore = minimax(depth + 1, 2);
-				max = Math.max(currentScore, max);
-
-				if (depth == 0)// System.out.println("Score for position
-								// "+(i+1)+" = "+currentScore);
-					if (currentScore >= 0) {
-						if (depth == 0)
-							computersMove = point;
-					}
-				if (currentScore == 1) {
-					board.setTile(point.x, point.y, Tile.EMPTY);
-					break;
-				}
-				if (i == pointsAvailable.size() - 1 && max < 0) {
-					if (depth == 0)
-						computersMove = point;
-				}
-			} else if (turn == 2) { // O's Turn
-				board.setTile(point.x, point.y, Tile.O);
-				int currentScore = minimax(depth + 1, 1);
-				min = Math.min(currentScore, min);
-				if (min == -1) {
-					board.setTile(point.x, point.y, Tile.EMPTY);
-					break;
-				}
-			}
-			board.setTile(point.x, point.y, Tile.EMPTY); // Reset this point
-		}
-		return turn == 1 ? max : min;
 	}
 
 }

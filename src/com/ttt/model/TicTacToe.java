@@ -2,6 +2,9 @@ package com.ttt.model;
 
 import javax.swing.JFrame;
 
+import com.ttt.ai.Individual;
+import com.ttt.ai.Minimax;
+import com.ttt.ai.TrainedPlayer;
 import com.ttt.control.GameController;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
@@ -12,10 +15,16 @@ public class TicTacToe {
 
 	public static void main(String[] args) {
 		board = new Board();
-		Player p1 = new HumanPlayer("Player 1");
-		Player p2 = new HumanPlayer("Player 2");
+		Player p2 = new HumanPlayer("Player 1");
+		//Player p2 = new HumanPlayer("Player 2");
+		AIPlayer net = new AIPlayer("AI NeuralNetwork");
+		AIPlayer mini = new AIPlayer("AI Minimax");
+		Minimax minimax = new Minimax(10, Tile.X);
+		mini.setNetwork(minimax);
+		TrainedPlayer tp = new TrainedPlayer(Individual.openNN("/home/nicholas/brains3x3/ind6.ind").nn, Tile.O);
+		net.setNetwork(tp);
 		setupGraphics(board);
-		Player winner = new GameController(p1, p2, board).playGame();
+		Player winner = new GameController(p2, mini, board).playGame();
 		System.out.print(winner.getLabel() + " Won!");
 	}
 
