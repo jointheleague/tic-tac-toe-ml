@@ -10,11 +10,13 @@ public class GameController {
 	private Player playerA;
 	private Player playerB;
 	private Board gameBoard;
+	private int turnNum;
 	
 	public GameController(Player a, Player b, Board board){
 		this.playerA = a;
 		this.playerB = b;
 		this.gameBoard = board;
+		this.turnNum = 0;
 		
 		if(a.getTileType() == b.getTileType()){
 			a.swapTileType();
@@ -26,23 +28,32 @@ public class GameController {
 
 	}
 	
-	public Player playGame(){
+	public Player playGame() {
+		Player winner = null;
 		boolean playerTurn = true;
-		boolean playerWon = false;
-		while(!playerWon){
+		boolean gameOver = false;
+		while(!gameOver){
+			turnNum++;
+			if (turnNum > Board.BOARD_WIDTH * Board.BOARD_HEIGHT) {
+				gameOver = true;
+				break;
+			}
 			if(playerTurn){
 				playerA.performTurn(gameBoard);
 			}else{
 				playerB.performTurn(gameBoard);
 			}
 			playerTurn = !playerTurn;
-			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))));
+			
+			if(gameBoard.checkWin(Tile.X)){
+				gameOver = true;
+				winner = playerA.getTileType() == Tile.X ? playerA : playerB;
+			}else if (gameBoard.checkWin(Tile.O)){
+				gameOver = true;
+				winner = playerA.getTileType() == Tile.O ? playerA : playerB;
+			}
 		}
-		if(gameBoard.checkWin(Tile.X)){
-			return playerA.getTileType() == Tile.X ? playerA : playerB;
-		}else{
-			return playerA.getTileType() == Tile.O ? playerA : playerB;
-		}
+		return winner;
 	}
 
 }
