@@ -25,9 +25,9 @@ public class MenuService extends GUIApplication {
 	@Override
 	public void drawGUI() {
 		if (drawButton(new Rectangle(125, 0, 250, 75), "Player vs. Player")) {
-			clear();
+			TicTacToe.clear();
 			TicTacToe.FRAME.getContentPane().add(new RenderService().getContents());
-			refresh();
+			TicTacToe.refresh();
 			return;
 		}
 		style.setStyle(Style.COLOR, Color.lightGray);
@@ -50,12 +50,4 @@ public class MenuService extends GUIApplication {
 		return false;
 	}
 
-	private void refresh() {
-		TicTacToe.FRAME.revalidate();
-		TicTacToe.FRAME.repaint();
-	}
-
-	private void clear() {
-		TicTacToe.FRAME.getContentPane().removeAll();
-	}
 }
