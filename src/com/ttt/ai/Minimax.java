@@ -4,11 +4,12 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ttt.model.AINetwork;
+import com.ttt.model.AI;
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
+import com.ttt.model.TilePosition;
 
-public class Minimax implements AINetwork{
+public class Minimax implements AI{
 
 	Board board;
 	Tile tile;
@@ -30,12 +31,12 @@ public class Minimax implements AINetwork{
 	public void setTile(Tile tile){
 		this.tile = tile;
 	}
-	
+
 	@Override
-	public void performTurn(Board b) {
-		board = b;
+	public TilePosition getNextMove(Tile[][] tiles) {
+		board = new Board(tiles);
 		minimax(0, 1);
-		board.setTile(computersMove.x, computersMove.y, tile);
+		return new TilePosition(tile, computersMove.x, computersMove.y);
 	}
 
 	List<Point> availablePoints;

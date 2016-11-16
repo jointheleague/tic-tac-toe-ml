@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
+import com.ttt.model.TilePosition;
 
 public class Population extends GeneticAlgorithm {
 
@@ -242,7 +243,8 @@ public class Population extends GeneticAlgorithm {
 			while (!tileWon && !draw) {
 
 				if (board.getTurn() == Tile.X) { // If X turn
-					minimax.performTurn(board);
+					TilePosition tp = minimax.getNextMove(board.getTiles());
+					board.setTile(tp.getX(), tp.getY(), Tile.X);
 
 				} else if (board.getTurn() == Tile.O) { // If O turn
 					JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
