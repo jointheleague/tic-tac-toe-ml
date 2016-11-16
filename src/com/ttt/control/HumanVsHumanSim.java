@@ -1,5 +1,7 @@
 package com.ttt.control;
 
+import javax.swing.JOptionPane;
+
 import com.ttt.model.Board;
 import com.ttt.model.HumanPlayer;
 import com.ttt.model.Player;
@@ -15,8 +17,8 @@ public class HumanVsHumanSim extends SimulationController{
 		Player p2 = new HumanPlayer("Player 2");
 		Player winner = new GameController(p1, p2, TicTacToe.board).playGame();
 		System.out.print(winner.getLabel() + " Won!");
+		JOptionPane.showMessageDialog(null, winner.getLabel() + " Won");
 		TicTacToe.returnToMainMenu();
 		}
 	}
-
 }

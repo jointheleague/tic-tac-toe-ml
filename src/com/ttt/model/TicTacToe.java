@@ -42,4 +42,13 @@ public class TicTacToe {
 	public static void setBoard(Board board) {
 		TicTacToe.board = board;
 	}
+	
+	public static void refresh() {
+		TicTacToe.FRAME.revalidate();
+		TicTacToe.FRAME.repaint();
+	}
+
+	public static void clear() {
+		TicTacToe.FRAME.getContentPane().removeAll();
+	}
 }
