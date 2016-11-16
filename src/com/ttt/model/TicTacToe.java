@@ -18,7 +18,6 @@ public class TicTacToe {
 		new HumanVsHumanSim().startSimulation();
 	}
 	
-
 	public static void setupGraphics() {
 		FRAME = new JFrame("Tic Tac Toe");
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,10 +28,9 @@ public class TicTacToe {
 	}
 	
 	public static void returnToMainMenu(){
-		FRAME.getContentPane().removeAll();
+		clear();
 		FRAME.getContentPane().add(new MenuService().getContents());
-		FRAME.revalidate();
-		FRAME.repaint();
+		refresh();
 	}
 
 	public static Board getBoard() {
@@ -44,11 +42,11 @@ public class TicTacToe {
 	}
 	
 	public static void refresh() {
-		TicTacToe.FRAME.revalidate();
-		TicTacToe.FRAME.repaint();
+		FRAME.revalidate();
+		FRAME.repaint();
 	}
 
 	public static void clear() {
-		TicTacToe.FRAME.getContentPane().removeAll();
+		FRAME.getContentPane().removeAll();
 	}
 }
