@@ -10,6 +10,7 @@ public class GameController {
 	private Player playerA;
 	private Player playerB;
 	private Board gameBoard;
+	private int turnCount = 0;
 	
 	public GameController(Player a, Player b, Board board){
 		this.playerA = a;
@@ -23,6 +24,8 @@ public class GameController {
 		if(gameBoard == null){
 			System.err.println("Cannot Instantiate a Game On A Null Board Object!");
 		}
+		
+		TicTacToe.setBoard(gameBoard);
 
 	}
 	
@@ -31,12 +34,17 @@ public class GameController {
 		boolean playerWon = false;
 		while(!playerWon){
 			if(playerTurn){
+				turnCount++;
 				playerA.performTurn(gameBoard);
 			}else{
+				turnCount++;
 				playerB.performTurn(gameBoard);
 			}
 			playerTurn = !playerTurn;
-			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))));
+			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O)) || turnCount >= (gameBoard.BOARD_HEIGHT * gameBoard.BOARD_WIDTH)));
+		}
+		if(turnCount >= (gameBoard.BOARD_HEIGHT * gameBoard.BOARD_WIDTH)){
+			return new Player("Tie");
 		}
 		if(gameBoard.checkWin(Tile.X)){
 			return playerA.getTileType() == Tile.X ? playerA : playerB;
