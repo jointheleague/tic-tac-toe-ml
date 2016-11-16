@@ -3,13 +3,14 @@ package com.ttt.ai;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import com.ttt.model.Board;
 
@@ -38,6 +39,7 @@ public class Trainer {
 		JFrame frame = new JFrame();
 		frame.setSize(1000, 800);
 		frame.getContentPane().setLayout(new FlowLayout());
+		JPanel panel = new JPanel(new GridLayout((int)Math.sqrt(pop.getPopulation().size()), (int)Math.sqrt(pop.getPopulation().size())));
 		JLabel label = new JLabel(new ImageIcon(np.getNetworkImage(frame.getWidth(), frame.getHeight(), 60)));
 		frame.getContentPane().add(label);
 		frame.pack();
@@ -64,14 +66,10 @@ public class Trainer {
 			gen = pop.getGeneration();
 			pop.clearStats();
 		}
-		ArrayList<Individual> finals = pop.getPopulation();
+		JNeuralNetwork finalNet = pop.getBestIndividual().nn;
 
 		String dir = JOptionPane.showInputDialog("Dir for final top brain (Include all slashes): ");
-		int index = 0;
-		for(Individual i : finals){
-			i.saveIndividual(dir + "ind" + index);
-			index++;
-		}
+		finalNet.saveNN(dir + "TrainedNN");
 		System.exit(0);
 
 	}

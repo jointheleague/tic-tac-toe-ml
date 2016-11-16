@@ -264,7 +264,7 @@ public class Population extends GeneticAlgorithm {
 						int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
 						int y = sortedIndexes.get(index) % Board.BOARD_HEIGHT;
 						if (tiles[x][y] == Tile.EMPTY) {
-							board.placeAt(x, y, Tile.O);
+							board.setTile(x, y, Tile.O);
 							break;
 						} else {
 							// fitness -= Math.pow(2, exponent);
