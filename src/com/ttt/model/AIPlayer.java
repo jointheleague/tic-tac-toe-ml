@@ -14,7 +14,7 @@ public class AIPlayer extends Player {
 
 	@Override
 	public void performTurn(Board b) {
-		TilePosition pos = brain.getNextMove(b);
+		TilePosition pos = brain.getNextMove(b.getTiles());
 		b.setTile(pos.getX(), pos.getY(), pos.getTile());
 	}
 
