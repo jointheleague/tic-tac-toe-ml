@@ -3,30 +3,36 @@ package com.ttt.model;
 import javax.swing.JFrame;
 
 import com.ttt.control.GameController;
+import com.ttt.control.HumanVsHumanSim;
 import com.ttt.view.MenuService;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
 
 public class TicTacToe {
 	public static JFrame FRAME;
-	private static Board board;
+	public static Board board;
 
 	public static void main(String[] args) {
 		board = new Board();
-		Player p1 = new HumanPlayer("Player 1");
-		Player p2 = new HumanPlayer("Player 2");
-		setupGraphics(board);
-		Player winner = new GameController(p1, p2, board).playGame();
-		System.out.print(winner.getLabel() + " Won!");
+		setupGraphics();
+		new HumanVsHumanSim().startSimulation();
 	}
+	
 
-	public static void setupGraphics(Board b) {
+	public static void setupGraphics() {
 		FRAME = new JFrame("Tic Tac Toe");
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		WindowIcon.setupIcons(FRAME);
 		FRAME.getContentPane().add(new MenuService().getContents());
 		FRAME.setVisible(true);
 		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
+	}
+	
+	public static void returnToMainMenu(){
+		FRAME.getContentPane().removeAll();
+		FRAME.getContentPane().add(new MenuService().getContents());
+		FRAME.revalidate();
+		FRAME.repaint();
 	}
 
 	public static Board getBoard() {
