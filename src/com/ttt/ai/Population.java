@@ -67,7 +67,7 @@ public class Population extends GeneticAlgorithm {
 		ArrayList<Individual> newPool = new ArrayList<Individual>();
 
 		populateMatingPool(pool);
-		for (int i = 0; i < pool.size() / 2; i++) {
+		for (int i = 0; i < pool.size() * 0.45; i++) {
 			Individual p1 = pickParent(null, 0);
 			Individual p2 = pickParent(p1, 0);
 			Individual crossed = crossover(p1, p2);
@@ -77,6 +77,13 @@ public class Population extends GeneticAlgorithm {
 				percent = progressBar((i * 100) / pool.size());
 				System.out.print("Crossover/Mutation: " + percent);
 			}
+		}
+		for (int i = 0; i < pool.size() * 0.05; i++) {
+			JNeuralNetwork nn = new JNeuralNetwork(pickParent(null, 0).nn);
+			nn.makeWeightGroups();
+
+			Individual ind = new Individual(0.0, nn, Individual.generateName());
+			newPool.add(ind);
 		}
 		newPool.addAll(getHighestHalf(pool));
 		if (debug) {

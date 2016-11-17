@@ -17,6 +17,8 @@ public class Individual implements Comparable<Individual>, Serializable {
 	private static Random random = new Random();
 	private static String consonats = "bcdfghjklmnpqrstvwxyz";
 	private static String vowels = "aeiou";
+	public static int ALL_OPTIONS = 0;
+	public static int SKIP_FIRST = 1;
 	public double fitness = 0;
 	public JNeuralNetwork nn;
 	public String name;
@@ -42,7 +44,7 @@ public class Individual implements Comparable<Individual>, Serializable {
 
 	public static String mixNames(String n1, String n2) {
 		int smaller = (n1.length() > n2.length()) ? n2.length() : n1.length();
-		int len = smaller + random.nextInt(Math.abs(n1.length() - n2.length()));
+		int len = smaller + random.nextInt(Math.abs(n1.length() - n2.length()) + 1);
 
 		String name = "";
 		if (n1.length() < n2.length()) {
@@ -63,6 +65,17 @@ public class Individual implements Comparable<Individual>, Serializable {
 		return fixName(condense(nameArray));
 	}
 
+	public static String mutateName(String name, int letters, int option) {
+		String[] arr = name.split("");
+		for (int i = 0; i < letters; i++) {
+			int index = random.nextInt(name.length() - option) + option;
+			arr[index] = String.valueOf(consonats.charAt(random.nextInt(consonats.length())));
+
+		}
+
+		return fixName(condense(arr));
+	}
+
 	public static String fixName(String name) {
 		int consecutive = 0;
 		for (int i = 0; i < name.length() - 1; i++) {
@@ -76,6 +89,12 @@ public class Individual implements Comparable<Individual>, Serializable {
 				String[] letters = name.split("");
 				letters[i + 1] = String.valueOf(vowels.charAt(random.nextInt(vowels.length())));
 				name = condense(letters);
+			} else if (consecutive == 1){
+				if(random.nextDouble() < 0.3){
+					String[] letters = name.split("");
+					letters[i + 1] = String.valueOf(vowels.charAt(random.nextInt(vowels.length())));
+					name = condense(letters);
+				}
 			}
 
 		}

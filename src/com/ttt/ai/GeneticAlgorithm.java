@@ -13,11 +13,13 @@ public abstract class GeneticAlgorithm {
 		JNeuralNetwork nn = ind.nn;
 		JNeuralNetwork mutated = new JNeuralNetwork(nn);
 		mutated.makeWeightGroups();
+		boolean changed = false;
 
 		for (int i = 0; i < nn.getWeightGroups().size(); i++) {
 			JWeightGroup wg = mutated.getWeightGroups().get(i);
 			for (int d = 0; d < wg.getWeights().length; d++) {
 				if (random.nextDouble() < mutateRate) {
+					changed = true;
 					wg.setWeight(d, (random.nextDouble() - 0.5));
 				} else {
 					wg.setWeight(d, nn.getWeightGroups().get(i).getWeights()[d]);
@@ -26,6 +28,7 @@ public abstract class GeneticAlgorithm {
 			mutated.setWeightGroup(i, wg);
 		}
 		if (random.nextDouble() < mutateRate) {
+			changed = true;
 			if (random.nextDouble() < mutateRate * 10) { // Add or remove Layer
 															// to
 				// NeuralNetwork
@@ -83,8 +86,12 @@ public abstract class GeneticAlgorithm {
 				}
 			}
 		}
-
-		return new Individual(0, mutated, ind.name);
+		
+		String mutatedName = ind.name;
+		if(changed){
+			mutatedName = Individual.mutateName(ind.name, 1, Individual.SKIP_FIRST);
+		}
+		return new Individual(0, mutated, mutatedName);
 	}
 
 	private static int pickMutationLevel() {
@@ -132,7 +139,7 @@ public abstract class GeneticAlgorithm {
 			crossed.setWeightGroup(i, newWg);
 			i++;
 		}
-		return new Individual(0, crossed, crossName);
+		return new Individual(0, crossed, Individual.mixNames(ind.name, ind2.name));
 	}
 
 	public static JNeuralNetwork acceptReject(ArrayList<Individual> pool, int maxFitness) {
