@@ -36,7 +36,56 @@ public class Individual implements Comparable<Individual>, Serializable {
 		int len = random.nextInt(5) + 3;
 		for (int i = 0; i < len; i++) {
 			name += pickLetter(name);
-			System.out.println(name);
+		}
+		return name;
+	}
+
+	public static String mixNames(String n1, String n2) {
+		int smaller = (n1.length() > n2.length()) ? n2.length() : n1.length();
+		int len = smaller + random.nextInt(Math.abs(n1.length() - n2.length()));
+
+		String name = "";
+		if (n1.length() < n2.length()) {
+			name = n2.substring(0, len);
+		} else {
+			name = n1.substring(0, len);
+		}
+		String[] nameArray = name.split("");
+
+		for (int i = 0; i < smaller; i++) {
+			if (random.nextBoolean()) {
+				nameArray[i] = String.valueOf(n1.charAt(i));
+			} else {
+				nameArray[i] = String.valueOf(n2.charAt(i));
+			}
+		}
+
+		return fixName(condense(nameArray));
+	}
+
+	public static String fixName(String name) {
+		int consecutive = 0;
+		for (int i = 0; i < name.length() - 1; i++) {
+			if (consonats.contains(String.valueOf(name.charAt(i)))) {
+				consecutive += 1;
+			} else {
+				consecutive = 0;
+			}
+
+			if (consecutive >= 2) {
+				String[] letters = name.split("");
+				letters[i + 1] = String.valueOf(vowels.charAt(random.nextInt(vowels.length())));
+				name = condense(letters);
+			}
+
+		}
+		return name;
+	}
+
+	private static String condense(String[] letters) {
+		String name = "";
+		for (String s : letters) {
+			name += s;
 		}
 		return name;
 	}
@@ -45,22 +94,25 @@ public class Individual implements Comparable<Individual>, Serializable {
 		if (name.length() >= 2) {
 			int consecutive = 0;
 			for (int i = name.length() - 2; i < name.length(); i++) {
-				String c = String.valueOf(name.charAt(i));
-				System.out.println(c);
-				if (consonats.contains(c)) {
-					consecutive++;
-				} else if (vowels.contains(c)) {
+				if (consonats.contains(String.valueOf(name.charAt(i)))) {
+					consecutive += 1;
+				} else {
 					consecutive = 0;
 				}
 
-				if (consecutive >= 2 || random.nextFloat() < 0.1) {
-					return vowels.charAt(random.nextInt(vowels.length()));
-				} else {
-					return consonats.charAt(random.nextInt(consonats.length()));
-				}
+			}
+
+			if (consecutive >= 2 || random.nextFloat() < 0.2) {
+				return vowels.charAt(random.nextInt(vowels.length()));
+			} else {
+				return consonats.charAt(random.nextInt(consonats.length()));
 			}
 		}
-		return consonats.charAt(random.nextInt(consonats.length()));
+		if (random.nextFloat() < 0.2) {
+			return vowels.charAt(random.nextInt(vowels.length()));
+		} else {
+			return consonats.charAt(random.nextInt(consonats.length()));
+		}
 	}
 
 	public void setFitness(double fitness) {

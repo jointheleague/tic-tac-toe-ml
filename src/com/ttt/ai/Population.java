@@ -41,7 +41,7 @@ public class Population extends GeneticAlgorithm {
 			JNeuralNetwork nn = new JNeuralNetwork(base);
 			nn.makeWeightGroups();
 
-			Individual ind = new Individual(0.0, nn);
+			Individual ind = new Individual(0.0, nn, Individual.generateName());
 			pool.add(ind);
 		}
 	}
@@ -51,7 +51,7 @@ public class Population extends GeneticAlgorithm {
 			// System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new
 			// Double[1])[0]));
 			double fitness = selection(pool.get(i).nn);
-			Individual ind = new Individual(fitness, pool.get(i).nn);
+			Individual ind = new Individual(fitness, pool.get(i).nn, pool.get(i).name);
 			pool.set(i, ind);
 			if (debug && !percent.equals(progressBar((i * 100) / pool.size()))) {
 				percent = progressBar((i * 100) / pool.size());
