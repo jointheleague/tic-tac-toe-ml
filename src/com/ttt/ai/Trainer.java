@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -62,6 +64,12 @@ public class Trainer {
 			//g.drawString("Best Fitness: " + ind.fitness + " / " + pop.getMaxTiedFitness(), 50, 50);
 			g.drawString("Best Individual Name: " + ind.name, 50, 50);
 			label.setIcon(new ImageIcon(img));
+			
+			ArrayList<String> startingLetters = new ArrayList<String>();
+			for(Individual i : pop.getPopulation()){
+				startingLetters.add(i.name.substring(0, 1));
+			}
+			g.drawString("Highest Starting Letter: " + calculateElectionWinner(startingLetters), 50, 75);
 
 			pop.makeNewGeneration();
 			gen = pop.getGeneration();
@@ -73,6 +81,31 @@ public class Trainer {
 		finalInd.nn.saveNN(dir + finalInd.name + "_AI");
 		System.exit(0);
 
+	}
+	
+	public static String calculateElectionWinner(ArrayList<String> votes) {
+		HashMap<String, Integer> people = new HashMap<String, Integer>();
+
+		for (String s : votes) {
+			s = s.toLowerCase();
+			if (people.containsKey(s)) {
+				people.put(s, people.get(s) + 1);
+			} else {
+				people.put(s, 1);
+			}
+		}
+
+		int largest = 0;
+		String key = "";
+		for (String p : people.keySet()) {
+			if (people.get(p) > largest) {
+				key = p;
+				largest = people.get(p);
+			} else if (people.get(p) == largest)
+				key = "TIE";
+		}
+
+		return key;
 	}
 
 }

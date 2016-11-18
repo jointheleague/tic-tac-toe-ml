@@ -20,6 +20,7 @@ public class SimulationController {
 		for(int i = 0; i < SIM_GENS; i++){
 			TicTacToe.getBoard().clearBoard();
 			//TODO: Create new GameControllers() here and play a series of games...
+			
 		}
 	}
 
