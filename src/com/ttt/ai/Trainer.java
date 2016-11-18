@@ -32,6 +32,7 @@ public class Trainer {
 		pop.setDebug(false);
 		pop.setExtraDebug(false);
 		pop.setMaxDepth(10); // (2 for 5x5, 10 for 3x3)
+		pop.setGames(3);
 		
 		JNetworkPicture np = new JNetworkPicture(nbase);
 		np.setNodes(Color.blue);
@@ -102,7 +103,7 @@ public class Trainer {
 				key = p;
 				largest = people.get(p);
 			} else if (people.get(p) == largest)
-				key = "TIE";
+				key += ", " + p;
 		}
 
 		return key;

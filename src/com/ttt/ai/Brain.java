@@ -10,6 +10,14 @@ public class Brain implements com.ttt.model.AI{
 
 	JNeuralNetwork jnn;
 	
+	public Brain(){
+		this(new JNeuralNetwork());
+	}
+	
+	public Brain(JNeuralNetwork jnn){
+		this.jnn = jnn;
+	}
+	
 	public void setNeuralNetwork(JNeuralNetwork jnn){
 		this.jnn = jnn;
 	}

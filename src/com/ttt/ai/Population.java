@@ -27,11 +27,12 @@ public class Population extends GeneticAlgorithm {
 	private double avgNeurons = 0;
 	private double maxTiedFitness = 0;
 	private Minimax minimax;
+	private int games = 3;
 
 	public Population(JNeuralNetwork base, int populationSize, double mutateRate, int exponent) {
 		pool = new ArrayList<Individual>();
 		board = new Board();
-		minimax = new Minimax(2, Tile.X);
+		minimax = new Minimax(2);
 		this.mutateRate = mutateRate;
 		maxFitness = (int) Math.pow((2 * ((Board.BOARD_WIDTH * Board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
 		maxTiedFitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) / 2 + 1, exponent);
@@ -46,6 +47,10 @@ public class Population extends GeneticAlgorithm {
 		}
 	}
 
+	public void setGames(int games){
+		this.games = games;
+	}
+	
 	public void selection() {
 		for (int i = 0; i < pool.size(); i++) {
 			// System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new
@@ -106,7 +111,7 @@ public class Population extends GeneticAlgorithm {
 		pool.addAll(newPool);
 		// System.out.println(Arrays.toString(pool.toArray()));
 		output = "Generation: " + generation + ". Average Fitness: " + avgFitness + " Tied Percent: "
-				+ (tiedPercent * 100 / (pool.size() * 3) + "%. Average Neurons: " + avgNeurons);
+				+ (tiedPercent * 100 / (pool.size() * games) + "%. Average Neurons: " + avgNeurons);
 		generation++;
 	}
 
@@ -145,7 +150,7 @@ public class Population extends GeneticAlgorithm {
 	}
 
 	public double getTiedPercent() {
-		return (tiedPercent * 100) / (pool.size() * 3);
+		return (tiedPercent * 100) / (pool.size() * games);
 	}
 
 	public int getGeneration() {
@@ -234,7 +239,7 @@ public class Population extends GeneticAlgorithm {
 	public double selection(JNeuralNetwork nn) {
 
 		double fitness = 0;
-		for (int game = 0; game < 3; game++) {
+		for (int game = 0; game < games; game++) {
 			board = new Board();
 			boolean tileWon = false;
 			boolean draw = false;
@@ -318,7 +323,7 @@ public class Population extends GeneticAlgorithm {
 
 		}
 		// System.out.println(fitness);
-		return fitness / 3;
+		return fitness / games;
 
 	}
 

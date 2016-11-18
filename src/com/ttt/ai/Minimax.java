@@ -12,12 +12,10 @@ import com.ttt.model.TilePosition;
 public class Minimax implements AI{
 
 	Board board;
-	Tile tile;
 	int maxDepth = 2;
 	
-	public Minimax(int maxDepth, Tile tile){
+	public Minimax(int maxDepth){
 		this.maxDepth = maxDepth;
-		this.tile = tile;
 	}
 	
 	public void setMaxDepth(int maxDepth){
@@ -27,16 +25,12 @@ public class Minimax implements AI{
 	public int getMaxDepth(){
 		return maxDepth;
 	}
-	
-	public void setTile(Tile tile){
-		this.tile = tile;
-	}
 
 	@Override
 	public TilePosition getNextMove(Tile[][] tiles) {
 		board = new Board(tiles);
 		minimax(0, 1);
-		return new TilePosition(tile, computersMove.x, computersMove.y);
+		return new TilePosition(Tile.EMPTY, computersMove.x, computersMove.y);
 	}
 
 	List<Point> availablePoints;
