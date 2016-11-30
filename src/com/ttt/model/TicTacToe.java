@@ -3,6 +3,7 @@ package com.ttt.model;
 import javax.swing.JFrame;
 
 import com.ttt.control.GameController;
+import com.ttt.control.SimulationController;
 import com.ttt.view.MenuService;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
@@ -13,11 +14,19 @@ public class TicTacToe {
 
 	public static void main(String[] args) {
 		board = new Board();
-		Player p1 = new HumanPlayer("Player 1");
-		Player p2 = new HumanPlayer("Player 2");
 		setupGraphics(board);
-		Player winner = new GameController(p1, p2, board).playGame();
-		System.out.print(winner.getLabel() + " Won!");
+	}
+
+	public static void playGame() {
+		// Player a = new AIPlayer("X's", SimulationController.learn(100,
+		// 10).setTile(Tile.X));
+		Player a = new HumanPlayer("X's");
+		System.out.println("Learning...");
+		Player b = new AIPlayer("O's", SimulationController.learn(1000, 100).setTile(Tile.O));
+		System.out.println("Completed learning.");
+
+		GameController controller = new GameController(a, b, board);
+		System.out.println(controller.playGame().getLabel() + " won!");
 	}
 
 	public static void setupGraphics(Board b) {

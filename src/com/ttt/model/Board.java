@@ -1,16 +1,26 @@
 package com.ttt.model;
 
-public class Board {
+import java.awt.Point;
 
+public class Board {
 	// TODO catch if width/height is not positive
 	public static final int BOARD_WIDTH = 3;
-	public static final int BOARD_HEIGHT = 3;
-	public static final int WIN_COUNT = 3;
-	private static Tile currentTurn = Tile.X;
+	public static final int BOARD_HEIGHT = BOARD_WIDTH;
+	public static final int WIN_COUNT = BOARD_WIDTH;
 	private Tile[][] tiles;
 
 	public Board() {
 		tiles = emptyBoard();
+	}
+
+	public Board(Board copy) {
+		this();
+
+		for (int i = 0; i < copy.tiles.length; i++) {
+			for (int j = 0; j < copy.tiles[i].length; j++) {
+				tiles[i][j] = copy.tiles[i][j];
+			}
+		}
 	}
 
 	public Board(Tile[][] tiles) {
@@ -23,21 +33,6 @@ public class Board {
 		} else {
 			throw new ArrayIndexOutOfBoundsException("Parameter tile array has size zero");
 		}
-	}
-	
-	public Tile getTurn(){
-		return currentTurn;
-	}
-	
-	@Deprecated
-	public void switchTurn(){
-		//TODO: Remove method
-		if(currentTurn == Tile.X){
-			currentTurn = Tile.O;
-		}else{
-			currentTurn = Tile.X;
-		}
-		System.err.println("Board.switchTurn() is deprecated, use GameControllers to manage games from now on!");
 	}
 
 	public Tile getTile(int x, int y) {
@@ -55,6 +50,17 @@ public class Board {
 				tiles[x][y] = t;
 			}
 		}
+	}
+
+	public Point nextEmpty() {
+		for (int i = 0; i < tiles.length; i++) {
+			for (int j = 0; j < tiles[i].length; j++) {
+				if (tiles[i][j] == Tile.EMPTY) {
+					return new Point(i, j);
+				}
+			}
+		}
+		return null;
 	}
 
 	public Tile[][] getTiles() {
@@ -88,31 +94,46 @@ public class Board {
 				break;
 			}
 		}
-		System.out.println("Path length : " + pathLength);
 		return pathLength;
+	}
+
+	public boolean isTie() {
+		int unempty = 0;
+		for (Tile[] x : tiles) {
+			for (Tile y : x) {
+				if (y != Tile.EMPTY) {
+					unempty++;
+				}
+			}
+		}
+		return unempty == BOARD_WIDTH * BOARD_HEIGHT && !checkWin(Tile.X) && !checkWin(Tile.O);
 	}
 
 	public boolean checkWin(Tile tile) {
 		int consecutiveCount = 0;
 		for (int i = 0; i < BOARD_WIDTH; i++) {
 			for (int j = 0; j < BOARD_HEIGHT; j++) {
-				if(getTile(i, j) == tile){
-				if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
-				if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
-				if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
-				if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
-					consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
-					if (consecutiveCount >= WIN_COUNT) return true;
-				}
+				if (getTile(i, j) == tile) {
+					if (tile == checkSurroundingTiles(tile, i, j, 1, 0).getTile()) {
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 0);
+						if (consecutiveCount >= WIN_COUNT)
+							return true;
+					}
+					if (tile == checkSurroundingTiles(tile, i, j, 0, 1).getTile()) {
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 0, 1);
+						if (consecutiveCount >= WIN_COUNT)
+							return true;
+					}
+					if (tile == checkSurroundingTiles(tile, i, j, 1, 1).getTile()) {
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), 1, 1);
+						if (consecutiveCount >= WIN_COUNT)
+							return true;
+					}
+					if (tile == checkSurroundingTiles(tile, i, j, -1, 1).getTile()) {
+						consecutiveCount = getPathLength(new TilePosition(tile, i, j), -1, 1);
+						if (consecutiveCount >= WIN_COUNT)
+							return true;
+					}
 				}
 				if (consecutiveCount >= WIN_COUNT) {
 					return true;
@@ -122,13 +143,7 @@ public class Board {
 		return false;
 	}
 
-	@Deprecated
-	public void placeAt(int x, int y, Tile tile) {
-		setTile(x, y, tile);
-		System.err.println("Baord.placeAt() is deprecated, please use setTile instead.");
-	}
-	
-	public void clearBoard(){
+	public void clearBoard() {
 		this.tiles = emptyBoard();
 	}
 

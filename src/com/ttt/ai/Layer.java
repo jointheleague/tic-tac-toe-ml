@@ -1,4 +1,5 @@
 package com.ttt.ai;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -7,6 +8,7 @@ import java.util.Random;
 public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	private ArrayList<Neuron> neurons = new ArrayList<>();
 	private int depth;
+	private NeuralNetwork network;
 
 	public Layer() {
 	}
@@ -30,9 +32,9 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 	public void setNeurons(Neuron[] n) {
 		this.neurons = new ArrayList<>(Arrays.asList(n));
 	}
-	
-	public Neuron[] getNeurons(){
-		return neurons.toArray(new Neuron[neurons.size()]);
+
+	public Neuron[] getNeurons() {
+		return this.neurons.toArray(new Neuron[neurons.size()]);
 	}
 
 	public int getDepth() {
@@ -41,6 +43,18 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 
 	void setDepth(int depth) {
 		this.depth = depth;
+	}
+
+	public boolean isInput() {
+		return depth == 0;
+	}
+
+	public boolean isLogic() {
+		return !isInput() && !isOutput();
+	}
+
+	public boolean isOutput() {
+		return depth == network.getOutputLayer().getDepth();
 	}
 
 	@Override
@@ -69,12 +83,13 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 		neurons.set(index, neuron);
 	}
 
-	public void connectSynapses(Layer layer) {
-		Random random = new Random();
+	private static final Random RANDOM = new Random();
 
+	public void connectSynapses(Layer layer) {
 		for (Neuron neuron : this) {
 			for (Neuron other : layer) {
-				neuron.addOutgoingSynapse(new Synapse(neuron, other, random.nextFloat() - 0.5f));
+				neuron.addOutgoingSynapse(
+						new Synapse(neuron, other, RANDOM.nextDouble() * (RANDOM.nextInt(2) == 0 ? -1 : 1)));
 			}
 		}
 	}
@@ -100,5 +115,13 @@ public class Layer implements Comparable<Layer>, Iterable<Neuron> {
 
 	public int indexOf(Neuron n) {
 		return neurons.indexOf(n);
+	}
+
+	public NeuralNetwork getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(NeuralNetwork network) {
+		this.network = network;
 	}
 }

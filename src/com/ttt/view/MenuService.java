@@ -57,5 +57,11 @@ public class MenuService extends GUIApplication {
 
 	private void clear() {
 		TicTacToe.FRAME.getContentPane().removeAll();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				TicTacToe.playGame();
+			}
+		}).start();
 	}
 }

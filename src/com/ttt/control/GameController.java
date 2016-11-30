@@ -2,47 +2,59 @@ package com.ttt.control;
 
 import com.ttt.model.Board;
 import com.ttt.model.Player;
-import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 
 public class GameController {
-	
 	private Player playerA;
 	private Player playerB;
 	private Board gameBoard;
-	
-	public GameController(Player a, Player b, Board board){
+	private boolean isXTurn = true;
+	private long wait = 0;
+
+	public GameController(Player a, Player b, Board board) {
 		this.playerA = a;
 		this.playerB = b;
 		this.gameBoard = board;
-		
-		if(a.getTileType() == b.getTileType()){
-			a.swapTileType();
-		}
-		
-		if(gameBoard == null){
+
+		if (gameBoard == null) {
 			System.err.println("Cannot Instantiate a Game On A Null Board Object!");
 		}
 
 	}
-	
-	public Player playGame(){
-		boolean playerTurn = true;
-		boolean playerWon = false;
-		while(!playerWon){
-			if(playerTurn){
-				playerA.performTurn(gameBoard);
-			}else{
-				playerB.performTurn(gameBoard);
+
+	public Player playGame() {
+		while (true) {
+			performTurn();
+
+			if (gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))) {
+				return gameBoard.checkWin(Tile.X) ? playerA : playerB;
+			} else if (gameBoard.isTie()) {
+				return null;
 			}
-			playerTurn = !playerTurn;
-			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))));
-		}
-		if(gameBoard.checkWin(Tile.X)){
-			return playerA.getTileType() == Tile.X ? playerA : playerB;
-		}else{
-			return playerA.getTileType() == Tile.O ? playerA : playerB;
 		}
 	}
 
+	public void performTurn() {
+		if (isXTurn) {
+			playerA.performTurn(gameBoard);
+		} else {
+			playerB.performTurn(gameBoard);
+		}
+		isXTurn = !isXTurn;
+		if (wait > 0) {
+			try {
+				Thread.sleep(wait);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public long getWait() {
+		return wait;
+	}
+
+	public void setWait(long wait) {
+		this.wait = wait;
+	}
 }
