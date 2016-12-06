@@ -53,11 +53,13 @@ You are given a 2D array of type ```Tile```, which is an enum. The Three possibl
 
  ```Tile.EMPTY```, ```Tile.X```, and ```Tile.O```
  
- From that information, use classes in your base implementation to determine the next move, and return it as a ```Tile Position```.
+ From that information, use classes in your base implementation to determine the next move, 
+and return it as a ```Tile Position```.
  
  *For Example,* ```return new TilePosition(Tile.X, 2, 1);```
  
  Once you've filled out the body for the ```getNextMove``` method, you're all done with the AI implementation!
+
  
  ### The Simulation Controller
  
@@ -71,7 +73,7 @@ You are given a 2D array of type ```Tile```, which is an enum. The Three possibl
  
  *Here are a few things you may need to know whilst writing your simulation controller...*
  
- Define a new ```Player``` for by executing ```Player myPlayer = new AIPlayer(String label)```, you can then set it's AI Implementation with ```myPlayer.setNetwork(AI net)```. You should pass in your custom AI implementation as the "net" variable.
+ Define a new ```Player``` by executing ```Player myPlayer = new AIPlayer(String label)```, you can then set it's AI Implementation with ```myPlayer.setNetwork(AI net)```. You should pass in your custom AI implementation as the "net" variable.
  
  *Remember : Your AI Implementation interfaces directly with your base implementation, so no need to tell the player object which base implementation you are going to use!*
  
