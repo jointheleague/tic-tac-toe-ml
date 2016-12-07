@@ -1,30 +1,33 @@
 package com.ttt.model;
 
 public class Player {
-	
-	String playerLabel;
-	Tile tileType = Tile.X;
+	private String playerLabel;
+	private Tile tileType = Tile.X;
+	private Brain ai;
 
-	public Player(String label){
+	public Player(String label, Brain ai) {
 		this.playerLabel = label;
+		this.ai = ai;
 	}
-	
-	public String getLabel(){
+
+	public String getLabel() {
 		return playerLabel;
 	}
-	
-	public void performTurn(Board b){
-		
-	}
-	public void swapTileType(){
-		if(tileType == Tile.EMPTY){
+
+	public void swapTileType() {
+		if (tileType == Tile.EMPTY) {
 			System.err.println("Cannot Swap TileType From Tile State : Empty");
 			return;
 		}
 		tileType = (tileType == Tile.X ? Tile.O : Tile.X);
 	}
-	public Tile getTileType(){
+
+	public Tile getTileType() {
 		return tileType;
 	}
 
+	public void performTurn(Board board) {
+		TilePosition tile = ai.getNextMove(board.getTiles());
+		board.setTile(tile.getX(), tile.getY(), this.getTileType());
+	}
 }

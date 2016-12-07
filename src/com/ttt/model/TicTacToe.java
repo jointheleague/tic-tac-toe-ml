@@ -3,7 +3,6 @@ package com.ttt.model;
 import javax.swing.JFrame;
 
 import com.ttt.control.GameController;
-import com.ttt.control.HumanVsHumanSim;
 import com.ttt.view.MenuService;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
@@ -15,9 +14,15 @@ public class TicTacToe {
 	public static void main(String[] args) {
 		board = new Board();
 		setupGraphics();
-		new HumanVsHumanSim().startSimulation();
+
+		Brain first = null;
+		Brain second = null;
+		Player player1 = new Player("", first);
+		Player player2 = new Player("", second);
+		GameController game = new GameController(player1, player2, board);
+		Player winner = game.playGame();
+		System.out.println(winner.getLabel() + " won!");
 	}
-	
 
 	public static void setupGraphics() {
 		FRAME = new JFrame("Tic Tac Toe");
@@ -27,8 +32,8 @@ public class TicTacToe {
 		FRAME.setVisible(true);
 		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
 	}
-	
-	public static void returnToMainMenu(){
+
+	public static void returnToMainMenu() {
 		FRAME.getContentPane().removeAll();
 		FRAME.getContentPane().add(new MenuService().getContents());
 		FRAME.revalidate();
