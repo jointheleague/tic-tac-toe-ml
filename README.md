@@ -61,7 +61,8 @@ and return it as a ```Tile Position```.
  Once you've filled out the body for the ```getNextMove``` method, you're all done with the AI implementation!
 
  
- ### The Simulation Controller
+### The Simulation Controller
+
  
  Your simulation controller will be run before humans start to play against your AI. Use it to have your AI learn and become more "smart." Simulation Controllers will manage the simulation of multiple games while your AI is in the "learning" phase.
  
