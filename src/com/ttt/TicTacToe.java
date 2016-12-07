@@ -1,41 +1,53 @@
-package com.ttt.model;
+package com.ttt;
+
+import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import com.ttt.control.GameController;
+import com.ttt.model.Board;
+import com.ttt.model.Player;
 import com.ttt.view.MenuService;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
 
 public class TicTacToe {
 	public static JFrame FRAME;
-	public static Board board;
+	public static Board board = new Board();
 
 	public static void main(String[] args) {
-		board = new Board();
-		setupGraphics();
-
-		Brain first = null;
-		Brain second = null;
-		Player player1 = new Player("", first);
-		Player player2 = new Player("", second);
-		GameController game = new GameController(player1, player2, board);
-		Player winner = game.playGame();
-		System.out.println(winner.getLabel() + " won!");
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			setupGraphics();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 
-	public static void setupGraphics() {
+	public static void play(Player player1, Player player2) {
+		GameController game = new GameController(player1, player2, board);
+		Player winner = game.playGame();
+		if (winner == null) {
+			System.out.println("Tie!");
+		} else {
+			System.out.println(winner.getLabel() + " (" + winner.getTileType().name() + "'s) won!");
+		}
+	}
+
+	public static void setupGraphics() throws IOException {
 		FRAME = new JFrame("Tic Tac Toe");
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		WindowIcon.setupIcons(FRAME);
-		FRAME.getContentPane().add(new MenuService().getContents());
+		FRAME.getContentPane().add(new MenuService());
 		FRAME.setVisible(true);
 		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
 	}
 
-	public static void returnToMainMenu() {
+	public static void returnToMainMenu() throws IOException {
 		FRAME.getContentPane().removeAll();
-		FRAME.getContentPane().add(new MenuService().getContents());
+		FRAME.getContentPane().add(new MenuService());
 		FRAME.revalidate();
 		FRAME.repaint();
 	}

@@ -1,8 +1,8 @@
 package com.ttt.control;
 
+import com.ttt.TicTacToe;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
-import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 
 public class GameController {
@@ -42,10 +42,10 @@ public class GameController {
 			}
 			playerTurn = !playerTurn;
 			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))
-					|| turnCount >= (gameBoard.BOARD_HEIGHT * gameBoard.BOARD_WIDTH)));
+					|| turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)));
 		}
 		if (turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)) {
-			return new Player("Tie", null);
+			return null;
 		}
 		if (gameBoard.checkWin(Tile.X)) {
 			return playerA.getTileType() == Tile.X ? playerA : playerB;
@@ -53,5 +53,4 @@ public class GameController {
 			return playerA.getTileType() == Tile.O ? playerA : playerB;
 		}
 	}
-
 }

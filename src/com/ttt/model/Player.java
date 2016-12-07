@@ -2,11 +2,12 @@ package com.ttt.model;
 
 public class Player {
 	private String playerLabel;
-	private Tile tileType = Tile.X;
+	private Tile tileType;
 	private Brain ai;
 
-	public Player(String label, Brain ai) {
+	public Player(String label, Tile tile, Brain ai) {
 		this.playerLabel = label;
+		this.tileType = tile;
 		this.ai = ai;
 	}
 

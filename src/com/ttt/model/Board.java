@@ -88,7 +88,6 @@ public class Board {
 				break;
 			}
 		}
-		System.out.println("Path length : " + pathLength);
 		return pathLength;
 	}
 
