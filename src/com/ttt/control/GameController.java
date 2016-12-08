@@ -52,5 +52,9 @@ public class GameController {
 			return playerA.getTileType() == Tile.O ? playerA : playerB;
 		}
 	}
+	
+	public Board getBoard(){
+		return gameBoard;
+	}
 
 }

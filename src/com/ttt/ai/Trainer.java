@@ -27,11 +27,11 @@ public class Trainer {
 		nbase.makeWeightGroups();
 		nbase.flush();
 		
-		Population pop = new Population(nbase, 100, 0.01, 3);
+		Population pop = new Population(nbase, 100, 0.001, 2);
 
 		pop.setDebug(false);
 		pop.setExtraDebug(false);
-		pop.setMaxDepth(10); // (2 for 5x5, 10 for 3x3)
+		pop.setMaxDepth(5); // (2 for 5x5, 10 for 3x3)
 		pop.setGames(3);
 		
 		JNetworkPicture np = new JNetworkPicture(nbase);
@@ -50,10 +50,13 @@ public class Trainer {
 		frame.setVisible(true);
 		
 		double tiedPercent = 0;
+		double wonPercent = 0;
 		int gen = 0;
-		while(tiedPercent < 98 && gen < 10000) {
+		while(tiedPercent < 98 && wonPercent < 95 && gen < 10000) {
 			pop.selection();
 			tiedPercent = pop.getTiedPercent();
+			wonPercent = pop.getWonPercent();
+			
 			System.out.println(pop.getOutput());
 			
 			Individual ind = pop.getBestIndividual();

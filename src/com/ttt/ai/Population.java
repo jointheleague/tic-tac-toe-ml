@@ -1,10 +1,15 @@
 package com.ttt.ai;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.ttt.control.GameController;
+import com.ttt.model.AIPlayer;
 import com.ttt.model.Board;
+import com.ttt.model.Player;
+import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
 
@@ -34,7 +39,7 @@ public class Population extends GeneticAlgorithm {
 		board = new Board();
 		minimax = new Minimax(2);
 		this.mutateRate = mutateRate;
-		maxFitness = (int) Math.pow((2 * ((Board.BOARD_WIDTH * Board.BOARD_HEIGHT) - board.WIN_COUNT)), exponent);
+		maxFitness = (int) Math.pow(10, exponent);
 		maxTiedFitness = Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) / 2 + 1, exponent);
 		this.exponent = exponent;
 
@@ -47,10 +52,10 @@ public class Population extends GeneticAlgorithm {
 		}
 	}
 
-	public void setGames(int games){
+	public void setGames(int games) {
 		this.games = games;
 	}
-	
+
 	public void selection() {
 		for (int i = 0; i < pool.size(); i++) {
 			// System.out.println(pool.get(i).get(pool.get(i).keySet().toArray(new
@@ -111,7 +116,8 @@ public class Population extends GeneticAlgorithm {
 		pool.addAll(newPool);
 		// System.out.println(Arrays.toString(pool.toArray()));
 		output = "Generation: " + generation + ". Average Fitness: " + avgFitness + " Tied Percent: "
-				+ (tiedPercent * 100 / (pool.size() * games) + "%. Average Neurons: " + avgNeurons);
+				+ getTiedPercent() + "% Won Percent: "
+						+ getWonPercent() + "%. Average Neurons: " + avgNeurons;
 		generation++;
 	}
 
@@ -151,6 +157,10 @@ public class Population extends GeneticAlgorithm {
 
 	public double getTiedPercent() {
 		return (tiedPercent * 100) / (pool.size() * games);
+	}
+
+	public double getWonPercent() {
+		return (wonPercent * 100) / (pool.size() * games);
 	}
 
 	public int getGeneration() {
@@ -212,7 +222,7 @@ public class Population extends GeneticAlgorithm {
 		return null;
 	}
 
-	public void printBoard() {
+	public void printBoard(Board board) {
 		Tile[][] tiles = board.getTiles();
 
 		System.out.println();
@@ -240,82 +250,25 @@ public class Population extends GeneticAlgorithm {
 
 		double fitness = 0;
 		for (int game = 0; game < games; game++) {
-			board = new Board();
-			boolean tileWon = false;
-			boolean draw = false;
+			AIPlayer ai1 = new AIPlayer("Minimax");
+			ai1.setNetwork(new Minimax(minimax.maxDepth));
 
-			int oMoves = 0;
-			
-			for(int i = 0; i < random.nextInt(5); i++){
-				board.switchTurn();
-			}
+			AIPlayer ai2 = new AIPlayer("Neural Network");
+			ai2.setNetwork(new TrialAI(nn));
 
-			while (!tileWon && !draw) {
+			TicTacToe.board = new Board();
+			GameController gc = new GameController(ai1, ai2, TicTacToe.board);
+			Player winner = gc.playGame();
+			// printBoard(gc.getBoard());
 
-				if (board.getTurn() == Tile.X) { // If X turn
-					TilePosition tp = minimax.getNextMove(board.getTiles());
-					board.setTile(tp.getX(), tp.getY(), Tile.X);
-
-				} else if (board.getTurn() == Tile.O) { // If O turn
-					JLayer l = new JLayer(Board.BOARD_WIDTH * Board.BOARD_HEIGHT + 1);
-					Tile[][] tiles = board.getTiles();
-					int i = 0;
-					for (int x = 0; x < tiles.length; x++) {
-						for (int y = 0; y < tiles[0].length; y++) {
-							l.setNeuron(i, new JNeuron(tiles[x][y].getValue()));
-							i++;
-						}
-					}
-					l.setNeuron(Board.BOARD_WIDTH * Board.BOARD_HEIGHT, new JNeuron(1)); // constant
-					nn.setInputs(l);
-					nn.flush();
-
-					JLayer output = nn.getOutputs();
-					ArrayList<Integer> sortedIndexes = output.getHighest2Lowest();
-					for (int index = 0; index < Board.BOARD_WIDTH * Board.BOARD_HEIGHT; index++) {
-						int x = sortedIndexes.get(index) / Board.BOARD_WIDTH;
-						int y = sortedIndexes.get(index) % Board.BOARD_HEIGHT;
-						if (tiles[x][y] == Tile.EMPTY) {
-							board.setTile(x, y, Tile.O);
-							break;
-						} else {
-							// fitness -= Math.pow(2, exponent);
-						}
-					}
-					oMoves++;
-				}
-
-				if (board.checkWin(Tile.X)) {
-					fitness += oMoves;
-					tileWon = true;
-				} else if (board.checkWin(Tile.O)) {
-					fitness += Math.pow((Board.BOARD_HEIGHT * Board.BOARD_WIDTH) - oMoves, exponent);
-					tileWon = true;
-					wonPercent++;
-				} else {
-					boolean emptyTile = false;
-					Tile[][] tiles = board.getTiles();
-					for (Tile[] tiles1 : tiles) {
-						for (Tile tile : tiles1) {
-							if (tile == Tile.EMPTY) {
-								emptyTile = true;
-								break;
-							}
-						}
-					}
-					if (!emptyTile) {// The board is full
-						fitness += Math.pow(oMoves, exponent);
-						draw = true;
-						tiedPercent++;
-					}
-				}
-
-				board.switchTurn();
-				// printBoard();
-			}
-
-			if (extraDebug) {
-				printBoard();
+			if (winner.getLabel().equals(ai1.getLabel())) {
+				fitness += 0;
+			} else if (winner.getLabel().equals(ai2.getLabel())) {
+				fitness += Math.pow(10, exponent);
+				wonPercent++;
+			} else {
+				fitness += Math.pow(5, exponent);
+				tiedPercent++;
 			}
 
 			board.clearBoard();
