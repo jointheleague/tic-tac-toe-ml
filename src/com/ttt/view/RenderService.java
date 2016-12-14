@@ -13,9 +13,9 @@ import javax.awt.Shape;
 import javax.awt.Style;
 import javax.imageio.ImageIO;
 
+import com.ttt.TicTacToe;
 import com.ttt.input.InputController;
 import com.ttt.model.Board;
-import com.ttt.model.TicTacToe;
 import com.ttt.model.Tile;
 
 public class RenderService extends GUIApplication {
