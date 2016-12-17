@@ -36,11 +36,13 @@ public class TicTacToe {
 		}
 	}
 
+	private static MenuService menu;
+
 	public static void setupGraphics() throws IOException {
 		FRAME = new JFrame("Tic Tac Toe");
 		FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		WindowIcon.setupIcons(FRAME);
-		FRAME.getContentPane().add(new MenuService());
+		FRAME.getContentPane().add(menu = new MenuService());
 		FRAME.setVisible(true);
 		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
 	}

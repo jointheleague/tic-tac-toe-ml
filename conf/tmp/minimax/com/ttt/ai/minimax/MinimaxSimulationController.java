@@ -7,6 +7,6 @@ import com.ttt.model.Tile;
 public class MinimaxSimulationController implements SimulationController {
 	@Override
 	public Brain getAI(Tile tile) {
-		return new Minimax(2, tile);
+		return new Minimax(10, tile);
 	}
 }

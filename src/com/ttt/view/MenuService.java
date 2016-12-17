@@ -1,11 +1,14 @@
 package com.ttt.view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import com.ttt.TicTacToe;
@@ -42,6 +45,18 @@ public class MenuService extends JPanel {
 		});
 		add(start);
 		add(getOptions());
+
+		JButton pull = new JButton("Pull");
+		pull.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog pullDialog = new JDialog(TicTacToe.FRAME, "Pull AI");
+				pullDialog.add(new PullService(pullDialog));
+				pullDialog.setVisible(true);
+				pullDialog.pack();
+			}
+		});
+		add(pull);
 	}
 
 	private JComboBox<PlayerConfiguration> getOptions() throws IOException {

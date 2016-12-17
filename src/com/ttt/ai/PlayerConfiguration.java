@@ -10,6 +10,10 @@ public class PlayerConfiguration {
 	private String playerName;
 	private SimulationController simulationController;
 
+	public PlayerConfiguration(String name, Class<?> clazz) throws ReflectiveOperationException {
+		this(name, (SimulationController) clazz.newInstance());
+	}
+
 	public PlayerConfiguration(String name, SimulationController clazz) {
 		this.playerName = name;
 		this.simulationController = clazz;
@@ -40,7 +44,7 @@ public class PlayerConfiguration {
 		}
 		return new PlayerConfiguration(name, sim);
 	}
-	
+
 	@Override
 	public String toString() {
 		return playerName;
