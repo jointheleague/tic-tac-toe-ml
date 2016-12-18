@@ -26,7 +26,7 @@ public class TicTacToe {
 		}
 	}
 
-	public static void play(Player player1, Player player2) {
+	public static void play(Player player1, Player player2) throws IOException {
 		GameController game = new GameController(player1, player2, board);
 		Player winner = game.playGame();
 		if (winner == null) {
@@ -34,6 +34,7 @@ public class TicTacToe {
 		} else {
 			System.out.println(winner.getLabel() + " (" + winner.getTileType().name() + "'s) won!");
 		}
+		returnToMainMenu();
 	}
 
 	private static MenuService menu;
@@ -45,6 +46,10 @@ public class TicTacToe {
 		FRAME.getContentPane().add(menu = new MenuService());
 		FRAME.setVisible(true);
 		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
+	}
+
+	public static void refreshMenu() throws IOException {
+		menu.refresh();
 	}
 
 	public static void returnToMainMenu() throws IOException {

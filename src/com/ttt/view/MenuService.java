@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -15,12 +16,48 @@ import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
+import com.ttt.pull.LocalImportService;
 
 public class MenuService extends JPanel {
 	private static final long serialVersionUID = -3269621559758222014L;
+	private static ArrayList<PlayerConfiguration> configs = new ArrayList<>();
+
+	static {
+		try {
+			File confFolder = new File("conf");
+			for (File file : confFolder.listFiles()) {
+				if (file.isDirectory()) {
+					configs.add(LocalImportService.handleDirectory(file));
+				} else if (file.getName().endsWith(".cfg")) {
+					configs.add(PlayerConfiguration.load(file));
+				}
+			}
+		} catch (IOException | ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void registerConfiguration(PlayerConfiguration config) {
+		configs.add(config);
+	}
+
+	public MenuService() throws IOException {
+		refresh();
+	}
+
+	private JComboBox<PlayerConfiguration> getOptions() throws IOException {
+		JComboBox<PlayerConfiguration> options = new JComboBox<>(new PlayerConfiguration[] {});
+		DefaultComboBoxModel<PlayerConfiguration> model = (DefaultComboBoxModel<PlayerConfiguration>) options
+				.getModel();
+		for (PlayerConfiguration config : configs) {
+			model.addElement(config);
+		}
+		return options;
+	}
 
 	@SuppressWarnings("unchecked")
-	public MenuService() throws IOException {
+	public void refresh() throws IOException {
+		removeAll();
 		add(getOptions());
 		JButton start = new JButton("Start");
 		start.addActionListener((e) -> {
@@ -36,9 +73,15 @@ public class MenuService extends JPanel {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					TicTacToe.play(
-							new Player(first.getPlayerName(), Tile.X, first.getSimulationController().getAI(Tile.X)),
-							new Player(second.getPlayerName(), Tile.O, second.getSimulationController().getAI(Tile.O)));
+					try {
+						TicTacToe.play(
+								new Player(first.getPlayerName(), Tile.X,
+										first.getSimulationController().getAI(Tile.X)),
+								new Player(second.getPlayerName(), Tile.O,
+										second.getSimulationController().getAI(Tile.O)));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}).start();
 
@@ -46,26 +89,19 @@ public class MenuService extends JPanel {
 		add(start);
 		add(getOptions());
 
-		JButton pull = new JButton("Pull");
+		JButton pull = new JButton("Import");
 		pull.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JDialog pullDialog = new JDialog(TicTacToe.FRAME, "Pull AI");
+				JDialog pullDialog = new JDialog(TicTacToe.FRAME, "Import AI");
 				pullDialog.add(new PullService(pullDialog));
 				pullDialog.setVisible(true);
 				pullDialog.pack();
 			}
 		});
 		add(pull);
-	}
 
-	private JComboBox<PlayerConfiguration> getOptions() throws IOException {
-		JComboBox<PlayerConfiguration> options = new JComboBox<>(new PlayerConfiguration[] {});
-		DefaultComboBoxModel<PlayerConfiguration> model = (DefaultComboBoxModel<PlayerConfiguration>) options
-				.getModel();
-		for (File file : new File("conf").listFiles()) {
-			model.addElement(PlayerConfiguration.load(file));
-		}
-		return options;
+		revalidate();
+		repaint();
 	}
 }
