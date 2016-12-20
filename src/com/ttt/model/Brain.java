@@ -1,7 +1,5 @@
 package com.ttt.model;
 
-public interface AI {
-	
+public interface Brain {
 	public TilePosition getNextMove(Tile[][] tiles);
-
 }

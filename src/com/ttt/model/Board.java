@@ -61,6 +61,16 @@ public class Board {
 		return tiles;
 	}
 
+	public Tile[][] getTilesClone() {
+		Tile[][] newTiles = new Tile[BOARD_WIDTH][BOARD_HEIGHT];
+		for (int x = 0; x < BOARD_WIDTH; x++) {
+			for (int y = 0; y < BOARD_HEIGHT; y++) {
+				newTiles[x][y] = this.tiles[x][y];
+			}
+		}
+		return newTiles;
+	}
+	
 	public Tile[] getTileColumn(int x) {
 		return tiles[x];
 	}
@@ -88,7 +98,6 @@ public class Board {
 				break;
 			}
 		}
-		System.out.println("Path length : " + pathLength);
 		return pathLength;
 	}
 

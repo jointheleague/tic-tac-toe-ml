@@ -1,18 +1,22 @@
 package com.ttt.model;
 
 public class TilePosition {
-	
+
 	private Tile tile;
 	private int x;
 	private int y;
-	
-	public TilePosition(Tile tile, int x, int y){
-		this.tile = tile;
+
+	public TilePosition(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public Tile getTile(){
+
+	public TilePosition(Tile tile, int x, int y) {
+		this(x, y);
+		this.tile = tile;
+	}
+
+	public Tile getTile() {
 		return tile;
 	}
 
