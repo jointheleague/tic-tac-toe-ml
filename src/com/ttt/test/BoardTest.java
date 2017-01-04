@@ -1,15 +1,13 @@
 package com.ttt.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
 
 public class BoardTest {
-
 	@Test
 	public void testBoardInitialization() {
 		Board b = new Board();
