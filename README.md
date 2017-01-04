@@ -11,11 +11,12 @@ At this point in time, all libraries, such as our rendering library, are include
 
 
 ## Developing Your Own Custom AI
-To develop your own custom AI for the TTTML framework, you will need to complete three steps :
+To develop your own custom AI for the TTTML framework, you will need to complete four steps :
 <ul>
 <li> Define a Base Implementation
 <li> Create an Implementation of the AI Interface
 <li> Write your own Simulation Controller
+<li> Package your code for deployment
 </ul>
 
 
@@ -81,3 +82,47 @@ and return it as a ```Tile Position```.
  To start a new game, use ```new GameController(Player a, Player b)```, which will return the winner as an object of the type ```Player```. 
  
   *Remember : When finished with the simulation, return the Player object that you want to play against humans on the live game board!*
+
+### Packaging And Deploying
+
+At this point you should have all the implementation done for your AI. Now it’s time to get it ready for deployment!
+
+Start by creating a folder for your finished deployable package, which should share the name of your AI.
+
+Place that folder under the already existing ```/conf``` folder so that you can test your code as a built package locally before you publish it for other users.
+
+Once you have your folder under the ```/conf``` folder, it's time to add a ```.cfg``` file that will tell the AI loader how to load your AI. 
+
+Start by creating a ```.cfg``` file in the folder you just created. The name of your ```.cfg``` file should be the name of your AI. Your ```.cfg``` file should contain two things : 
+
+<ul>
+<li> A name for your AI
+<li> The classpath to your simulation controller 
+</ul>
+
+In the end, a sample ```/conf/MyAI/MyAI.cfg``` file should read as follows : 
+
+```Name MyAI ```
+<br>
+```Class com.ttt.ai.myAI.mySimController```
+
+Now that we have a config setup, we simply need to package our implementation!
+
+First, copy all your ```.java``` files into the ```/conf/YourAIName/``` folder, and remove their package declerations. A list of all the files that should be included goes as follows : 
+<ul>
+<li>All Base Implementation .java files
+<li>Your AI Implementation .java file
+<li>Your Simulation Controller .java file
+</ul>
+
+Once you ensure that all the files listed above are included, and their package declerations are removed, you can start to test!
+
+If you see your AI name in the dropdown menus, and it works at runtime how you intended, it's finally time to deploy!
+
+Simply zip the __contents__ of your AI's root folder (the one you created under ```/conf```), and send that ```.zip``` to whoever wants your AI. 
+
+You're all set!
+Good Luck, Have Fun!
+
+### Installing AI's
+//TODO: Add
