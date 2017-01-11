@@ -45,7 +45,13 @@ public class GameController {
 					|| turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)));
 		}
 		if (turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)) {
-			return null;
+			if (gameBoard.checkWin(Tile.X)) {
+				return playerA.getTileType() == Tile.X ? playerA : playerB;
+			} else if (gameBoard.checkWin(Tile.O)) {
+				return playerA.getTileType() == Tile.O ? playerA : playerB;
+			} else {
+				return null;
+			}
 		}
 		if (gameBoard.checkWin(Tile.X)) {
 			return playerA.getTileType() == Tile.X ? playerA : playerB;

@@ -1,7 +1,17 @@
-package com.ttt.ai;
-public class NeuralNetworkMain {
+package com.ttt.test;
+
+import com.ttt.ai.Layer;
+import com.ttt.ai.NeuralNetwork;
+import com.ttt.ai.Neuron;
+import com.ttt.ai.Synapse;
+
+public class NeuralNetworkPOC {
 	private static int runs = 1000;
 
+	// This program was used as a Proof Of Concept for the use of Neural Networks to gradually learn towards certain goals.
+	// 1000 test cases are run, each with 1000 times to attempt to output a number close to 1. 
+	// In each test case, the Neural Network is first randomized, then edited to weigh Synapses to act more successfully.
+	
 	public static void main(String[] args) {
 		int bad = 0;
 
