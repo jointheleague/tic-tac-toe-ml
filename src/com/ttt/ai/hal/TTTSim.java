@@ -66,13 +66,11 @@ public class TTTSim {
 		boolean win = false;
 		if (isWinner(-1) || isWinner(1)) {
 			this.playing = false;
-			System.out.println("Winner Found");
 			win = true;
 		}
 		if (isTie()) {
 			this.playing = false;
 			win = true;
-			System.out.println("Tie");
 		}
 		return win;
 	}
@@ -132,7 +130,7 @@ public class TTTSim {
 		int turns = moves / 2;
 		double score;
 		score = max - turns;
-		System.out.println("Score: " + score);
+		//System.out.println("Score: " + score);
 		return score;
 	}
 

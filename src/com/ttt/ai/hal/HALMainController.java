@@ -1,5 +1,9 @@
 package com.ttt.ai.hal;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+
 import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.ml.MLMethod;
 import org.encog.ml.MethodFactory;
@@ -43,21 +47,35 @@ public class HALMainController {
 			}
 		}, new HalScore(), 1);
 
-		int epoch = 1;
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
 
-		for (int i = 0; i < 1000000; i++) {
-			System.out.println("Training #" + epoch);
+		JProgressBar bar = new JProgressBar();
+		bar.setIndeterminate(false);
+		bar.setStringPainted(true);
+		bar.setString("0%");
+		bar.setValue(0);
+		panel.add(bar);
+
+		frame.add(panel);
+		frame.setVisible(true);
+		frame.pack();
+
+		int times = 1000000;
+		for (int i = 0; i < times; i++) {
 			train.iteration();
-			// System.out.println("Epoch #" + epoch + " Score:" +
-			// train.getError());
-			epoch++;
+			if (i % (times / 100) == 0) {
+				bar.setValue(i / (times / 100));
+				bar.setString(bar.getValue() + "%");
+			}
 		}
 		train.finishTraining();
+		frame.dispose();
 	}
 
 	public static TilePosition getNextPosition(Tile[][] tiles) {
 		MLData data = new BasicMLData(size * size);
-		
+
 		int val = 0;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -76,7 +94,7 @@ public class HALMainController {
 			}
 			int x = maxIndex % 3;
 			int y = maxIndex / 3;
-			if(tiles[x][y] == Tile.EMPTY) {
+			if (tiles[x][y] == Tile.EMPTY) {
 				return new TilePosition(x, y);
 			}
 			value[maxIndex] = -10;
