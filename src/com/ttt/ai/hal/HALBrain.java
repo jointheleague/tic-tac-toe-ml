@@ -4,12 +4,13 @@ import com.ttt.model.Brain;
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
 
-public class brainthingy implements Brain {
-
+public class HALBrain implements Brain {
+	public HALBrain() {
+		HALMainController.learn();
+	}
+	
 	@Override
 	public TilePosition getNextMove(Tile[][] tiles) {
-		// TODO Auto-generated method stub
-		return null;
+		return HALMainController.getNextPosition(tiles);
 	}
-
 }

@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
+import com.ttt.ai.hal.HALSimulationController;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
 
@@ -51,6 +52,7 @@ public class MenuService extends JPanel {
 		for (File file : new File("conf").listFiles()) {
 			model.addElement(PlayerConfiguration.load(file));
 		}
+		model.addElement(new PlayerConfiguration("HAL 9000", new HALSimulationController()));
 		return options;
 	}
 }

@@ -7,10 +7,9 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.networks.BasicNetwork;
 
 public class Hal {
-
 	private BasicNetwork network;
-	int size;
-	HashMap<Integer, int[]> map = new HashMap<>();
+	private int size;
+	private HashMap<Integer, int[]> map = new HashMap<>();
 
 	public Hal(int size, BasicNetwork network) {
 		this.network = network;
@@ -38,8 +37,7 @@ public class Hal {
 			}
 			MLData output = this.network.compute(input);
 			double value[] = output.getData();
-			boolean findWorkingLocaiton = true;
-			while (findWorkingLocaiton) {
+			while (true) {
 				int maxIndex = 0;
 				double max = value[0];
 				for (int i = 0; i < value.length; i++) {
@@ -48,7 +46,9 @@ public class Hal {
 						maxIndex = i;
 					}
 				}
-				findWorkingLocaiton = !sim.place(1, map.get(maxIndex)[0], map.get(maxIndex)[1]);
+				if(!sim.place(1, map.get(maxIndex)[0], map.get(maxIndex)[1])) {
+					break;
+				}
 				value[maxIndex] = -10;
 			}
 
