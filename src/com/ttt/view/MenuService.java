@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
 import com.ttt.ai.hal.HALSimulationController;
+import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
 
@@ -37,6 +38,13 @@ public class MenuService extends JPanel {
 					TicTacToe.play(
 							new Player(first.getPlayerName(), Tile.X, first.getSimulationController().getAI(Tile.X)),
 							new Player(second.getPlayerName(), Tile.O, second.getSimulationController().getAI(Tile.O)));
+					try {
+						TicTacToe.returnToMainMenu();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					TicTacToe.setBoard(new Board());
 				}
 			}).start();
 
