@@ -61,7 +61,7 @@ public class HALMainController {
 		frame.setVisible(true);
 		frame.pack();
 
-		int times = 1000000;
+		int times = 100000;
 		for (int i = 0; i < times; i++) {
 			train.iteration();
 			if (i % (times / 100) == 0) {
