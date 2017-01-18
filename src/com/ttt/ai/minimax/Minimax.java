@@ -39,7 +39,7 @@ public class Minimax implements Brain {
 	}
 
 	List<Point> availablePoints;
-	Point computersMove;
+	public Point computersMove;
 
 	public List<Point> getAvailableStates() {
 		availablePoints = new ArrayList<>();
@@ -55,7 +55,7 @@ public class Minimax implements Brain {
 
 	public int minimax(int depth, int turn) {
 		if (board.checkWin(Tile.X))
-			return +1;
+			return 1;
 		if (board.checkWin(Tile.O))
 			return -1;
 

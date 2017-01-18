@@ -45,7 +45,7 @@ public class HALMainController {
 				result.reset();
 				return result;
 			}
-		}, new HalScore(), 1);
+		}, new HalScore(), 10);
 
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
@@ -61,13 +61,14 @@ public class HALMainController {
 		frame.setVisible(true);
 		frame.pack();
 
+		TTTSim.Logging = true;
 		int times = 100000;
 		for (int i = 0; i < times; i++) {
 			train.iteration();
 			if (i % (times / 100) == 0) {
 				bar.setValue(i / (times / 100));
-				bar.setString(bar.getValue() + "%");
 			}
+			bar.setString(i + "/" + times + " (" + bar.getValue() + "%)");
 		}
 		train.finishTraining();
 		frame.dispose();

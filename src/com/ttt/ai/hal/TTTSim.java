@@ -1,12 +1,13 @@
 package com.ttt.ai.hal;
 
-import java.util.Random;
+import com.ttt.ai.minimax.Minimax;
+import com.ttt.model.Tile;
 
 public class TTTSim {
 	int[][] board;
 	boolean playing = true;
 	int moves;
-	boolean Logging = false;
+	public static boolean Logging = false;
 
 	public TTTSim(int size) {
 		moves = 0;
@@ -62,28 +63,27 @@ public class TTTSim {
 		return true;
 	}
 
-	public boolean TestForWin() {
-		boolean win = false;
-		if (isWinner(-1) || isWinner(1)) {
+	public boolean testForWin() {
+		if (isWinner(-1) || isWinner(1) || isTie()) {
 			this.playing = false;
-			win = true;
+			return true;
 		}
-		if (isTie()) {
-			this.playing = false;
-			win = true;
-		}
-		return win;
+		return false;
 	}
 
 	public boolean isTie() {
 		boolean tie = true;
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == 0)
+				if (board[i][j] == 0) {
 					tie = false;
+				}
 			}
 		}
-		return tie;
+		if (tie) {
+			return !isWinner(-1) && !isWinner(1);
+		}
+		return false;
 	}
 
 	public boolean isWinner(int player) {
@@ -130,22 +130,25 @@ public class TTTSim {
 		int turns = moves / 2;
 		double score;
 		score = max - turns;
-		//System.out.println("Score: " + score);
+		// System.out.println("Score: " + score);
 		return score;
 	}
 
-	public void randomMove(int player) {
-		boolean go = true;
-		Random r = new Random();
-		while (go) {
-			int x = r.nextInt(board.length);
-			int y = r.nextInt(board.length);
-			if (board[x][y] == 0) {
-				board[x][y] = player;
-				go = false;
-			}
+	private static final Minimax minimax = new Minimax(2, Tile.X);
 
+	public void minimaxMove(int player) {
+		Tile[][] convert = new Tile[HALMainController.size][HALMainController.size];
+		for (int i = 0; i < HALMainController.size; i++) {
+			for (int j = 0; j < HALMainController.size; j++) {
+				convert[i][j] = board[i][j] == 1 ? Tile.X : (board[i][j] == -1 ? Tile.O : Tile.EMPTY);
+			}
 		}
-		moves++;
+		try {
+			minimax.getNextMove(convert);
+			board[minimax.computersMove.x][minimax.computersMove.y] = 1;
+			moves++;
+		} catch (Exception e) {
+			System.err.println("Ruoya.");
+		}
 	}
 }
