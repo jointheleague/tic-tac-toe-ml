@@ -5,10 +5,9 @@ import org.encog.ml.MLMethod;
 import org.encog.neural.networks.BasicNetwork;
 
 public class HalScore implements CalculateScore {
-
 	@Override
 	public double calculateScore(MLMethod method) {
-		Hal pilot = new Hal(3, (BasicNetwork) method);
+		Hal pilot = new Hal((BasicNetwork) method);
 		return pilot.scorePilot();
 	}
 

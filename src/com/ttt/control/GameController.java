@@ -1,12 +1,10 @@
 package com.ttt.control;
 
-import com.ttt.TicTacToe;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
 
 public class GameController {
-
 	private Player playerA;
 	private Player playerB;
 	private Board gameBoard;
@@ -24,9 +22,6 @@ public class GameController {
 		if (gameBoard == null) {
 			System.err.println("Cannot Instantiate a Game On A Null Board Object!");
 		}
-
-		TicTacToe.setBoard(gameBoard);
-
 	}
 
 	public Player playGame() {

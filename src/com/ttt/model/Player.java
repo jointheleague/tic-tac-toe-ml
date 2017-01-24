@@ -29,6 +29,10 @@ public class Player {
 
 	public void performTurn(Board board) {
 		TilePosition tile = ai.getNextMove(board.getTilesClone());
-		board.setTile(tile.getX(), tile.getY(), this.getTileType());
+		if (board.getTile(tile.getX(), tile.getY()) != Tile.EMPTY) {
+			performTurn(board);
+		} else {
+			board.setTile(tile.getX(), tile.getY(), this.getTileType());
+		}
 	}
 }
