@@ -1,8 +1,11 @@
 package com.ttt.ai.hal;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.ml.MLMethod;
@@ -13,11 +16,13 @@ import org.encog.ml.genetic.MLMethodGeneticAlgorithm;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.pattern.FeedForwardPattern;
 
+import com.sun.javafx.event.EventQueue;
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
 
 public class HALMainController {
 	public static final int size = 3;
+	public static int i = 0;
 
 	public static BasicNetwork createNetwork() {
 		FeedForwardPattern pattern = new FeedForwardPattern();
@@ -59,12 +64,24 @@ public class HALMainController {
 		frame.pack();
 
 		int times = 100000;
-		for (int i = 0; i < times; i++) {
+		while(i < times){
 			train.iteration();
-			if (i % (times / 100) == 0) {
-				bar.setValue(i / (times / 100));
-			}
-			bar.setString(i + "/" + times + " (" + bar.getValue() + "%)");
+			if(i % 100 == 0){
+			try {
+				SwingUtilities.invokeLater(new Runnable(){
+				    public void run() {
+				        if (HALMainController.i % (times / 100) == 0) {
+				        	bar.setValue(HALMainController.i / (times / 100));
+				        }
+				        bar.setString(HALMainController.i + "/" + times + " (" + (HALMainController.i / times) + "%)");
+				    }
+				});
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		i++;
 		}
 		train.finishTraining();
 		frame.dispose();

@@ -9,7 +9,6 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.networks.BasicNetwork;
 
 import com.ttt.ai.minimax.Minimax;
-import com.ttt.ai.rando.Rando;
 import com.ttt.control.GameController;
 import com.ttt.model.Board;
 import com.ttt.model.Brain;
@@ -20,7 +19,8 @@ import com.ttt.model.TilePosition;
 public class Hal {
 	private BasicNetwork network;
 	private HashMap<Integer, int[]> map = new HashMap<>();
-
+	private static int numLoops;
+	
 	public Hal(BasicNetwork network) {
 		this.network = network;
 		int key = 0;
@@ -50,10 +50,11 @@ public class Hal {
 	}
 
 	public double scorePilot() {
+		numLoops++;
 		Board board = new Board();
 
-		// Brain brain = new Minimax(1, Tile.X);
-		Brain brain = new Rando();
+		Brain brain = new Minimax(1, Tile.X);
+		//Brain brain = new Rando();
 		GameController controller = new GameController(new Player("Opposer", Tile.X, brain),
 				new Player("HAL 9000", Tile.O, new Brain() {
 					@Override
@@ -100,11 +101,13 @@ public class Hal {
 	private static float won = 0;
 	private static float total = 0;
 
-	private static void log(String str) {
+	private void log(String str) {
 		total++;
 		if (str.equals("Winner")) {
 			won++;
 		}
-		System.out.println(str + " (" + ((won / total) * 100) + "% won)");
+		if (numLoops % 10000 == 0) {			
+			System.out.println(str + " (" + ((won / total) * 100) + "% won)");
+		}
 	}
 }
