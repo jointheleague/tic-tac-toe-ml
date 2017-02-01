@@ -26,17 +26,16 @@ public class GameController {
 
 	public Player playGame() {
 		boolean playerTurn = true;
-		boolean playerWon = false;
-		while (!playerWon) {
+		boolean gameEnded = false;
+		while (!gameEnded) {
 			if (playerTurn) {
-				turnCount++;
 				playerA.performTurn(gameBoard);
 			} else {
-				turnCount++;
 				playerB.performTurn(gameBoard);
 			}
+			turnCount++;
 			playerTurn = !playerTurn;
-			playerWon = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))
+			gameEnded = ((gameBoard.checkWin(Tile.X) || (gameBoard.checkWin(Tile.O))
 					|| turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)));
 		}
 		if (turnCount >= (Board.BOARD_HEIGHT * Board.BOARD_WIDTH)) {
