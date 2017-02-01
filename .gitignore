@@ -11,10 +11,6 @@
 hs_err_pid*
 /bin/
 .metadata
-<<<<<<< Updated upstream
 .settings
-=======
-
-
 src/com/ttt/.DS_Store
->>>>>>> Stashed changes
+.DS_Store
