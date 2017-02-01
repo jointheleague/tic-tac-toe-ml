@@ -14,6 +14,9 @@ public class Minimax implements Brain {
 	private Tile tile;
 	private int maxDepth;
 
+	List<Point> availablePoints;
+	public Point computersMove;
+
 	public Minimax(int maxDepth, Tile tile) {
 		this.maxDepth = maxDepth;
 		this.tile = tile;
@@ -35,11 +38,9 @@ public class Minimax implements Brain {
 	public TilePosition getNextMove(Tile[][] tiles) {
 		board = new Board(tiles);
 		minimax(0, 1);
+		System.out.println(computersMove.x);
 		return new TilePosition(tile, computersMove.x, computersMove.y);
 	}
-
-	List<Point> availablePoints;
-	public Point computersMove;
 
 	public List<Point> getAvailableStates() {
 		availablePoints = new ArrayList<>();
