@@ -52,8 +52,8 @@ public class Hal {
 	public double scorePilot() {
 		Board board = new Board();
 
-		// Brain brain = new Minimax(1, Tile.X);
-		Brain brain = new Rando();
+		Brain brain = new Minimax(1, Tile.X);
+		//Brain brain = new Rando();
 		GameController controller = new GameController(new Player("Opposer", Tile.X, brain),
 				new Player("HAL 9000", Tile.O, new Brain() {
 					@Override
