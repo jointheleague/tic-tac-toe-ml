@@ -3,6 +3,7 @@ package com.ttt.view;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import javax.awt.Ellipse;
 import javax.awt.Fonts;
@@ -27,19 +28,41 @@ public class RenderService extends GUIApplication {
 	public static final int PANEL_HEIGHT = 500;
 	public static final int tileWidth = PANEL_WIDTH / Board.BOARD_WIDTH;
 	public static final int tileHeight = PANEL_HEIGHT / Board.BOARD_HEIGHT;
+	public static int progress = 0;
+	public static int total = 1;
 
 	public RenderService() {
 		super(60); // framerate
 
 		setGraphicsStyle(style.setStyle(Style.COLOR, Color.gray).setStyle(Style.BUTTON_HOVERED, Color.gray.brighter())
 				.setStyle(Style.BUTTON_SELECTED, Color.gray.brighter().brighter()).setStyle(Style.STROKE, Color.black)
-				.setStyle(Style.FONT, Fonts.arial(12)));
+				.setStyle(Style.FONT, Fonts.arial(12)).setStyle(Style.TEXT_COLOR, Color.black));
 
 		InputController.registerClickInput(this);
 	}
 
 	@Override
 	public void drawGUI() {
+		if (progress < total) {
+			if (TicTacToe.FRAME.getSize().getHeight() == 500 + TicTacToe.FRAME.getInsets().top) {
+				TicTacToe.FRAME.setSize(500, 500 + TicTacToe.FRAME.getInsets().top + 50);
+			}
+			drawShape(new Rectangle(15, 510, (int) (((double) progress / total) * 460), 25));
+			drawShape(new Rectangle(15, 510, 459, 25), false, true);
+			double amt = (double) progress / total * 100;
+			NumberFormat format = NumberFormat.getInstance();
+			format.setMaximumFractionDigits(3);
+
+			String prog = progress + "/" + total + " (" + format.format(amt) + "%)";
+			int width = getContents().getFontMetrics(getGraphicsStyle().getStyle(Style.FONT)).stringWidth(prog);
+			int height = getContents().getFontMetrics(getGraphicsStyle().getStyle(Style.FONT)).getHeight();
+
+			drawLabel((500 - width) / 2, 550 - (height * 2) + 5, prog);
+		} else {
+			if (TicTacToe.FRAME.getSize().getHeight() != 500) {
+				TicTacToe.FRAME.setSize(500, 500 + TicTacToe.FRAME.getInsets().top);
+			}
+		}
 		for (int x = 0; x < TicTacToe.getBoard().getTiles().length; x++) {
 			for (int y = 0; y < TicTacToe.getBoard().getTileColumn(x).length; y++) {
 				Tile tile = TicTacToe.getBoard().getTile(x, y);

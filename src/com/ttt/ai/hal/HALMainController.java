@@ -1,9 +1,5 @@
 package com.ttt.ai.hal;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
 import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.ml.MLMethod;
 import org.encog.ml.MethodFactory;
@@ -15,6 +11,7 @@ import org.encog.neural.pattern.FeedForwardPattern;
 
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
+import com.ttt.view.RenderService;
 
 public class HALMainController {
 	public static final int size = 3;
@@ -34,6 +31,7 @@ public class HALMainController {
 	}
 
 	private static final BasicNetwork result = createNetwork();
+	private static int i;
 
 	public static void learn() {
 		MLMethodGeneticAlgorithm train = new MLMethodGeneticAlgorithm(new MethodFactory() {
@@ -44,30 +42,13 @@ public class HALMainController {
 			}
 		}, new HalScore(), 100);
 
-		JFrame frame = new JFrame();
-		JPanel panel = new JPanel();
-
-		JProgressBar bar = new JProgressBar();
-		bar.setIndeterminate(false);
-		bar.setStringPainted(true);
-		bar.setString("0%");
-		bar.setValue(0);
-		panel.add(bar);
-
-		frame.add(panel);
-		frame.setVisible(true);
-		frame.pack();
-
-		int times = 100000;
-		for (int i = 0; i < times; i++) {
+		int times = 10000;
+		RenderService.total = times;
+		for (i = 0; i <= times; i++) {
 			train.iteration();
-			if (i % (times / 100) == 0) {
-				bar.setValue(i / (times / 100));
-			}
-			bar.setString(i + "/" + times + " (" + bar.getValue() + "%)");
+			RenderService.progress = i;
 		}
 		train.finishTraining();
-		frame.dispose();
 	}
 
 	public static TilePosition getNextPosition(Tile[][] tiles) {
