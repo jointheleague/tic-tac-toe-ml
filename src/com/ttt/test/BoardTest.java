@@ -1,6 +1,6 @@
 package com.ttt.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -46,29 +46,60 @@ public class BoardTest {
 	}
 
 	@Test
+	public void testBoardClear() {
+		Tile[][] tiles = new Tile[][] { { Tile.O, Tile.X, Tile.EMPTY },
+			{ Tile.X, Tile.O, Tile.EMPTY }, { Tile.O, Tile.X, Tile.O } };
+		Board b = new Board(tiles);
+		b.clearBoard();
+		Tile[][] newTiles = b.getTiles();
+		for (Tile[] column: newTiles) {
+			for (Tile tile: column) {
+				assertEquals(tile, Tile.EMPTY);
+			}
+		}
+	}
+	
+	@Test
+	public void testBoardTilesClone() {
+		Tile[][] tiles = new Tile[][] { { Tile.O, Tile.X, Tile.EMPTY },
+			{ Tile.X, Tile.O, Tile.O }, { Tile.O, Tile.X, Tile.O } };
+		Board b = new Board(tiles);
+		Tile[][] newTiles = b.getTilesClone();
+		newTiles[0][2] = Tile.X;
+		assertEquals(b.getTile(0, 2), Tile.EMPTY);
+		b = new Board(newTiles);
+		assertEquals(b.getTile(0, 2), Tile.X);
+	}
+	
+	@Test
 	public void testBoardCheckWin() {
 		//TODO: Remove printout from checkWin method
 		Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY },
 			{ Tile.EMPTY, Tile.EMPTY, Tile.EMPTY }, { Tile.EMPTY, Tile.EMPTY, Tile.EMPTY} };
 		Board b = new Board(tiles);
-		assertEquals(b.checkWin(Tile.X) || b.checkWin(Tile.O), false);
+		assertFalse(b.checkWin(Tile.X) || b.checkWin(Tile.O));
 		
 		tiles = new Tile[][] { { Tile.X, Tile.O, Tile.X },
 			{ Tile.EMPTY, Tile.O, Tile.X }, { Tile.O, Tile.EMPTY, Tile.O } };
 		b = new Board(tiles);
-		assertEquals(b.checkWin(Tile.X) || b.checkWin(Tile.O), false);
+		assertFalse(b.checkWin(Tile.X) || b.checkWin(Tile.O));
+		
+		tiles = new Tile[][] { { Tile.X, Tile.O, Tile.X },
+			{ Tile.O, Tile.O, Tile.X }, { Tile.O, Tile.X, Tile.O } };
+		b = new Board(tiles);
+		assertFalse(b.checkWin(Tile.X) || b.checkWin(Tile.O));
 		
 		tiles = new Tile[][] { { Tile.X, Tile.O, Tile.O},
 			{ Tile.X, Tile.X, Tile.X }, { Tile.O, Tile.X, Tile.O } };
 		b = new Board(tiles);
-		assertEquals(b.checkWin(Tile.X), true);
-		assertEquals(b.checkWin(Tile.O), false);
+		assertTrue(b.checkWin(Tile.X));
+		assertFalse(b.checkWin(Tile.O));
 		
-		tiles = new Tile[][] { { Tile.O, Tile.O, Tile.O},
-			{ Tile.O, Tile.O, Tile.O }, { Tile.O, Tile.O, Tile.O } };
+		tiles = new Tile[][] { { Tile.O, Tile.EMPTY, Tile.EMPTY},
+			{ Tile.EMPTY, Tile.O, Tile.EMPTY}, { Tile.EMPTY, Tile.EMPTY, Tile.O} };
 		b = new Board(tiles);
-		assertEquals(b.checkWin(Tile.X), false);
-		assertEquals(b.checkWin(Tile.O), true);
+		assertFalse(b.checkWin(Tile.X));
+		assertTrue(b.checkWin(Tile.O));
 	}
 
 }
