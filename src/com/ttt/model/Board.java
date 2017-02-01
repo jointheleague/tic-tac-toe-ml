@@ -75,7 +75,7 @@ public class Board {
 		return tiles[x];
 	}
 
-	public TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY) {
+	private TilePosition checkSurroundingTiles(Tile tile, int i, int j, int dirX, int dirY) {
 		if (getTile(i + dirX, j + dirY) == tile) {
 			return new TilePosition(tile, i + dirX, j + dirY);
 		} else {
@@ -83,7 +83,7 @@ public class Board {
 		}
 	}
 
-	public int getPathLength(TilePosition tile, int dirX, int dirY) {
+	private int getPathLength(TilePosition tile, int dirX, int dirY) {
 		if (dirX == 0 && dirY == 0) {
 			System.err.println("ERROR: Both directions can't be 0 -Matthew");
 			return 1;
