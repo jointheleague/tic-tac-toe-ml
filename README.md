@@ -92,8 +92,7 @@ Simply de-select all the files that are not the package encompassing your AI.
 
 Once you ensure that only these files are included, build your ```.jar```
 
-Place the built ```.jar``` under the already existing ```/conf``` folder so that you can test your code as a built package locally before you publish it for other users. Your AI will show up
-on the AI selection drop down menus, with the same name given to your ```.jar``` Go ahead and run to see it in action!
+You can now run the application and select ```Import``` from the Main Menu. Navigate to your AIs build ```.jar``` file and test it out!
 
 You're all set!
 Good Luck, Have Fun!
@@ -106,11 +105,9 @@ of installing an AI.
 
 If you have not cloned our GitHub repository, do that now into a directory of your choosing.
 
-Next, open the cloned repository and find the ```/conf/``` folder contained inside. With your desired AI's ```.jar``` selected, simply drag and drop it into the ```/conf/``` folder. 
+You can then run ```TicTacToe-ML.jar``` and select the AI you wish to load from the "Import" button. 
 
-You can then run ```TicTacToe-ML.jar``` and select the AI you wish to run from the drop down menus. 
-
-*Note : If you find the application running out of RAM, you can run the jar with this command ```-Xms 4GB```*
+*Note : If you find the application running out of RAM, you can run the jar with this launch perameter 	```-Xmx 4GB```*	
 
 
 
