@@ -5,18 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 
 import com.ttt.ai.PlayerConfiguration;
 
@@ -63,35 +54,7 @@ public class LocalPullService {
 		pullDirectory.mkdir();
 		unzip(file);
 
-		File[] config = { new File(pullDirectory, "minimax/Minimax.cfg") };
-		if (config.length > 0) {
-			System.setProperty("java.home", "C:\\Program Files\\Java\\jdk1.8.0_101");
-
-			List<File> files = new ArrayList<>();
-			Files.walk(pullDirectory.toPath()).forEach((e) -> {
-				File f = e.toFile();
-				if (f.getName().endsWith(".java")) {
-					files.add(f);
-				}
-			});
-			compile(files);
-
-			return LocalImportService.handleDirectory(pullDirectory);
-		} else {
-			throw new PullException("No .cfg file found");
-		}
-	}
-
-	private static void compile(List<File> files) throws IOException {
-		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		List<String> optionList = new ArrayList<String>();
-		optionList.addAll(Arrays.asList("-classpath", System.getProperty("java.class.path")));
-		StandardJavaFileManager sjfm = compiler.getStandardFileManager(null, null, null);
-		Iterable<? extends JavaFileObject> fileObjects = sjfm
-				.getJavaFileObjects((File[]) files.toArray(new File[files.size()]));
-		JavaCompiler.CompilationTask task = compiler.getTask(null, null, null, optionList, null, fileObjects);
-		task.call();
-		sjfm.close();
+		return LocalImportService.handleDirectory(pullDirectory);
 	}
 
 	private static void unzip(File zip) throws IOException {

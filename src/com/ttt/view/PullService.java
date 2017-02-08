@@ -64,12 +64,12 @@ public class PullService extends JPanel {
 				files.setFileFilter(new FileFilter() {
 					@Override
 					public String getDescription() {
-						return "Tic-Tac-Toe ZIP Archives (*.zip)";
+						return "Tic-Tac-Toe Archives (*.zip, *.jar)";
 					}
 
 					@Override
 					public boolean accept(File f) {
-						return f.getName().endsWith(".zip");
+						return f.isDirectory() || f.getName().endsWith(".zip") || f.getName().endsWith(".jar");
 					}
 				});
 				if (files.showOpenDialog(TicTacToe.FRAME) == JFileChooser.APPROVE_OPTION) {

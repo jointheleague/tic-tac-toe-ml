@@ -8,14 +8,13 @@ import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.networks.BasicNetwork;
 
-import com.ttt.ai.minimax.Minimax;
-import com.ttt.ai.rando.Rando;
 import com.ttt.control.GameController;
 import com.ttt.model.Board;
 import com.ttt.model.Brain;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
+import com.ttt.pull.LocalImportService;
 
 public class Hal {
 	private BasicNetwork network;
@@ -52,8 +51,8 @@ public class Hal {
 	public double scorePilot() {
 		Board board = new Board();
 
-		Brain brain = new Minimax(1, Tile.X);
-		//Brain brain = new Rando();
+		Brain brain = LocalImportService.getController("Minimax").getAI(Tile.X);
+		// Brain brain = new Rando();
 		GameController controller = new GameController(new Player("Opposer", Tile.X, brain),
 				new Player("HAL 9000", Tile.O, new Brain() {
 					@Override

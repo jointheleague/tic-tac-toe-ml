@@ -5,10 +5,10 @@ import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
-import com.ttt.ai.rando.RandoSimulationController;
 import com.ttt.model.Brain;
 import com.ttt.model.Tile;
 import com.ttt.model.TilePosition;
+import com.ttt.pull.LocalImportService;
 
 public class BrainTest {
 
@@ -16,7 +16,7 @@ public class BrainTest {
 	public void testRando() {
 		Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.O, Tile.O }, { Tile.O, Tile.O, Tile.O },
 				{ Tile.O, Tile.O, Tile.O } };
-		Brain rando = new RandoSimulationController().getAI(Tile.X);
+		Brain rando = LocalImportService.getController("Rando").getAI(Tile.X);
 		TilePosition tp = rando.getNextMove(tiles);
 
 		assertNotEquals(tp, null);
