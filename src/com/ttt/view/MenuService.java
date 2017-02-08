@@ -21,22 +21,7 @@ import com.ttt.pull.LocalImportService;
 
 public class MenuService extends JPanel {
 	private static final long serialVersionUID = -3269621559758222014L;
-	private static ArrayList<PlayerConfiguration> configs = new ArrayList<>();
-
-	static {
-		try {
-			File confFolder = new File("conf");
-			for (File file : confFolder.listFiles()) {
-				if (file.isDirectory()) {
-					configs.add(LocalImportService.handleDirectory(file));
-				} else if (file.getName().endsWith(".cfg")) {
-					configs.add(PlayerConfiguration.load(file));
-				}
-			}
-		} catch (IOException | ReflectiveOperationException e) {
-			e.printStackTrace();
-		}
-	}
+	public static ArrayList<PlayerConfiguration> configs = new ArrayList<>();
 
 	public static void registerConfiguration(PlayerConfiguration config) {
 		configs.add(config);

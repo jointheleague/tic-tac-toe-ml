@@ -1,13 +1,16 @@
 package com.ttt;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import com.ttt.ai.PlayerConfiguration;
 import com.ttt.control.GameController;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
+import com.ttt.pull.LocalImportService;
 import com.ttt.view.MenuService;
 import com.ttt.view.RenderService;
 import com.ttt.view.WindowIcon;
@@ -15,6 +18,21 @@ import com.ttt.view.WindowIcon;
 public class TicTacToe {
 	public static JFrame FRAME;
 	public static Board board = new Board();
+
+	static {
+		try {
+			File confFolder = new File("conf");
+			for (File file : confFolder.listFiles()) {
+				if (file.isDirectory()) {
+					MenuService.configs.add(LocalImportService.handleDirectory(file));
+				} else if (file.getName().endsWith(".cfg")) {
+					MenuService.configs.add(PlayerConfiguration.load(file));
+				}
+			}
+		} catch (IOException | ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) {
 		try {
