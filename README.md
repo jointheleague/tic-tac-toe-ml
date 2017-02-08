@@ -87,42 +87,31 @@ and return it as a ```Tile Position```.
 
 At this point you should have all the implementation done for your AI. Now it’s time to get it ready for deployment!
 
-Start by creating a folder for your finished deployable package, which should share the name of your AI.
+In your prefered IDE, build a ```.jar``` with only the files in your AI package. For example, in eclipse, ```File->Export->Java->Jar``` will bring up the ```.jar``` build wizard.
+Simply de-select all the files that are not the package encompassing your AI.
 
-Place that folder under the already existing ```/conf``` folder so that you can test your code as a built package locally before you publish it for other users.
+Once you ensure that only these files are included, build your ```.jar```
 
-Once you have your folder under the ```/conf``` folder, it's time to add a ```.cfg``` file that will tell the AI loader how to load your AI. 
-
-Start by creating a ```.cfg``` file in the folder you just created. The name of your ```.cfg``` file should be the name of your AI. Your ```.cfg``` file should contain two things : 
-
-<ul>
-<li> A name for your AI
-<li> The classpath to your simulation controller 
-</ul>
-
-In the end, a sample ```/conf/MyAI/MyAI.cfg``` file should read as follows : 
-
-```Name MyAI ```
-<br>
-```Class com.ttt.ai.myAI.mySimController```
-
-Now that we have a config setup, we simply need to package our implementation!
-
-First, copy all your ```.java``` files into the ```/conf/YourAIName/``` folder, and remove their package declerations. A list of all the files that should be included goes as follows : 
-<ul>
-<li>All Base Implementation .java files
-<li>Your AI Implementation .java file
-<li>Your Simulation Controller .java file
-</ul>
-
-Once you ensure that all the files listed above are included, and their package declerations are removed, you can start to test!
-
-If you see your AI name in the dropdown menus, and it works at runtime how you intended, it's finally time to deploy!
-
-Simply zip the __contents__ of your AI's root folder (the one you created under ```/conf```), and send that ```.zip``` to whoever wants your AI. 
+Place the built ```.jar``` under the already existing ```/conf``` folder so that you can test your code as a built package locally before you publish it for other users. Your AI will show up
+on the AI selection drop down menus, with the same name given to your ```.jar``` Go ahead and run to see it in action!
 
 You're all set!
 Good Luck, Have Fun!
+In the next section we will go over installing pre-existing AIs.
 
 ### Installing AI's
-//TODO: Add
+
+As of now we do not have a central server setup to host user created AI's. If you want to test someone's AI, and have found a link to the ```.jar``` file, this section will walk you through the simple process
+of installing an AI.
+
+If you have not cloned our GitHub repository, do that now into a directory of your choosing.
+
+Next, open the cloned repository and find the ```/conf/``` folder contained inside. With your desired AI's ```.jar``` selected, simply drag and drop it into the ```/conf/``` folder. 
+
+You can then run ```TicTacToe-ML.jar``` and select the AI you wish to run from the drop down menus. 
+
+*Note : If you find the application running out of RAM, you can run the jar with this command ```-Xms 4GB```*
+
+
+
+
