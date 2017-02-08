@@ -45,7 +45,7 @@ public class TicTacToe {
 		WindowIcon.setupIcons(FRAME);
 		FRAME.getContentPane().add(menu = new MenuService());
 		FRAME.setVisible(true);
-		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top);
+		FRAME.setSize(RenderService.PANEL_WIDTH, RenderService.PANEL_HEIGHT + FRAME.getInsets().top + 50);
 	}
 
 	public static void refreshMenu() throws IOException {
