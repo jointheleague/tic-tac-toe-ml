@@ -43,7 +43,7 @@ public class RenderService extends GUIApplication {
 
 	@Override
 	public void drawGUI() {
-		if (progress < total) {
+		if (progress < total && (progress != 0 && total != 1)) {
 			if (TicTacToe.FRAME.getSize().getHeight() == 500 + TicTacToe.FRAME.getInsets().top) {
 				TicTacToe.FRAME.setSize(500, 500 + TicTacToe.FRAME.getInsets().top + 50);
 			}

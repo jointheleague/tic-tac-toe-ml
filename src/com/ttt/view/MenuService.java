@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
+import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
 import com.ttt.pull.LocalImportService;
@@ -82,6 +83,7 @@ public class MenuService extends JPanel {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					TicTacToe.board = new Board();
 				}
 			}).start();
 
