@@ -44,7 +44,7 @@ Other than that, your base implementation can work however you want. If your AI 
 ### The Brain Implementation
 
 
-The Brain interfaces between your custom base implementation, and the game board. To start, create a class and implement the ```Brain``` interface. This will give you one method, titled, ```getNextMove``` You can store this class in the package of your AI the we created in the previous step, "The Base Implementation."
+The Brain interfaces between your custom base implementation, and the game board. To start, create a class and implement the ```Brain``` interface. This will give you one method, titled, ```getNextMove```. You can store this class in the package of your AI the we created in the previous step, "The Base Implementation."
 
 
 This method will be called every time it is your AI's turn to make a move on the game board.
