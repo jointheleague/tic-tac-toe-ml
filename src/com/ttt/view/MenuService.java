@@ -2,7 +2,6 @@ package com.ttt.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ import com.ttt.ai.PlayerConfiguration;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
-import com.ttt.pull.LocalImportService;
 
 public class MenuService extends JPanel {
 	private static final long serialVersionUID = -3269621559758222014L;
