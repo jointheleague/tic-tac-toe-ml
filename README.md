@@ -4,7 +4,13 @@ A platform for machine learning based around the simple game of tic-tac-toe, our
 
 ## Installation
 
-To install and build on your desktop device, simply clone our project on github!
+### User
+
+To install for use without development, simply download our public release on GitHub!
+
+### Developer
+
+To install and build on your desktop device, simply clone our project on GitHub!
 At this point in time, all libraries, such as our rendering library, are included in the "/lib" directory. 
 
 *Note : You may need to add ```awtutils.jar```, located in the "/lib" directory to your Java Build Path in your prefered IDE before running.*
@@ -65,33 +71,34 @@ and return it as a ```Tile Position```.
  
  Your simulation controller will be run before humans start to play against your AI. Use it to have your AI learn and become more "smart." Simulation Controllers will manage the simulation of multiple games while your AI is in the "learning" phase.
  
- Much like the previous two steps, there are few strict rules about how you go about running your simulation, however your simulation controller class ```implements SimulationController```, to be compatible with the framework...
+ Much like the previous two steps, there are few strict rules about how you go about running your simulation, however your simulation controller ```implements SimulationController```, to be compatible with the framework...
  
- The last thing you need to do to finish the Simulation Controller is to override and fill in the body of the method ```getAI(Tile )```, which is inherited from the superinterface, ```SimulationController```.
+ The last thing you need to do to finish the Simulation Controller is to override and fill in the body of the method ```getAI(Tile tile)```, which is inherited from the superinterface, ```SimulationController```.
  
  The simulation controller can work however you like, however, it must return the finished ```Brain``` object when it's done. This finished ```Brain``` will be used to play against a human.
  
  *Here are a few things you may need to know whilst writing your simulation controller...*
  
  Define a new ```Player``` by executing ```Player myPlayer = new Player(String label, Tile startingTile, Brain ai)```,
- where the ```ai``` paremeter is an instance of the Brain you with to run. It is of type Brain.
+ where the ```ai``` argument is an instance of the Brain you wish to run. It is of type Brain.
  
  *Remember : Your Brain interfaces directly with your base implementation, so no need to tell the player object which base implementation you are going to use!*
  
- To start a new game, use ```new GameController(Player a, Player b)```, which will return the winner as an object of the type ```Player```. 
+ To define a new game, use ```GameController myGC = new GameController(Player a, Player b)```
+ Start the game by calling ```myGC.playGame()```, which will return the winner as an object of the type ```Player```. 
  
-  *Remember : When finished with the simulation, return the Player object that you want to play against humans on the live game board!*
+  *Remember : When finished with the simulation, return the Brain object that you want to play against humans on the live game board!*
 
 ### Packaging And Deploying
 
 At this point you should have all the implementation done for your AI. Now it’s time to get it ready for deployment!
 
-In your prefered IDE, build a ```.jar``` with only the files in your AI package. For example, in Eclipse, ```File->Export->Java->Jar``` will bring up the ```.jar``` build wizard.
+In your preferred IDE, build a ```.jar``` with only the files in your AI package. For example, in Eclipse, ```File->Export->Java->Jar``` will bring up the ```.jar``` build wizard.
 Simply de-select all the files that are not the package encompassing your AI.
 
 Once you ensure that only these files are included, build your ```.jar```
 
-You can now run the application and select ```Import``` from the Main Menu. Navigate to your AI's build ```.jar``` file and test it out!
+You can now run the application and select ```Import``` from the Main Menu. Navigate to your AI's built ```.jar``` file and test it out!
 
 You're all set!
 Good Luck, Have Fun!
@@ -102,11 +109,11 @@ In the next section we will go over installing pre-existing AIs.
 As of now we do not have a central server setup to host user created AI's. If you want to test someone's AI, and have found a link to the ```.jar``` file, this section will walk you through the simple process
 of installing an AI.
 
-If you have not cloned our GitHub repository, do that now into a directory of your choosing.
+See the section, "Installation," above to get information on getting your runtime setup.
 
 You can then run ```TicTacToe-ML.jar``` and select the AI you wish to load from the "Import" button. 
 
-*Note : If you find the application running out of RAM, you can run the jar with this launch perameter 	```-Xmx 3GB```*	
+*Note : If you find the application running out of RAM, you can run the jar with this launch argument 	```-Xmx 3GB```*	
 
 
 
