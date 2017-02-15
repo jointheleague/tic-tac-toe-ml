@@ -84,4 +84,7 @@ public class TicTacToe {
 	public static void setBoard(Board board) {
 		TicTacToe.board = board;
 	}
+
+	public static void register() {
+	}
 }
