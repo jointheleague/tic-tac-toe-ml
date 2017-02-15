@@ -44,7 +44,7 @@ Other than that, your base implementation can work however you want. If your AI 
 ### The Brain Implementation
 
 
-The Brain interfaces between your custom base implementation, and the game board. To start, create a class and implement the ```Brain``` interface. This will give you one method, titled, ```getNextMove```
+The Brain interfaces between your custom base implementation, and the game board. To start, create a class and implement the ```Brain``` interface. This will give you one method, titled, ```getNextMove``` You can store this class in the package of your AI the we created in the previous step, "The Base Implementation."
 
 
 This method will be called every time it is your AI's turn to make a move on the game board.
@@ -71,9 +71,9 @@ and return it as a ```Tile Position```.
  
  Your simulation controller will be run before humans start to play against your AI. Use it to have your AI learn and become more "smart." Simulation Controllers will manage the simulation of multiple games while your AI is in the "learning" phase.
  
- Much like the previous two steps, there are few strict rules about how you go about running your simulation, however your simulation controller ```implements SimulationController```, to be compatible with the framework...
+ Much like the previous two steps, there are few strict rules about how you go about running your simulation, however your simulation controller ```implements SimulationController```, to be compatible with the framework... You can store this class in your AI's package.
  
- The last thing you need to do to finish the Simulation Controller is to override and fill in the body of the method ```getAI(Tile tile)```, which is inherited from the superinterface, ```SimulationController```.
+ The last thing you need to do to finish the Simulation Controller is to fill in the body of the method ```getAI(Tile tile)```, which is inherited from the superinterface, ```SimulationController```.
  
  The simulation controller can work however you like, however, it must return the finished ```Brain``` object when it's done. This finished ```Brain``` will be used to play against a human.
  
@@ -98,7 +98,7 @@ Simply de-select all the files that are not the package encompassing your AI.
 
 Once you ensure that only these files are included, build your ```.jar```
 
-You can now run the application and select ```Import``` from the Main Menu. Navigate to your AI's built ```.jar``` file and test it out!
+You can now run the base ```Tic-Tac-Toe-ML``` application and select ```Import``` from the Main Menu. Navigate to your AI's built ```.jar``` file and test it out!
 
 You're all set!
 Good Luck, Have Fun!
