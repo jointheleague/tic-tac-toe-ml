@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.ttt.ai.PlayerConfiguration;
@@ -48,9 +49,9 @@ public class TicTacToe {
 		GameController game = new GameController(player1, player2, board);
 		Player winner = game.playGame();
 		if (winner == null) {
-			System.out.println("Tie!");
+			JOptionPane.showMessageDialog(null, "Tie!");
 		} else {
-			System.out.println(winner.getLabel() + " (" + winner.getTileType().name() + "'s) won!");
+			JOptionPane.showMessageDialog(null, winner.getLabel() + " (" + winner.getTileType().name() + "'s) won!");
 		}
 		returnToMainMenu();
 	}
