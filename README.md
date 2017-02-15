@@ -38,7 +38,7 @@ The Base Implementation is essentially the core of how your AI works. For exampl
 Because most Base Implementations will be large and span over more than one file, you can store your base implementation classes and other files under the package ``` com.ttt.ai.yourAIname ```.
 
 
-Other than that, your base implementation can work however you want. If your AI is really small, such as just a random guesser, you may not have an base implementation at all. The base implementation is simply a clean place for you to store classes and other files needed for your AI to work! Next we will learn how to interface between your base implementation and the game board by writing an implementation for the AI class.
+Other than that, your base implementation can work however you want. If your AI is really small, such as just a random guesser, you may not have an base implementation at all. The base implementation is simply a clean place for you to store classes and other files needed for your AI to work! Next we will learn how to interface between your base implementation and the game board by writing an implementation for the Brain interface.
 
 
 ### The Brain Implementation
