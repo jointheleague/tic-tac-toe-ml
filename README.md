@@ -6,14 +6,14 @@ A platform for machine learning based around the simple game of tic-tac-toe, our
 
 ### User
 
-To install for use without development, simply download our public release on GitHub!
+To install for use without development, simply download our public release on GitHub! Un-zip the archive and use the executable ```.jar``` file.
 
 ### Developer
 
-To install and build on your desktop device, simply clone our project on GitHub!
+To install and build on your desktop device for development, simply clone our project on GitHub!
 At this point in time, all libraries, such as our rendering library, are included in the "/lib" directory. 
 
-*Note : You may need to add ```awtutils.jar```, located in the "/lib" directory to your Java Build Path in your prefered IDE before running.*
+*Note : You may need to add ```awtutils.jar```, located in the "/lib" directory to your Java Build Path in your IDE before running.*
 
 
 ## Developing Your Own Custom AI
