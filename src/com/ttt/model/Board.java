@@ -51,7 +51,11 @@ public class Board {
 	public void setTile(int x, int y, Tile t) {
 		if (!(x >= BOARD_WIDTH || x < 0)) {
 			if (!(y >= BOARD_HEIGHT || y < 0)) {
+				if((tiles[x][y] == Tile.EMPTY)){
 				tiles[x][y] = t;
+				}else{
+					//System.err.println("Tile was placed above another");
+				}
 			}
 		}
 	}
