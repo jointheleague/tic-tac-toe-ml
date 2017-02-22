@@ -19,8 +19,12 @@ public class BrainTest {
 		Tile[][] tiles = new Tile[][] { { Tile.EMPTY, Tile.O, Tile.O }, { Tile.O, Tile.O, Tile.O },
 				{ Tile.O, Tile.O, Tile.O } };
 		Brain rando = LocalImportService.getController("Rando").getAI(Tile.X);
-		TilePosition tp = rando.getNextMove(tiles);
-
+		TilePosition tp = null;
+		try{
+		tp = rando.getNextMove(tiles);
+		}catch (Exception e){
+			
+		}
 		assertNotEquals(tp, null);
 		assertEquals(tp.getX(), 0);
 		assertEquals(tp.getY(), 0);
