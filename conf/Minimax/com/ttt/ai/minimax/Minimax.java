@@ -38,7 +38,6 @@ public class Minimax implements Brain {
 	public TilePosition getNextMove(Tile[][] tiles) {
 		board = new Board(tiles);
 		minimax(0, 1);
-		System.out.println(computersMove.x);
 		return new TilePosition(tile, computersMove.x, computersMove.y);
 	}
 
@@ -75,7 +74,7 @@ public class Minimax implements Brain {
 			if (turn == 1) { // X's Turn
 				board.setTile(point.x, point.y, Tile.X);
 				int currentScore = minimax(depth + 1, 2);
-				max = Math.max(currentScore, max);
+				max = (tile == Tile.X)?Math.max(currentScore, max):Math.min(currentScore, max);
 
 				if (depth == 0)
 					if (currentScore >= 0) {
@@ -93,7 +92,7 @@ public class Minimax implements Brain {
 			} else if (turn == 2) { // O's Turn
 				board.setTile(point.x, point.y, Tile.O);
 				int currentScore = minimax(depth + 1, 1);
-				min = Math.min(currentScore, min);
+				min = (tile == Tile.X)?Math.min(currentScore, min):Math.max(currentScore, min);
 				if (min == -1) {
 					board.setTile(point.x, point.y, Tile.EMPTY);
 					break;
