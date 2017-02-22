@@ -36,4 +36,8 @@ public class TilePosition {
 		this.y = y;
 	}
 
+	@Override
+	public String toString() {
+		return "com.ttt.model.TilePosition[tile=" + tile.name() + ",x=" + x + "y=" + y + "]";
+	}
 }

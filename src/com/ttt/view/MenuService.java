@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 
 import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
+import com.ttt.ai.minimax.MinimaxSimulationController;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
@@ -36,6 +37,7 @@ public class MenuService extends JPanel {
 		for (PlayerConfiguration config : configs) {
 			model.addElement(config);
 		}
+		model.addElement(new PlayerConfiguration("Lucas-Minimax", new MinimaxSimulationController()));
 		return options;
 	}
 

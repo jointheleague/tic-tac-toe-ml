@@ -8,7 +8,7 @@ public class Board {
 	private Tile[][] tiles;
 
 	public Board() {
-		this.tiles = emptyBoard();
+		clearBoard();
 		this.tiles = getTilesClone();
 	}
 
