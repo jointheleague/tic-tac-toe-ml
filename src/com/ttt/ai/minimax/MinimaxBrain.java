@@ -37,13 +37,13 @@ public class MinimaxBrain implements Brain {
 		boolean isMyTurn = depth % 2 == 0;
 		Board tempBoard = new Board(tiles);
 		if (tempBoard.checkWin(tile)) {
-			System.out.println("We have won in depth " + depth);
+			//System.out.println("We have won in depth " + depth);
 			return new Result(1);
 		} else if (tempBoard.checkWin(tile == Tile.X ? Tile.O : Tile.X)) {
-			System.out.println("We have lost in depth " + depth);
+			//System.out.println("We have lost in depth " + depth);
 			return new Result(-1);
 		}
-		if (depth < maxDepth) {
+		//if (depth < maxDepth) {
 			Result choice = new Result(isMyTurn ? -2 : 2);
 			for (int i = 0; i < 9; i++) {
 				int x = i % 3;
@@ -65,9 +65,9 @@ public class MinimaxBrain implements Brain {
 				}
 			}
 			return choice;
-		} else {
-			System.out.println("Nobody has won in depth " + depth);
-			return new Result(0);
-		}
+		//} else {
+		//	System.out.println("Nobody has won in depth " + depth);
+		//	return new Result(0);
+		//}
 	}
 }
