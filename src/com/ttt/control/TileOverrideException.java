@@ -9,7 +9,7 @@ public class TileOverrideException extends RuntimeException{
 	
 	@Override
 	public String getMessage() {
-		return "Tired to place a new tile on an already filled location";
+		return "Tried to place a new tile on an already filled location";
 	}
 
 }
