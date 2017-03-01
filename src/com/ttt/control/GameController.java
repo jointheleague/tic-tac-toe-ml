@@ -23,25 +23,15 @@ public class GameController {
 			System.err.println("Cannot Instantiate a Game On A Null Board Object!");
 		}
 	}
-	
-	private int attemptPerformTurn(Player toPlay){
-		try{
-			toPlay.performTurn(gameBoard);
-		}catch (TileOverrideException e){
-			System.err.println("Player  : " + toPlay.getLabel() + " Tried To Override An Already Written Tile!");
-			return 1;
-		}
-		return 0;
-	}
 
-	public Player playGame() {
+	public Player playGame() throws TileOverrideException {
 		boolean playerTurn = true;
 		boolean gameEnded = false;
 		while (!gameEnded) {
 			if (playerTurn) {
-				attemptPerformTurn(playerA);
+				playerA.performTurn(gameBoard);
 			} else {
-				attemptPerformTurn(playerB);
+				playerB.performTurn(gameBoard);
 			}
 			turnCount++;
 			playerTurn = !playerTurn;
