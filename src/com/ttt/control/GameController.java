@@ -24,7 +24,7 @@ public class GameController {
 		}
 	}
 
-	public Player playGame() {
+	public Player playGame() throws TileOverrideException {
 		boolean playerTurn = true;
 		boolean gameEnded = false;
 		while (!gameEnded) {

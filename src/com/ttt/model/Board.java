@@ -1,5 +1,7 @@
 package com.ttt.model;
 
+import com.ttt.control.TileOverrideException;
+
 public class Board {
 	public static final int BOARD_WIDTH = 3;
 	public static final int BOARD_HEIGHT = 3;
@@ -48,10 +50,14 @@ public class Board {
 		return null;
 	}
 
-	public void setTile(int x, int y, Tile t) {
+	public void setTile(int x, int y, Tile t) throws TileOverrideException {
 		if (!(x >= BOARD_WIDTH || x < 0)) {
 			if (!(y >= BOARD_HEIGHT || y < 0)) {
+				if((tiles[x][y] == Tile.EMPTY)){
 				tiles[x][y] = t;
+				}else{
+					throw new TileOverrideException();
+				}
 			}
 		}
 	}
@@ -136,7 +142,7 @@ public class Board {
 
 	@Deprecated
 	public void placeAt(int x, int y, Tile tile) {
-		setTile(x, y, tile);
+		//setTile(x, y, tile);
 		System.err.println("Baord.placeAt() is deprecated, please use setTile instead.");
 	}
 

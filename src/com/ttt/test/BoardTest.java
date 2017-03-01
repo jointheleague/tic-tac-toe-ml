@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.ttt.control.TileOverrideException;
 import com.ttt.model.Board;
 import com.ttt.model.Tile;
 
@@ -42,7 +43,11 @@ public class BoardTest {
 		assertEquals(b.getTile(1, 1), Tile.O);
 		assertEquals(b.getTile(0, 0), Tile.EMPTY);
 		assertEquals(b.getTile(-1, 0), null);
-		b.setTile(5, 5, Tile.EMPTY);
+		try {
+			b.setTile(5, 5, Tile.EMPTY);
+		} catch (TileOverrideException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test

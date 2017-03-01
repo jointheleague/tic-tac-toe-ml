@@ -1,5 +1,7 @@
 package com.ttt.model;
 
+import com.ttt.control.TileOverrideException;
+
 public class Player {
 	private String playerLabel;
 	private Tile tileType;
@@ -27,7 +29,7 @@ public class Player {
 		return tileType;
 	}
 
-	public void performTurn(Board board) {
+	public void performTurn(Board board) throws TileOverrideException{
 		TilePosition tile = ai.getNextMove(board.getTilesClone());
 		if (board.getTile(tile.getX(), tile.getY()) != Tile.EMPTY) {
 			performTurn(board);
