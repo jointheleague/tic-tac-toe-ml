@@ -1,6 +1,6 @@
 package com.ttt.control;
 
-public class TileOverrideException extends Exception{
+public class TileOverrideException extends RuntimeException{
 
 	/**
 	 * 
