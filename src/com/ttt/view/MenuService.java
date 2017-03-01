@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 
 import com.ttt.TicTacToe;
 import com.ttt.ai.PlayerConfiguration;
+import com.ttt.ai.hal.HALSimulationController;
+import com.ttt.ai.human.HumanSimulationController;
+import com.ttt.ai.minimax.MinimaxSimulationController;
+import com.ttt.ai.rando.RandoSimulationController;
 import com.ttt.model.Board;
 import com.ttt.model.Player;
 import com.ttt.model.Tile;
@@ -36,6 +40,10 @@ public class MenuService extends JPanel {
 		for (PlayerConfiguration config : configs) {
 			model.addElement(config);
 		}
+		model.addElement(new PlayerConfiguration("Human", new HumanSimulationController()));
+		model.addElement(new PlayerConfiguration("Minimax", new MinimaxSimulationController()));
+		model.addElement(new PlayerConfiguration("HAL 9000", new HALSimulationController()));
+		model.addElement(new PlayerConfiguration("Rando", new RandoSimulationController()));
 		return options;
 	}
 
